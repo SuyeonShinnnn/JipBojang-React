@@ -1,0 +1,22 @@
+header {
+  background-color: #fff;
+  box-shadow: 0px 0px 5px var(--color-lightgray);
+
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
+
+img {
+  width: 60px;
+}
+
+.pageLink {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.memberLink {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
