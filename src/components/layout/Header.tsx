@@ -27,10 +27,7 @@ const Header: React.FC = () => {
             </Link>
           ))}
         </NavItemsWrapper>
-        <UserNavItemsWrapper>
-          <Link to="/login">로그인</Link>
-          <Link to="/signUp">회원가입</Link>
-        </UserNavItemsWrapper>
+        <LoginBtn>로그인</LoginBtn>
       </ItemWrapper>
     </HeaderContainer>
   );
@@ -48,6 +45,7 @@ const HeaderContainer = styled.header`
 
   display: flex;
   justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const ItemWrapper = styled.div`
@@ -60,6 +58,12 @@ const ItemWrapper = styled.div`
 
 const LogoImage = styled.img`
   width: 80px;
+  @media (max-width: 1024px) {
+    width: 72px;
+  }
+  @media (max-width: 768px) {
+    width: 52px;
+  }
 `;
 
 const NavItemsWrapper = styled.nav`
@@ -68,14 +72,23 @@ const NavItemsWrapper = styled.nav`
   align-items: center;
   gap: 3rem;
   font-size: 20px;
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
 `;
 
-const UserNavItemsWrapper = styled.nav`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-  font-size: 16px;
+const LoginBtn = styled.button`
+  padding: 0.5rem 1rem;
+  background-color: var(--color-primary);
+  color: white;
+  border: 0px solid transparent;
+  font-size: 0.9rem;
+  border-radius: 5rem;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 
 export default Header;
