@@ -9,6 +9,10 @@
   --color-darkgray: #595959;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 html,
 body {
   margin: 0;

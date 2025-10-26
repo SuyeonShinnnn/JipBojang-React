@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/layout/Header';
 import HomePage from './pages/HomePage';
 import ReportPage from './pages/ReportPage';
-import NotiPage from './pages/NotiPage';
+import NotiPage from './pages/notification/NotiPage';
 
 function App() {
   return (
