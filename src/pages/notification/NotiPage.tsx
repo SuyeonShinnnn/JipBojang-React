@@ -1,16 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PropertyCard from './components/PropertyCard';
+import { getRegistedPropertyInfo } from '../../apis/notiApi';
 
 const NotiPage: React.FC = () => {
+  const [propertyInfo, setPropertyInfo] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getRegistedPropertyInfo(1);
+      setPropertyInfo(data.regist_list);
+    };
+    fetchData();
+  }, []);
+
+  const totalCards = 3;
+
   return (
     <Container>
       <h1>등기변동 알림 서비스</h1>
       <SubTitle>알림 설정된 부동산</SubTitle>
       <PropertyCardWrapper>
-        <PropertyCard />
-        <PropertyCard />
-        <PropertyCard />
+        {Array.from({ length: totalCards }).map((_, idx) => {
+          const item = propertyInfo[idx];
+
+          return (
+            <PropertyCard
+              key={idx}
+              registName={item?.regist_name}
+              address={item?.address}
+              isEmpty={!item}
+            />
+          );
+        })}
       </PropertyCardWrapper>
     </Container>
   );

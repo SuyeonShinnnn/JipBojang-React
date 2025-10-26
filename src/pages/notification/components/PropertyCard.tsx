@@ -1,36 +1,50 @@
-import { MapPinPlusIcon, PencilIcon, PlusIcon, TrashIcon } from 'lucide-react';
 import { HiMagnifyingGlassPlus } from 'react-icons/hi2';
 import { GoTrash } from 'react-icons/go';
 import { GoPencil } from 'react-icons/go';
+import { BsPlusLg } from 'react-icons/bs';
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-const PropertyCard: React.FC = () => {
+interface PropertyCardProps {
+  registName?: string;
+  address?: string;
+  isEmpty?: boolean;
+}
+
+const PropertyCard: React.FC<PropertyCardProps> = ({
+  registName,
+  address,
+  isEmpty = false,
+}) => {
   return (
-    <>
-      <Container>
-        <h2>📍관심 부동산</h2>
-        <span>서울광역시 동대문구 장한평로 42-1</span>
-        <IconWrapper>
-          <IconBox>
-            <GoTrash />
-            <Tooltip>삭제</Tooltip>
-          </IconBox>
-          <IconBox>
-            <GoPencil />
-            <Tooltip>수정</Tooltip>
-          </IconBox>
-          <IconBox>
-            <HiMagnifyingGlassPlus />
-            <Tooltip>상세보기</Tooltip>
-          </IconBox>
-        </IconWrapper>
-      </Container>
-    </>
+    <Container $isEmpty={isEmpty}>
+      {isEmpty ? (
+        <BsPlusLg />
+      ) : (
+        <>
+          <h2>📍{registName}</h2>
+          <span>{address}</span>
+          <IconWrapper>
+            <IconBox>
+              <GoTrash />
+              <Tooltip>삭제</Tooltip>
+            </IconBox>
+            <IconBox>
+              <GoPencil />
+              <Tooltip>수정</Tooltip>
+            </IconBox>
+            <IconBox>
+              <HiMagnifyingGlassPlus />
+              <Tooltip>상세보기</Tooltip>
+            </IconBox>
+          </IconWrapper>
+        </>
+      )}
+    </Container>
   );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ $isEmpty: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -42,10 +56,32 @@ const Container = styled.div`
   box-shadow: 15px 10px 15px -5px var(--color-accent);
   transition: all 0.3s ease;
 
+  ${({ $isEmpty }) =>
+    $isEmpty &&
+    css`
+      font-size: 2rem;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: var(--color-primary);
+      border: 1px dashed var(--color-primary);
+      box-shadow: none;
+
+      &:hover {
+        box-shadow: none !important;
+        transform: none !important;
+        font-size: 2.5rem;
+      }
+      @media (max-width: 768px) {
+        font-size: 1.5rem;
+      }
+    `}
+
   &:hover {
     transform: translateY(-4px);
     box-shadow: 10px 10px 20px -8px var(--color-primary);
   }
+
   @media (max-width: 1024px) {
     box-shadow: none;
     &:hover {
