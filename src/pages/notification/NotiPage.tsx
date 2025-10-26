@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PropertyCard from './components/PropertyCard';
 import { getRegistedPropertyInfo } from '../../apis/notiApi';
+import WarningCardSection from './components/WarningCardSection';
 
 const NotiPage: React.FC = () => {
   const [propertyInfo, setPropertyInfo] = useState<any[]>([]);
@@ -34,6 +35,7 @@ const NotiPage: React.FC = () => {
           );
         })}
       </PropertyCardWrapper>
+      <WarningCardSection />
     </Container>
   );
 };
@@ -56,7 +58,7 @@ const SubTitle = styled.span`
   font-weight: 600;
 `;
 
-const PropertyCardWrapper = styled.div`
+const PropertyCardWrapper = styled.section`
   margin-top: 12px;
   display: flex;
   justify-content: space-between;
