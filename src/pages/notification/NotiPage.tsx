@@ -63,6 +63,7 @@ const PropertyCardWrapper = styled.section`
   display: flex;
   justify-content: space-between;
   gap: 2rem;
+  height: 156px;
 
   @media (max-width: 1024px) {
     gap: 8px;
@@ -70,6 +71,7 @@ const PropertyCardWrapper = styled.section`
   @media (max-width: 768px) {
     flex-direction: column;
     gap: 8px;
+    height: auto;
   }
 `;
 
