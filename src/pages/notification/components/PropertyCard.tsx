@@ -2,8 +2,12 @@ import { HiMagnifyingGlassPlus } from 'react-icons/hi2';
 import { GoTrash } from 'react-icons/go';
 import { GoPencil } from 'react-icons/go';
 import { BsPlusLg } from 'react-icons/bs';
-import React from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
+import PropertyRegistModal from './PropertyRegistModal';
+import DeleteModal from './DeleteModal';
+import ModifyModal from './ModifyModal';
+import DetailModal from './DetailModal';
 
 interface PropertyCardProps {
   registName?: string;
@@ -16,31 +20,72 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   address,
   isEmpty = false,
 }) => {
+  const [openPropertyRegisterModal, setOpenPropertyRegisterModal] =
+    useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openModifyModal, setOpenModifyModal] = useState(false);
+  const [openDetailModal, setOpenDetailModal] = useState(false);
+
+  const iconList = [
+    { icon: <GoTrash />, label: '삭제' },
+    { icon: <GoPencil />, label: '수정' },
+    { icon: <HiMagnifyingGlassPlus />, label: '상세보기' },
+  ];
+
+  const openModal = (key: number) => {
+    if (key == 0) {
+      setOpenDeleteModal(!openDeleteModal);
+    } else if (key == 1) {
+      setOpenModifyModal(!openModifyModal);
+    } else if (key == 2) {
+      setOpenDetailModal(!openDetailModal);
+    }
+  };
+
   return (
-    <Container $isEmpty={isEmpty}>
+    <>
       {isEmpty ? (
-        <BsPlusLg />
+        <Container
+          $isEmpty={isEmpty}
+          onClick={() =>
+            setOpenPropertyRegisterModal(!openPropertyRegisterModal)
+          }
+        >
+          <BsPlusLg />
+        </Container>
       ) : (
-        <>
+        <Container $isEmpty={isEmpty}>
           <h2>📍{registName}</h2>
           <span>{address}</span>
           <IconWrapper>
-            <IconBox>
-              <GoTrash />
-              <Tooltip>삭제</Tooltip>
-            </IconBox>
-            <IconBox>
-              <GoPencil />
-              <Tooltip>수정</Tooltip>
-            </IconBox>
-            <IconBox>
-              <HiMagnifyingGlassPlus />
-              <Tooltip>상세보기</Tooltip>
-            </IconBox>
+            {iconList.map((item, key) => (
+              <IconBox key={key} onClick={() => openModal(key)}>
+                {item.icon}
+                <Tooltip>{item.label}</Tooltip>
+              </IconBox>
+            ))}
           </IconWrapper>
-        </>
+        </Container>
       )}
-    </Container>
+
+      <PropertyRegistModal
+        isOpen={openPropertyRegisterModal}
+        onClose={() => setOpenPropertyRegisterModal(false)}
+      />
+
+      <DeleteModal
+        isOpen={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
+      />
+      <ModifyModal
+        isOpen={openModifyModal}
+        onClose={() => setOpenModifyModal(false)}
+      />
+      <DetailModal
+        isOpen={openDetailModal}
+        onClose={() => setOpenDetailModal(false)}
+      />
+    </>
   );
 };
 
