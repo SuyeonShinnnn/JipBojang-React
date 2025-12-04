@@ -8,16 +8,15 @@ import PropertyRegistModal from './PropertyRegistModal';
 import DeleteModal from './DeleteModal';
 import ModifyModal from './ModifyModal';
 import DetailModal from './DetailModal';
+import type { PropertyDetail } from '../../../types/notification.types';
 
 interface PropertyCardProps {
-  registName?: string;
-  address?: string;
+  propertyInfo?: PropertyDetail;
   isEmpty?: boolean;
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
-  registName,
-  address,
+  propertyInfo,
   isEmpty = false,
 }) => {
   const [openPropertyRegisterModal, setOpenPropertyRegisterModal] =
@@ -55,8 +54,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         </Container>
       ) : (
         <Container $isEmpty={isEmpty}>
-          <h2>📍{registName}</h2>
-          <span>{address}</span>
+          <h2>📍{propertyInfo?.registName}</h2>
+          <span>{propertyInfo?.address}</span>
           <IconWrapper>
             {iconList.map((item, key) => (
               <IconBox key={key} onClick={() => openModal(key)}>
@@ -83,6 +82,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       />
       <DetailModal
         isOpen={openDetailModal}
+        propertyDetail={propertyInfo}
         onClose={() => setOpenDetailModal(false)}
       />
     </>

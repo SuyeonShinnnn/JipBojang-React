@@ -3,14 +3,16 @@ import styled from 'styled-components';
 import PropertyCard from './components/PropertyCard';
 import { getRegistedPropertyInfo } from '../../apis/notiApi';
 import WarningCardSection from './components/WarningCardSection';
+import type { PropertyDetail } from '../../types/notification.types';
 
 const NotiPage: React.FC = () => {
-  const [propertyInfo, setPropertyInfo] = useState<any[]>([]);
+  const [propertyInfo, setPropertyInfo] = useState<PropertyDetail[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getRegistedPropertyInfo(1);
       setPropertyInfo(data.regist_list);
+      console.log(data);
     };
     fetchData();
   }, []);
@@ -25,14 +27,7 @@ const NotiPage: React.FC = () => {
         {Array.from({ length: totalCards }).map((_, idx) => {
           const item = propertyInfo[idx];
 
-          return (
-            <PropertyCard
-              key={idx}
-              registName={item?.regist_name}
-              address={item?.address}
-              isEmpty={!item}
-            />
-          );
+          return <PropertyCard key={idx} propertyInfo={item} isEmpty={!item} />;
         })}
       </PropertyCardWrapper>
       <WarningCardSection />
