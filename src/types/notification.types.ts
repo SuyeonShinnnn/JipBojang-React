@@ -6,3 +6,9 @@ export interface PropertyDetail {
   commUniqueNo?: number;
   expireDate?: string;
 }
+
+export interface RegistryChanged {
+  id: number;
+  changedDate: string;
+  detail: string;
+}

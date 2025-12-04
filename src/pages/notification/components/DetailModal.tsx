@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import BaseModal from '../../../components/common/BaseModal';
-import type { PropertyDetail } from '../../../types/notification.types';
+import type {
+  PropertyDetail,
+  RegistryChanged,
+} from '../../../types/notification.types';
 import styled from 'styled-components';
+import { getRegistryChanged } from '../../../apis/notiApi';
 
 interface DetailModalProps {
   isOpen: boolean;
@@ -21,6 +25,20 @@ const DetailModal: React.FC<DetailModalProps> = ({
     expireDate: '만료일',
   };
 
+  const [changedInfo, setChangedInfo] = useState<RegistryChanged[]>([]);
+
+  useEffect(() => {
+    if (!isOpen || !propertyDetail?.commUniqueNo) return;
+
+    const fetchData = async () => {
+      console.log(propertyDetail?.commUniqueNo);
+      const data = await getRegistryChanged(propertyDetail?.commUniqueNo);
+      setChangedInfo(data.changed_list);
+      console.log(data);
+    };
+    fetchData();
+  }, [isOpen, propertyDetail?.commUniqueNo]);
+
   return (
     <BaseModal
       isOpen={isOpen}
@@ -28,7 +46,6 @@ const DetailModal: React.FC<DetailModalProps> = ({
       header={<h2>📍{propertyDetail?.registName}</h2>}
     >
       <h3>정보</h3>
-
       <InfoTable>
         <tbody>
           {Object.entries(infoMap).map(([key, label]) => (
@@ -39,6 +56,16 @@ const DetailModal: React.FC<DetailModalProps> = ({
           ))}
         </tbody>
       </InfoTable>
+
+      <h3>변동내역</h3>
+      <ChangedWrapper>
+        {changedInfo.map((item, key) => (
+          <ChangedBox>
+            <span>{item.changedDate}</span>
+            <span>{item.detail}</span>
+          </ChangedBox>
+        ))}
+      </ChangedWrapper>
     </BaseModal>
   );
 };
@@ -69,4 +96,19 @@ const ValueCell = styled.td`
   border-bottom: 1px solid var(--color-lightgray);
   line-height: 1.5;
   word-break: keep-all;
+`;
+
+const ChangedWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const ChangedBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  gap: 0.5rem;
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
 `;
