@@ -31,10 +31,8 @@ const DetailModal: React.FC<DetailModalProps> = ({
     if (!isOpen || !propertyDetail?.commUniqueNo) return;
 
     const fetchData = async () => {
-      console.log(propertyDetail?.commUniqueNo);
       const data = await getRegistryChanged(propertyDetail?.commUniqueNo);
       setChangedInfo(data.changed_list);
-      console.log(data);
     };
     fetchData();
   }, [isOpen, propertyDetail?.commUniqueNo]);
@@ -45,36 +43,45 @@ const DetailModal: React.FC<DetailModalProps> = ({
       onClose={onClose}
       header={<h2>📍{propertyDetail?.registName}</h2>}
     >
-      <h3>정보</h3>
-      <InfoTable>
-        <tbody>
-          {Object.entries(infoMap).map(([key, label]) => (
-            <tr key={key}>
-              <LabelCell>{label}</LabelCell>
-              <ValueCell>{(propertyDetail as any)?.[key] ?? '-'}</ValueCell>
-            </tr>
-          ))}
-        </tbody>
-      </InfoTable>
+      <InfoSection>
+        <h3>정보</h3>
+        <InfoTable>
+          <tbody>
+            {Object.entries(infoMap).map(([key, label]) => (
+              <tr key={key}>
+                <LabelCell>{label}</LabelCell>
+                <ValueCell>{(propertyDetail as any)?.[key] ?? '-'}</ValueCell>
+              </tr>
+            ))}
+          </tbody>
+        </InfoTable>
+      </InfoSection>
 
-      <h3>변동내역</h3>
-      <ChangedWrapper>
-        {changedInfo.map((item, key) => (
-          <ChangedBox>
-            <span>{item.changedDate}</span>
-            <span>{item.detail}</span>
-          </ChangedBox>
-        ))}
-      </ChangedWrapper>
+      <ChangedSection>
+        <h3>변동내역</h3>
+        <ChangedWrapper>
+          {changedInfo.map((item, key) => (
+            <ChangedBox>
+              <span>{item.changedDate}</span>
+              <span>{item.detail}</span>
+            </ChangedBox>
+          ))}
+        </ChangedWrapper>
+      </ChangedSection>
     </BaseModal>
   );
 };
 
 export default DetailModal;
 
+const InfoSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
 const InfoTable = styled.table`
   width: 100%;
-  margin-top: 12px;
   border-top: 1px solid var(--color-lightgray);
   border-collapse: collapse;
   overflow: hidden;
@@ -96,6 +103,13 @@ const ValueCell = styled.td`
   border-bottom: 1px solid var(--color-lightgray);
   line-height: 1.5;
   word-break: keep-all;
+`;
+
+const ChangedSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+  gap: 8px;
 `;
 
 const ChangedWrapper = styled.div`
