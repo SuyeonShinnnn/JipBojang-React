@@ -60,8 +60,8 @@ const DetailModal: React.FC<DetailModalProps> = ({
       <ChangedSection>
         <h3>변동내역</h3>
         <ChangedWrapper>
-          {changedInfo.map((item, key) => (
-            <ChangedBox>
+          {changedInfo.map((item) => (
+            <ChangedBox key={item.id}>
               <span>{item.changedDate}</span>
               <span>{item.detail}</span>
             </ChangedBox>
