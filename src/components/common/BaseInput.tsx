@@ -79,7 +79,7 @@ const InputButton = styled.button`
   padding: 8px 12px;
 
   position: absolute;
-  right: 4px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
 
@@ -87,10 +87,14 @@ const InputButton = styled.button`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const SearchIcon = styled.img`
-  width: 28px;
+  width: 24px;
 `;
 
 const StyledInput = styled.input<{
