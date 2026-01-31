@@ -8,6 +8,7 @@ interface BaseInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   padding?: string;
   icon?: string;
   showButton?: boolean;
+  onButtonClick?: () => void;
 }
 
 const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
@@ -19,6 +20,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       icon,
       disabled,
       showButton = false,
+      onButtonClick,
       ...rest
     },
     ref,
@@ -44,7 +46,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
 
           {rest.children}
           {showButton && (
-            <InputButton>
+            <InputButton type="button" onClick={onButtonClick}>
               <SearchIcon src={searchIcon} />
             </InputButton>
           )}
