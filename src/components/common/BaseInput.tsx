@@ -1,15 +1,28 @@
 import React, { forwardRef } from 'react';
 import styled, { css } from 'styled-components';
+import searchIcon from '../../assets/common/magnifying-glass.png';
 
 interface BaseInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   padding?: string;
   icon?: string;
+  showButton?: boolean;
 }
 
 const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
-  ({ label, error, padding = '1rem 1rem', icon, disabled, ...rest }, ref) => {
+  (
+    {
+      label,
+      error,
+      padding = '1rem 1rem',
+      icon,
+      disabled,
+      showButton = false,
+      ...rest
+    },
+    ref,
+  ) => {
     return (
       <Wrapper>
         {label && <Label>{label}</Label>}
@@ -29,14 +42,18 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
             </Icon>
           )}
 
-          {/* 커스텀 아이콘 슬롯처럼 children으로 받는 영역 */}
           {rest.children}
+          {showButton && (
+            <InputButton>
+              <SearchIcon src={searchIcon} />
+            </InputButton>
+          )}
         </InputContainer>
 
         {error && <ErrorText>{error}</ErrorText>}
       </Wrapper>
     );
-  }
+  },
 );
 
 export default BaseInput;
@@ -55,6 +72,27 @@ const InputContainer = styled.div`
   position: relative;
 `;
 
+const InputButton = styled.button`
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SearchIcon = styled.img`
+  width: 28px;
+`;
+
 const StyledInput = styled.input<{
   $hasError: boolean;
   $padding: string;
@@ -64,7 +102,9 @@ const StyledInput = styled.input<{
   border-radius: 10px;
   font-size: 1rem;
   box-sizing: border-box;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   padding: ${({ $padding }) => $padding};
 
   &:focus {
