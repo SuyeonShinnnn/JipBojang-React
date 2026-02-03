@@ -37,16 +37,35 @@ const PropertyRegistModal: React.FC<PropertyRegistModalProps> = ({
       header={<h2>부동산 등록</h2>}
       footer={
         <>
-          <BaseButton
-            variant="outline"
-            onClick={() => {
-              setCurrentIndex(0);
-              onClose();
-            }}
-          >
-            취소
-          </BaseButton>
-          <BaseButton onClick={nextSection}>다음</BaseButton>
+          {currentIndex === 0 && (
+            <BaseButton
+              variant="outline"
+              onClick={() => {
+                setCurrentIndex(0);
+                onClose();
+              }}
+            >
+              취소
+            </BaseButton>
+          )}
+          {currentIndex !== 0 && (
+            <BaseButton variant="outline" onClick={() => prevSection()}>
+              이전
+            </BaseButton>
+          )}
+          {currentIndex !== sections.length - 1 && (
+            <BaseButton onClick={nextSection}>다음</BaseButton>
+          )}
+          {currentIndex === sections.length - 1 && (
+            <BaseButton
+              onClick={() => {
+                setCurrentIndex(0);
+                onClose();
+              }}
+            >
+              완료
+            </BaseButton>
+          )}
         </>
       }
     >
