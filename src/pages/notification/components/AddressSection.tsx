@@ -4,19 +4,18 @@ import { useQuery } from '@tanstack/react-query';
 import { searchAddress } from '../../../apis/notiApi';
 import { DotLoader } from 'react-spinners';
 import { useState } from 'react';
+import type { AddressInfo } from '../types/notification';
 
-interface Address {
-  type: string;
-  address: string;
-  uniqueNo: string;
+interface AddressSectionProps {
+  onSelectedAddr: (address: AddressInfo) => void;
 }
 
-const AddressSection: React.FC = () => {
+const AddressSection: React.FC<AddressSectionProps> = ({ onSelectedAddr }) => {
   const [keyword, setKeyword] = useState('');
-  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+  const [selectedAddress, setSelectedAddress] = useState<AddressInfo | null>(null);
   const [searched, setSearched] = useState(false);
 
-  const { data, isPending, isSuccess, isError, refetch } = useQuery<Address[]>({
+  const { data, isPending, isSuccess, isError, refetch } = useQuery<AddressInfo[]>({
     queryKey: ['addressSearch', keyword],
     queryFn: () => searchAddress(keyword),
     enabled: false,
@@ -70,7 +69,7 @@ const AddressSection: React.FC = () => {
               <ResultList
                 key={addr.uniqueNo}
                 tabIndex={0}
-                onClick={() => setSelectedAddress(addr)}
+                onClick={() => onSelectedAddr(addr)}
               >
                 <TypeSpan>{addr.type}</TypeSpan>
                 <span>{addr.uniqueNo}</span>

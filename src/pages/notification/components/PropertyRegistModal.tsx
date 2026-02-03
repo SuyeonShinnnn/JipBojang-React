@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import BaseModal from '../../../components/common/BaseModal';
 import BaseButton from '../../../components/common/BaseButton';
 import AddressSection from './AddressSection';
+import PeriodSection from './PeriodSection';
+import type { AddressInfo } from '../types/notification';
 
 interface PropertyRegistModalProps {
   isOpen: boolean;
@@ -28,6 +30,18 @@ const PropertyRegistModal: React.FC<PropertyRegistModalProps> = ({
 
   const closeClicked = () => {
     onClose;
+  };
+
+  const [selectedAddr, setSelectedAddr] = useState<AddressInfo | undefined>();
+
+  const handleSelectedAddr = (address: AddressInfo) => {
+    setSelectedAddr(address);
+  };
+
+  const [selectedPeriod, setSelectedPeriod] = useState<String | undefined>();
+
+  const handleSelectedPeriod = (period: string) => {
+    setSelectedPeriod(period);
   };
 
   return (
@@ -69,7 +83,15 @@ const PropertyRegistModal: React.FC<PropertyRegistModalProps> = ({
         </>
       }
     >
-      {currentSection === 'Address' && <AddressSection />}
+      {currentSection === 'Address' && (
+        <AddressSection onSelectedAddr={handleSelectedAddr} />
+      )}
+      {currentSection === 'Period' && (
+        <PeriodSection
+          address={selectedAddr?.address}
+          onSelectedPeriod={handleSelectedPeriod}
+        />
+      )}
     </BaseModal>
   );
 };
