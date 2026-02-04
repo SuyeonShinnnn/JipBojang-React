@@ -4,6 +4,7 @@ import BaseButton from '../../../components/common/BaseButton';
 import AddressSection from './AddressSection';
 import PeriodSection from './PeriodSection';
 import type { AddressInfo } from '../types/notification';
+import CheckSection from './CheckSection';
 
 interface PropertyRegistModalProps {
   isOpen: boolean;
@@ -38,7 +39,7 @@ const PropertyRegistModal: React.FC<PropertyRegistModalProps> = ({
     setSelectedAddr(address);
   };
 
-  const [selectedPeriod, setSelectedPeriod] = useState<String | undefined>();
+  const [selectedPeriod, setSelectedPeriod] = useState<string | undefined>();
 
   const handleSelectedPeriod = (period: string) => {
     setSelectedPeriod(period);
@@ -91,6 +92,9 @@ const PropertyRegistModal: React.FC<PropertyRegistModalProps> = ({
           address={selectedAddr?.address}
           onSelectedPeriod={handleSelectedPeriod}
         />
+      )}
+      {currentSection === 'Check' && (
+        <CheckSection address={selectedAddr} period={selectedPeriod} />
       )}
     </BaseModal>
   );
