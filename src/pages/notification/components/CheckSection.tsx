@@ -5,6 +5,7 @@ import { HiOutlineBuildingOffice2 } from 'react-icons/hi2';
 import { MdNumbers } from 'react-icons/md';
 import { IoLocationOutline } from 'react-icons/io5';
 import { BsCalendar2Date } from 'react-icons/bs';
+import { useState } from 'react';
 
 interface CheckSectionProps {
   address: AddressInfo | undefined;
@@ -12,11 +13,31 @@ interface CheckSectionProps {
 }
 
 const CheckSection: React.FC<CheckSectionProps> = ({ address, period }) => {
+  const DEFAULT_NAME = '관심 부동산';
+  const [inputValue, setInputValue] = useState(DEFAULT_NAME);
+
+  const handleFocus = () => {
+    if (inputValue === DEFAULT_NAME) {
+      setInputValue('');
+    }
+  };
+
+  const handleBlur = () => {
+    if (inputValue.trim() === '') {
+      setInputValue(DEFAULT_NAME);
+    }
+  };
   return (
     <>
       <Title>선택사항 확인</Title>
       <InputWrapper>
-        <LineInput id="property-name" />
+        <LineInput
+          id="property-name"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <InputLabel htmlFor="property-name">
           등록 목록에 표시될 이름을 입력하세요. (미입력 시 기본 입력)
         </InputLabel>
