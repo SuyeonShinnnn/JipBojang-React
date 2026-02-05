@@ -1,11 +1,16 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'gray';
+type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'outline'
+  | 'gray'
+  | 'options'
+  | 'selected';
 type ButtonSize = 'size2' | 'size3' | 'size4' | 'size5' | 'size-address';
 
-interface BaseButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface BaseButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   htmlType?: 'button' | 'submit' | 'reset';
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -43,7 +48,9 @@ const StyledButton = styled.button<{
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: 0.2s ease, color 0.2s ease;
+  transition:
+    0.2s ease,
+    color 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -96,6 +103,16 @@ const StyledButton = styled.button<{
         return css`
           background-color: #838789;
           color: white;
+        `;
+      case 'options':
+        return css`
+          background-color: white;
+          border: 1px solid var(--color-lightgray);
+        `;
+      case 'selected':
+        return css`
+          background-color: white;
+          border: 1px solid var(--color-primary);
         `;
       default:
         return css`
