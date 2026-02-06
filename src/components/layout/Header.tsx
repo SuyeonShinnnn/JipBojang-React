@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Header: React.FC = () => {
@@ -16,10 +16,16 @@ const Header: React.FC = () => {
     { name: '커뮤니티', path: '/community' },
   ]);
 
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   return (
     <HeaderContainer>
       <ItemWrapper>
-        <LogoImage src="/logo.svg" />
+        <LogoImage src="/logo.svg" onClick={handleLogoClick} />
         <NavItemsWrapper>
           {navItems.map((item, index) => (
             <Link key={index} to={item.path}>
@@ -58,6 +64,11 @@ const ItemWrapper = styled.div`
 
 const LogoImage = styled.img`
   width: 80px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
   @media (max-width: 1024px) {
     width: 72px;
   }
