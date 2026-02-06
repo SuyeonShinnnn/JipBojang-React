@@ -22,6 +22,10 @@ const Header: React.FC = () => {
     navigate('/');
   };
 
+  const handleLoginButtonClick = () => {
+    navigate('/login');
+  };
+
   return (
     <HeaderContainer>
       <ItemWrapper>
@@ -33,7 +37,7 @@ const Header: React.FC = () => {
             </Link>
           ))}
         </NavItemsWrapper>
-        <LoginBtn>로그인</LoginBtn>
+        <LoginBtn onClick={handleLoginButtonClick}>로그인</LoginBtn>
       </ItemWrapper>
     </HeaderContainer>
   );
@@ -96,6 +100,10 @@ const LoginBtn = styled.button`
   border: 0px solid transparent;
   font-size: 0.9rem;
   border-radius: 5rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   @media (max-width: 768px) {
     font-size: 12px;
