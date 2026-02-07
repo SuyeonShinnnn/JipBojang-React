@@ -26,6 +26,10 @@ const Header: React.FC = () => {
     navigate('/login');
   };
 
+  const isLogin = !!localStorage.getItem('accessToken');
+
+  const handleLogoutButtonClick = () => {};
+
   return (
     <HeaderContainer>
       <ItemWrapper>
@@ -37,11 +41,17 @@ const Header: React.FC = () => {
             </Link>
           ))}
         </NavItemsWrapper>
-        <LoginBtn onClick={handleLoginButtonClick}>로그인</LoginBtn>
+        {isLogin ? (
+          <LoginBtn onClick={handleLoginButtonClick}>로그인</LoginBtn>
+        ) : (
+          <LogoutBtn onClick={handleLogoutButtonClick}>로그아웃</LogoutBtn>
+        )}
       </ItemWrapper>
     </HeaderContainer>
   );
 };
+
+export default Header;
 
 const HeaderContainer = styled.header`
   background-color: white;
@@ -110,4 +120,19 @@ const LoginBtn = styled.button`
   }
 `;
 
-export default Header;
+const LogoutBtn = styled.button`
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  background-color: #fff;
+  font-size: 0.9rem;
+  border-radius: 5rem;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+`;
