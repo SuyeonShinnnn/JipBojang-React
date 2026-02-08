@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Header: React.FC = () => {
@@ -16,10 +16,24 @@ const Header: React.FC = () => {
     { name: '커뮤니티', path: '/community' },
   ]);
 
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
+  const handleLoginButtonClick = () => {
+    navigate('/login');
+  };
+
+  const isLogin = !!localStorage.getItem('accessToken');
+
+  const handleLogoutButtonClick = () => {};
+
   return (
     <HeaderContainer>
       <ItemWrapper>
-        <LogoImage src="/logo.svg" />
+        <LogoImage src="/logo.svg" onClick={handleLogoClick} />
         <NavItemsWrapper>
           {navItems.map((item, index) => (
             <Link key={index} to={item.path}>
@@ -27,11 +41,17 @@ const Header: React.FC = () => {
             </Link>
           ))}
         </NavItemsWrapper>
-        <LoginBtn>로그인</LoginBtn>
+        {isLogin ? (
+          <LoginBtn onClick={handleLoginButtonClick}>로그인</LoginBtn>
+        ) : (
+          <LogoutBtn onClick={handleLogoutButtonClick}>로그아웃</LogoutBtn>
+        )}
       </ItemWrapper>
     </HeaderContainer>
   );
 };
+
+export default Header;
 
 const HeaderContainer = styled.header`
   background-color: white;
@@ -58,6 +78,11 @@ const ItemWrapper = styled.div`
 
 const LogoImage = styled.img`
   width: 80px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
   @media (max-width: 1024px) {
     width: 72px;
   }
@@ -86,9 +111,28 @@ const LoginBtn = styled.button`
   font-size: 0.9rem;
   border-radius: 5rem;
 
+  &:hover {
+    cursor: pointer;
+  }
+
   @media (max-width: 768px) {
     font-size: 12px;
   }
 `;
 
-export default Header;
+const LogoutBtn = styled.button`
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  background-color: #fff;
+  font-size: 0.9rem;
+  border-radius: 5rem;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+`;
