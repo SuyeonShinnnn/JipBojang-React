@@ -1,9 +1,9 @@
+import axios from 'axios';
 import axiosInstance from './axiosInstance';
 
 export const getRegistedPropertyInfo = async (id: number) => {
   try {
-    const response = await axiosInstance.get(`/noti/${id}`);
-    console.log(response.data);
+    const response = await axios.get(`/api/notification/regist/${id}`);
     return response.data;
   } catch (e) {
     console.log('🚨오류 발생');
@@ -11,9 +11,14 @@ export const getRegistedPropertyInfo = async (id: number) => {
   }
 };
 
-export const getRegistryChanged = async (commUniqueNo?: number) => {
+export const getRegistryChanged = async (
+  userId: number,
+  commUniqueNo?: number,
+) => {
   try {
-    const response = await axiosInstance.get(`/changed/${commUniqueNo}`);
+    const response = await axios.get(
+      `/api/notification/regist/user/${userId}/regist/${commUniqueNo}`,
+    );
     return response.data;
   } catch (e) {
     console.log('🚨getRegistryChanged 오류 발생');

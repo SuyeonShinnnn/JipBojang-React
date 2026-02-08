@@ -4,18 +4,21 @@ import PropertyCard from './components/PropertyCard';
 import { getRegistedPropertyInfo } from '../../apis/notiApi';
 import WarningCardSection from './components/WarningCardSection';
 import type { PropertyDetail } from '../../types/notification.types';
+import { useAuthStore } from '../../stores/auth';
 
 const NotiPage: React.FC = () => {
+  const userId = useAuthStore((state) => state.user.userId);
   const [propertyInfo, setPropertyInfo] = useState<PropertyDetail[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getRegistedPropertyInfo(1);
-      setPropertyInfo(data.regist_list);
-      console.log(data);
+      if (!userId) return;
+
+      const data = await getRegistedPropertyInfo(Number(userId));
+      setPropertyInfo(data);
     };
     fetchData();
-  }, []);
+  }, [userId]);
 
   const totalCards = 3;
 

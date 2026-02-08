@@ -54,8 +54,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         </Container>
       ) : (
         <Container $isEmpty={isEmpty}>
-          <h2>📍{propertyInfo?.registName}</h2>
-          <span>{propertyInfo?.address}</span>
+          <h2>📍{propertyInfo?.title}</h2>
+          <span>{propertyInfo?.commAddrLotNumber}</span>
           <IconWrapper>
             {iconList.map((item, key) => (
               <IconBox key={key} onClick={() => openModal(key)}>
