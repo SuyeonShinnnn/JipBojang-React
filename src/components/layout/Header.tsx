@@ -26,7 +26,7 @@ const Header: React.FC = () => {
     navigate('/login');
   };
 
-  const isLogin = !!localStorage.getItem('accessToken');
+  const isLogin = !localStorage.getItem('accessToken');
 
   const handleLogoutButtonClick = () => {};
 
