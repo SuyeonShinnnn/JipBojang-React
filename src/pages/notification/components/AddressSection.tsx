@@ -5,6 +5,7 @@ import { searchAddress } from '../../../apis/notiApi';
 import { DotLoader } from 'react-spinners';
 import { useState } from 'react';
 import type { AddressInfo } from '../types/notification';
+import type { PropertyDetail } from '../../../types/notification.types';
 
 interface AddressSectionProps {
   onSelectedAddr: (address: AddressInfo) => void;
@@ -12,10 +13,17 @@ interface AddressSectionProps {
 
 const AddressSection: React.FC<AddressSectionProps> = ({ onSelectedAddr }) => {
   const [keyword, setKeyword] = useState('');
-  const [selectedAddress, setSelectedAddress] = useState<AddressInfo | null>(null);
+
+  //🚨🚨🚨🚨 타입 정의 필요
+  const [searchResult, setSearchResult] = useState<any>([]);
+  const [selectedAddress, setSelectedAddress] = useState<AddressInfo | null>(
+    null,
+  );
   const [searched, setSearched] = useState(false);
 
-  const { data, isPending, isSuccess, isError, refetch } = useQuery<AddressInfo[]>({
+  const { data, isPending, isSuccess, isError, refetch } = useQuery<
+    AddressInfo[]
+  >({
     queryKey: ['addressSearch', keyword],
     queryFn: () => searchAddress(keyword),
     enabled: false,
@@ -23,7 +31,8 @@ const AddressSection: React.FC<AddressSectionProps> = ({ onSelectedAddr }) => {
 
   const handleSearch = () => {
     setSearched(true);
-    console.log(searched);
+    const data = searchAddress(keyword);
+    setSearchResult(data);
     refetch();
   };
 
