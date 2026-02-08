@@ -5,6 +5,7 @@ import NotiPage from '../../pages/notification/NotiPage';
 import NotFoundPage from '../../pages/NotFoundPage';
 import LoginPage from '../../pages/auth/LoginPage';
 import styled, { keyframes } from 'styled-components';
+import BuildingPage from '../../pages/building/BuildingPage';
 
 const DefaultLayout = () => {
   const location = useLocation();
@@ -16,6 +17,7 @@ const DefaultLayout = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/report" element={<ReportPage />} />
         <Route path="/notify" element={<NotiPage />} />
+        <Route path="/building" element={<BuildingPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </MainContent>
