@@ -28,20 +28,9 @@ export const getRegistryChanged = async (
 
 export const searchAddress = async (keyword: string) => {
   try {
-    // const response = await axiosInstance.get(`/address/${keyword}`);
-    // return response.data;
-    return [
-      {
-        type: '집합건물',
-        address: '서울특별시 테헤란로',
-        uniqueNo: '20102010',
-      },
-      {
-        type: '집합건물',
-        address: '서울특별시 테헤란로',
-        uniqueNo: '20102011',
-      },
-    ];
+    const res = await axios.post(`/api/codef/search`, { keyword });
+    console.log(res.data);
+    return res.data;
   } catch (e) {
     console.log('🚨getRegistryChanged 오류 발생');
     return [];
