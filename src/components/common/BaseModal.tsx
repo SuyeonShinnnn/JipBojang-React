@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import styled from 'styled-components';
+import BaseButton from './BaseButton';
 
 interface BaseModalProps {
   isOpen: boolean;
@@ -29,7 +30,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <Overlay onClick={onClose}>
+    <Overlay onClick={onClose} $isOpen={isOpen}>
       <Dialog
         onClick={(e) => e.stopPropagation()} // 내부 클릭 시 닫히지 않게
         role="dialog"
@@ -47,9 +48,9 @@ const BaseModal: React.FC<BaseModalProps> = ({
 
           <Footer>
             {footer || (
-              <DefaultButton type="button" onClick={onClose}>
+              <BaseButton type="button" onClick={onClose}>
                 닫기
-              </DefaultButton>
+              </BaseButton>
             )}
           </Footer>
         </Content>
@@ -60,12 +61,12 @@ const BaseModal: React.FC<BaseModalProps> = ({
 
 export default BaseModal;
 
-const Overlay = styled.div`
+const Overlay = styled.div<{ $isOpen?: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
@@ -80,6 +81,17 @@ const Dialog = styled.div`
   max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+
+  transform: translateY(-50px);
+  opacity: 0;
+  animation: slideDown 0.3s forwards;
+
+  @keyframes slideDown {
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 `;
 
 const Content = styled.div`
@@ -106,19 +118,9 @@ const Footer = styled.div`
   gap: 12px;
   padding: 1rem;
   border: none;
-`;
 
-const DefaultButton = styled.button`
-  background-color: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.6rem 1.5rem;
-  cursor: pointer;
-  transition: 0.2s ease;
-
-  &:hover {
-    background-color: #6662d6;
+  button {
+    width: 100%;
   }
 `;
 
