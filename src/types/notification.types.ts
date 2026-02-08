@@ -1,10 +1,12 @@
 export interface PropertyDetail {
-  id?: number;
-  registName?: string;
-  address?: string;
-  buildingType?: string;
-  commUniqueNo?: number;
-  expireDate?: string;
+  commAddrLotNumber: string;
+  commUniqueNo: string;
+  expiredDate: string;
+  id: number;
+  registDate: string;
+  resType: string;
+  title: string;
+  userId: number;
 }
 
 export interface RegistryChanged {

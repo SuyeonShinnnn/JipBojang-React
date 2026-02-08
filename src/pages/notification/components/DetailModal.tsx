@@ -19,10 +19,10 @@ const DetailModal: React.FC<DetailModalProps> = ({
   propertyDetail,
 }) => {
   const infoMap = {
-    address: '주소',
-    buildingType: '구분',
+    commAddrLotNumber: '주소',
+    resType: '구분',
     commUniqueNo: '고유번호',
-    expireDate: '만료일',
+    expiredDate: '만료일',
   };
 
   const [changedInfo, setChangedInfo] = useState<RegistryChanged[]>([]);
@@ -31,8 +31,11 @@ const DetailModal: React.FC<DetailModalProps> = ({
     if (!isOpen || !propertyDetail?.commUniqueNo) return;
 
     const fetchData = async () => {
-      const data = await getRegistryChanged(propertyDetail?.commUniqueNo);
-      setChangedInfo(data.changed_list);
+      const data = await getRegistryChanged(
+        Number(propertyDetail?.userId),
+        Number(propertyDetail?.commUniqueNo),
+      );
+      setChangedInfo(data);
     };
     fetchData();
   }, [isOpen, propertyDetail?.commUniqueNo]);
@@ -41,7 +44,7 @@ const DetailModal: React.FC<DetailModalProps> = ({
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
-      header={<h2>📍{propertyDetail?.registName}</h2>}
+      header={<h2>📍{propertyDetail?.title}</h2>}
     >
       <InfoSection>
         <h3>정보</h3>
