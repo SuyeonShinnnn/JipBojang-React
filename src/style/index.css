@@ -20,10 +20,6 @@ body {
   font-family: 'pretendard';
 }
 
-main {
-  padding-top: 5rem;
-}
-
 a {
   color: #595959 !important;
   text-decoration: none !important;
