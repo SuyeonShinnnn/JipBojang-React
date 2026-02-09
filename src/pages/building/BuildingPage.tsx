@@ -7,7 +7,13 @@ const BuildingPage = () => {
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
 
   const [places, setPlaces] = useState<
-    { lat: number; lng: number; name: string }[]
+    {
+      lat: number;
+      lng: number;
+      name: string;
+      address: string;
+      roadAddress: string;
+    }[]
   >([]);
 
   const handleSearch = (keyword: string) => {
@@ -21,6 +27,8 @@ const BuildingPage = () => {
         lat: Number(place.y),
         lng: Number(place.x),
         name: place.place_name,
+        address: place.address_name,
+        roadAddress: place.road_address_name,
       }));
 
       setPlaces(results);
@@ -31,7 +39,7 @@ const BuildingPage = () => {
   return (
     <>
       <SideBar>
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} places={places} />
       </SideBar>
       <Container>
         <Map

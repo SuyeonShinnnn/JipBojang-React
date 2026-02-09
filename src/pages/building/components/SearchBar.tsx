@@ -1,10 +1,21 @@
 import { useState } from 'react';
 import BaseInput from '../../../components/common/BaseInput';
+import styled from 'styled-components';
+
+interface Place {
+  lat: number;
+  lng: number;
+  name: string;
+  address: string;
+  roadAddress: string;
+}
 
 interface SearchBarProps {
+  places: Place[];
   onSearch: (keyword: string) => void;
 }
-const SearchBar = ({ onSearch }: SearchBarProps) => {
+
+const SearchBar = ({ onSearch, places }: SearchBarProps) => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,8 +34,33 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
           onChange={(e) => setSearchKeyword(e.target.value)}
         />
       </form>
+      <section>
+        <ul>
+          {places.map((item, key) => (
+            <List key={key}>
+              <Title>{item.name}</Title>
+              <span>{item.address}</span>
+              <span>{item.roadAddress}</span>
+            </List>
+          ))}
+        </ul>
+      </section>
     </>
   );
 };
 
 export default SearchBar;
+
+const List = styled.li`
+  padding: 1rem;
+
+  &:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+  }
+`;
+
+const Title = styled.h3`
+  font-size: 1.2rem;
+  font-weight: 600;
+`;
