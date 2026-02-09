@@ -55,7 +55,7 @@ const Container = styled.div`
 
 const SideBar = styled.aside`
   background-color: white;
-  width: 25%;
+  width: 360px;
   height: 100vh;
   padding: 6rem 12px 0 12px;
 
