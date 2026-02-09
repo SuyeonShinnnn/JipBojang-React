@@ -5,9 +5,11 @@ import { useState } from 'react';
 
 const BuildingPage = () => {
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
-  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(
-    null,
-  );
+
+  const [places, setPlaces] = useState<
+    { lat: number; lng: number; name: string }[]
+  >([]);
+
   const handleSearch = (keyword: string) => {
     if (!map) return;
     const ps = new kakao.maps.services.Places();
@@ -15,13 +17,14 @@ const BuildingPage = () => {
     ps.keywordSearch(keyword, (data, status) => {
       if (status !== kakao.maps.services.Status.OK) return;
 
-      const firstPlace = data[0];
-      const lat = Number(firstPlace.y);
-      const lng = Number(firstPlace.x);
+      const results = data.map((place) => ({
+        lat: Number(place.y),
+        lng: Number(place.x),
+        name: place.place_name,
+      }));
 
-      setPosition({ lat, lng });
-      map.setCenter(new kakao.maps.LatLng(lat, lng));
-      map.setLevel(3);
+      setPlaces(results);
+      map.panTo(new kakao.maps.LatLng(results[0].lat, results[0].lng));
     });
   };
 
@@ -37,7 +40,13 @@ const BuildingPage = () => {
           level={3}
           onCreate={setMap}
         >
-          {position && <MapMarker position={position} />}
+          {places.map((place, idx) => (
+            <MapMarker
+              key={idx}
+              position={{ lat: place.lat, lng: place.lng }}
+              title={place.name}
+            />
+          ))}
         </Map>
       </Container>
     </>
