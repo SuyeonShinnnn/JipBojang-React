@@ -13,6 +13,7 @@ const BuildingPage = () => {
       name: string;
       address: string;
       roadAddress: string;
+      category: string;
     }[]
   >([]);
 
@@ -29,6 +30,7 @@ const BuildingPage = () => {
         name: place.place_name,
         address: place.address_name,
         roadAddress: place.road_address_name,
+        category: place.category_name,
       }));
 
       setPlaces(results);

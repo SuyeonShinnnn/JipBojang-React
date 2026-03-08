@@ -8,6 +8,7 @@ interface Place {
   name: string;
   address: string;
   roadAddress: string;
+  category: string;
 }
 
 interface SearchBarProps {
@@ -24,6 +25,13 @@ const SearchBar = ({ onSearch, places }: SearchBarProps) => {
     onSearch(searchKeyword);
   };
 
+  const houseLabel = (categoryName: string) => {
+    if (!categoryName) return '';
+    if (categoryName.includes('아파트')) return '아파트';
+    if (categoryName.includes('빌라')) return '빌라';
+    return '';
+  };
+
   return (
     <Aside hasResult={places.length > 0}>
       <form onSubmit={handleSubmit}>
@@ -34,17 +42,19 @@ const SearchBar = ({ onSearch, places }: SearchBarProps) => {
           onChange={(e) => setSearchKeyword(e.target.value)}
         />
       </form>
-      <section>
+      <ResultSection>
         <ul>
           {places.map((item, key) => (
             <List key={key}>
-              <Title>{item.name}</Title>
-              <span>{item.address}</span>
-              <span>{item.roadAddress}</span>
+              <TitleWrapper>
+                <span>{item.name}</span>
+                <small>{houseLabel(item.category)}</small>
+              </TitleWrapper>
+              <Address>{item.address}</Address>
             </List>
           ))}
         </ul>
-      </section>
+      </ResultSection>
     </Aside>
   );
 };
@@ -64,11 +74,22 @@ const Aside = styled.aside<{ hasResult: boolean }>`
   z-index: 1000;
   overflow: hidden;
 
+  display: flex;
+  flex-direction: column;
+
   transition: height 0.5s ease;
+`;
+
+const ResultSection = styled.section`
+  flex: 1;
+  overflow-y: auto;
 `;
 
 const List = styled.li`
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 
   &:hover {
     background-color: #f5f5f5;
@@ -76,7 +97,21 @@ const List = styled.li`
   }
 `;
 
-const Title = styled.h3`
-  font-size: 1.2rem;
-  font-weight: 600;
+const TitleWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: end;
+
+  span {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  small {
+    color: var(--color-darkgray);
+  }
+`;
+
+const Address = styled.span`
+  color: var(--color-darkgray);
 `;
