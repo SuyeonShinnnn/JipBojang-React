@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import SearchBar from './components/SearchBar';
 import { useState } from 'react';
+import type { Place } from '../../types/building';
 
 const BuildingPage = () => {
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
@@ -38,9 +39,17 @@ const BuildingPage = () => {
     });
   };
 
+  const handleSelected = (value: Place) => {
+    console.log(value);
+  };
+
   return (
     <>
-      <SearchBar onSearch={handleSearch} places={places} />
+      <SearchBar
+        onSearch={handleSearch}
+        places={places}
+        onSelect={handleSelected}
+      />
 
       <Container>
         <Map

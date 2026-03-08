@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { searchAddress } from '../../../apis/notiApi';
 import { DotLoader } from 'react-spinners';
 import { useState } from 'react';
-import type { AddressInfo } from '../types/notification';
+import type { AddressInfo } from '../../../types/notification';
 import type { PropertyDetail } from '../../../types/notification.types';
 
 interface AddressSectionProps {

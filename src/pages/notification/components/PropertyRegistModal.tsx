@@ -3,7 +3,7 @@ import BaseModal from '../../../components/common/BaseModal';
 import BaseButton from '../../../components/common/BaseButton';
 import AddressSection from './AddressSection';
 import PeriodSection from './PeriodSection';
-import type { AddressInfo } from '../types/notification';
+import type { AddressInfo } from '../../../types/notification';
 import CheckSection from './CheckSection';
 
 interface PropertyRegistModalProps {
