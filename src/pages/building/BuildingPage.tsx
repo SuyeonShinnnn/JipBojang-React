@@ -38,9 +38,8 @@ const BuildingPage = () => {
 
   return (
     <>
-      <SideBar>
-        <SearchBar onSearch={handleSearch} places={places} />
-      </SideBar>
+      <SearchBar onSearch={handleSearch} places={places} />
+
       <Container>
         <Map
           center={{ lat: 33.450701, lng: 126.570667 }}
@@ -68,15 +67,4 @@ const Container = styled.div`
     width: 100%;
     height: 100vh;
   }
-`;
-
-const SideBar = styled.aside`
-  background-color: white;
-  width: 360px;
-  height: 100vh;
-  padding: 6rem 12px 0 12px;
-
-  position: absolute;
-  z-index: 1000;
-  overflow: hidden;
 `;

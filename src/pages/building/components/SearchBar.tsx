@@ -25,7 +25,7 @@ const SearchBar = ({ onSearch, places }: SearchBarProps) => {
   };
 
   return (
-    <>
+    <Aside hasResult={places.length > 0}>
       <form onSubmit={handleSubmit}>
         <BaseInput
           showButton={true}
@@ -45,11 +45,27 @@ const SearchBar = ({ onSearch, places }: SearchBarProps) => {
           ))}
         </ul>
       </section>
-    </>
+    </Aside>
   );
 };
 
 export default SearchBar;
+
+const Aside = styled.aside<{ hasResult: boolean }>`
+  background-color: white;
+  box-shadow: 5px 5px 20px var(--color-darkgray);
+  width: 400px;
+  border-radius: 12px;
+  margin: 5.5rem 0 0 12px;
+  padding: 1rem;
+  height: ${(props) => (props.hasResult ? '85vh' : '80px')};
+
+  position: absolute;
+  z-index: 1000;
+  overflow: hidden;
+
+  transition: height 0.5s ease;
+`;
 
 const List = styled.li`
   padding: 1rem;
