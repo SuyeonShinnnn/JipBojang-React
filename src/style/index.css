@@ -40,3 +40,23 @@ li {
   margin: 0;
   padding: 0;
 }
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* 스크롤바 배경 */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 움직이는 막대 */
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+/* hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
