@@ -15,7 +15,7 @@ interface BuildingInfoBarProps {
 
 interface Deposit {
   buildingCount: number;
-  averageRate: number;
+  averageJeonseRate: number;
 }
 
 interface BasicInfo {
@@ -36,14 +36,28 @@ const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
   const [clicked, setClicked] = useState<boolean>(false);
   const [depostiInfo, setDepositInfo] = useState<Deposit | null>(null);
   const [basicInfo, setBasicInfo] = useState<BasicInfo | null>(null);
+  const infoList = basicInfo
+    ? [
+        { label: '사용승인일', value: dateFormat(basicInfo.useAprDay) },
+        { label: '세대수', value: `${basicInfo.hhldCnt}세대` },
+        { label: '승강기수', value: `${basicInfo.rideUseElvtCnt}개` },
+        { label: '지상층수', value: `${basicInfo.grndFlrCnt}층` },
+        { label: '지하층수', value: `${basicInfo.ugrndFlrCnt}층` },
+        { label: '건축면적', value: `${Math.floor(basicInfo.archArea)}㎡` },
+        { label: '연면적', value: `${Math.floor(basicInfo.totArea)}㎡` },
+        { label: '대지면적', value: `${Math.floor(basicInfo.platArea)}㎡` },
+        { label: '건폐율', value: `${basicInfo.bcRat}%` },
+        { label: '용적률', value: `${basicInfo.vlRat}%` },
+      ]
+    : [];
 
   useEffect(() => {
     const fetchData = async () => {
       const deposit = await getDepositInfo(selectedPlace.address);
       const basic = await getBasicInfo(selectedPlace.address);
 
-      console.log(deposit);
-      console.log(basic);
+      if (!deposit.averageJeonseRate) deposit.averageJeonseRate = 0;
+
       setDepositInfo(deposit);
       setBasicInfo(basic);
     };
@@ -76,12 +90,14 @@ const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
           <span>{selectedPlace.category}</span>
         </TextIconWrapper>
         <Line />
-        <h4>적정 보증금</h4>
-        <p>
-          <span>{parseAddress(selectedPlace.address)}</span> 주변
-          <span> {depostiInfo?.buildingCount}</span>채 건물의 평균 전세가율은
-          <span> {depostiInfo?.averageRate}%</span>입니다.
-        </p>
+        <DepositWrapper>
+          <h4>적정 보증금</h4>
+          <p>
+            <span>{parseAddress(selectedPlace.address)}</span> 주변
+            <span> {depostiInfo?.buildingCount}</span>채 건물의 평균 전세가율은
+            <span> {depostiInfo?.averageJeonseRate}%</span>입니다.
+          </p>
+        </DepositWrapper>
       </BuildingInfoBox>
       <BannerBox>
         <img src={bannnerImg} />
@@ -89,46 +105,12 @@ const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
       <GridWrapper>
         <h4>기본 정보</h4>
         <Grid>
-          <div>
-            <span>사용승인일</span>
-            <span>{dateFormat(basicInfo?.useAprDay)}</span>
-          </div>
-          <div>
-            <span>세대수</span>
-            <span>{basicInfo?.hhldCnt}세대</span>
-          </div>
-          <div>
-            <span>승강기수</span>
-            <span>{basicInfo?.rideUseElvtCnt}개</span>
-          </div>
-          <div>
-            <span>지상층수</span>
-            <span>{basicInfo?.grndFlrCnt}층</span>
-          </div>
-          <div>
-            <span>지하층수</span>
-            <span>{basicInfo?.ugrndFlrCnt}층</span>
-          </div>
-          <div>
-            <span>건축면적</span>
-            <span>{basicInfo?.archArea}㎡</span>
-          </div>
-          <div>
-            <span>연면적</span>
-            <span>{basicInfo?.totArea}㎡</span>
-          </div>
-          <div>
-            <span>대지면적</span>
-            <span>{basicInfo?.platArea}㎡</span>
-          </div>
-          <div>
-            <span>건폐율</span>
-            <span>{basicInfo?.bcRat}%</span>
-          </div>
-          <div>
-            <span>용적률</span>
-            <span>{basicInfo?.vlRat}%</span>
-          </div>
+          {infoList.map((item, index) => (
+            <div key={index}>
+              <InfoTitle>{item.label}</InfoTitle>
+              <Info>{item.value}</Info>
+            </div>
+          ))}
         </Grid>
       </GridWrapper>
     </Container>
@@ -196,6 +178,20 @@ const Line = styled.hr`
   margin-top: 12px;
 `;
 
+const DepositWrapper = styled.div`
+  display: grid;
+  gap: 4px;
+
+  h4 {
+    font-size: 20px;
+  }
+
+  span {
+    color: var(--color-primary);
+    font-weight: bold;
+  }
+`;
+
 const BannerBox = styled.div`
   width: 100%;
   img {
@@ -207,9 +203,13 @@ const BannerBox = styled.div`
 
 const GridWrapper = styled.div`
   display: grid;
-  gap: 12px;
+  gap: 16px;
   text-align: center;
-  padding: 16px 0;
+  padding: 16px 8px;
+
+  h4 {
+    font-size: 20px;
+  }
 `;
 
 const Grid = styled.div`
@@ -217,10 +217,19 @@ const Grid = styled.div`
   text-align: center;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(4, auto);
-  gap: 16px;
+  column-gap: 8px;
+  row-gap: 28px;
 
   div {
     display: flex;
     flex-direction: column;
   }
+`;
+
+const InfoTitle = styled.span`
+  font-weight: 600;
+`;
+
+const Info = styled.span`
+  color: var(--color-darkgray);
 `;
