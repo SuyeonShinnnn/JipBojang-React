@@ -53,7 +53,12 @@ const BuildingPage = () => {
         onSelect={handleSelected}
       />
 
-      {selected && <BuildingInfoBar selectedPlace={selected} />}
+      {selected && (
+        <BuildingInfoBar
+          selectedPlace={selected}
+          onClose={() => setSelected(null)}
+        />
+      )}
 
       <Container>
         <Map

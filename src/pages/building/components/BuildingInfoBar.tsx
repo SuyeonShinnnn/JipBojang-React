@@ -5,6 +5,7 @@ import { IoIosArrowDown } from 'react-icons/io';
 import { IoIosArrowUp } from 'react-icons/io';
 import { LuMapPin } from 'react-icons/lu';
 import { LiaTagsSolid } from 'react-icons/lia';
+import { IoClose } from 'react-icons/io5';
 import { useEffect, useState } from 'react';
 import bannnerImg from '../../../assets/building/banner.png';
 import apartmentImg from '../../../assets/building/apartment.jpg';
@@ -14,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface BuildingInfoBarProps {
   selectedPlace: Place;
+  onClose: () => void;
 }
 
 interface Deposit {
@@ -35,7 +37,7 @@ interface BasicInfo {
   rideUseElvtCnt: number;
 }
 
-const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
+const BuildingInfoBar = ({ selectedPlace, onClose }: BuildingInfoBarProps) => {
   const navigate = useNavigate();
   const [clicked, setClicked] = useState<boolean>(false);
   const [depostiInfo, setDepositInfo] = useState<Deposit | null>(null);
@@ -79,25 +81,37 @@ const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
 
   return (
     <Container>
+      <CloseButton onClick={onClose}>
+        <IoClose />
+      </CloseButton>
+
       <ImgBox>
         <img src={imgUrl} />
       </ImgBox>
       <BuildingInfoBox>
+        {/* 주소 이름 */}
         <TitleWrapper>
           <h3>{selectedPlace.name}</h3>
           <small>{houseLabel(selectedPlace.category)}</small>
         </TitleWrapper>
+
+        {/* 주소 */}
         <TextIconWrapper>
           <LuMapPin />
           <span>{selectedPlace.address}</span>
           {!clicked && <IoIosArrowDown onClick={() => setClicked(!clicked)} />}
           {clicked && <IoIosArrowUp onClick={() => setClicked(!clicked)} />}
         </TextIconWrapper>
+
+        {/* 카테고리 */}
         <TextIconWrapper>
           <LiaTagsSolid />
           <span>{selectedPlace.category}</span>
         </TextIconWrapper>
+
         <Line />
+
+        {/* 적정 보증금 */}
         <DepositWrapper>
           <h4>적정 보증금</h4>
           <p>
@@ -107,9 +121,13 @@ const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
           </p>
         </DepositWrapper>
       </BuildingInfoBox>
+
+      {/* 배너 */}
       <BannerBox onClick={() => navigate('/report')}>
         <img src={bannnerImg} />
       </BannerBox>
+
+      {/* 건물 기본 정보 */}
       <GridWrapper>
         <h4>기본 정보</h4>
         <Grid>
@@ -138,6 +156,19 @@ const Container = styled.aside`
   position: absolute;
   z-index: 1000;
   overflow: auto;
+`;
+
+const CloseButton = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  z-index: 10;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.5;
+  }
 `;
 
 const ImgBox = styled.div`
