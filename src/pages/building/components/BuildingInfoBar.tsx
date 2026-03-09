@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import type { Place } from '../../../types/building';
 import { dateFormat, houseLabel } from '../../../utils/BuildingUtils';
 import { IoIosArrowDown } from 'react-icons/io';
@@ -145,6 +145,17 @@ const BuildingInfoBar = ({ selectedPlace, onClose }: BuildingInfoBarProps) => {
 
 export default BuildingInfoBar;
 
+const slideIn = keyframes`
+    from{
+        transform: translateX(-50%);
+        opacity: 0;
+    }
+    to{
+        transform: translate(0);
+        opacity: 1;
+    }
+`;
+
 const Container = styled.aside`
   background-color: white;
   box-shadow: 5px 5px 20px var(--color-darkgray);
@@ -154,8 +165,10 @@ const Container = styled.aside`
   height: 85vh;
 
   position: absolute;
-  z-index: 1000;
+  z-index: 900;
   overflow: auto;
+
+  animation: ${slideIn} 0.45s ease-out;
 `;
 
 const CloseButton = styled.div`
