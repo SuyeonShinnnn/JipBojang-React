@@ -5,21 +5,55 @@ import { IoIosArrowDown } from 'react-icons/io';
 import { IoIosArrowUp } from 'react-icons/io';
 import { LuMapPin } from 'react-icons/lu';
 import { LiaTagsSolid } from 'react-icons/lia';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import bannnerImg from '../../../assets/building/banner.png';
+import { getBasicInfo, getDepositInfo } from '../../../apis/buildingApi';
 
 interface BuildingInfoBarProps {
   selectedPlace: Place;
 }
 
+interface Deposit {
+  buildingCount: number;
+  averageRate: number;
+}
+
+interface BasicInfo {
+  useAprDay: string;
+  hhldCnt: number;
+  grndFlrCnt: number;
+  ugrndFlrCnt: number;
+  newPlatPlc: string;
+  totArea: number;
+  platArea: number;
+  bcRat: number;
+  vlRat: number;
+  archArea: number;
+  rideUseElvtCnt: number;
+}
+
 const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
   const [clicked, setClicked] = useState<boolean>(false);
-  //   const [depostiInfo, setDepositInfo] = useState();
-  //   useState(() => {
-  //     const fetchDepositInfo = async() => {
-  //         const res = await
-  //     }
-  //   });
+  const [depostiInfo, setDepositInfo] = useState<Deposit | null>(null);
+  const [basicInfo, setBasicInfo] = useState<BasicInfo | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const deposit = await getDepositInfo(selectedPlace.address);
+      const basic = await getBasicInfo(selectedPlace.address);
+
+      console.log(deposit);
+      console.log(basic);
+      setDepositInfo(deposit);
+      setBasicInfo(basic);
+    };
+
+    fetchData();
+  }, [selectedPlace.address]);
+
+  const parseAddress = (address: string) => {
+    return address.split(' ')[2];
+  };
 
   return (
     <Container>
@@ -44,8 +78,9 @@ const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
         <Line />
         <h4>적정 보증금</h4>
         <p>
-          <span>화곡동</span> 주변 <span>19채</span> 건물의 평균 전세가율은
-          <span> 68.78%</span>입니다.
+          <span>{parseAddress(selectedPlace.address)}</span> 주변
+          <span> {depostiInfo?.buildingCount}</span>채 건물의 평균 전세가율은
+          <span> {depostiInfo?.averageRate}%</span>입니다.
         </p>
       </BuildingInfoBox>
       <BannerBox>
@@ -56,52 +91,43 @@ const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
         <Grid>
           <div>
             <span>사용승인일</span>
-            <span>사용승인일</span>
+            <span>{basicInfo?.useAprDay}</span>
           </div>
           <div>
-            {' '}
             <span>세대수</span>
-            <span>사용승인일</span>
+            <span>{basicInfo?.hhldCnt}</span>
           </div>
           <div>
-            {' '}
             <span>승강기수</span>
-            <span>사용승인일</span>
+            <span>{basicInfo?.rideUseElvtCnt}</span>
           </div>
           <div>
-            {' '}
             <span>지상층수</span>
-            <span>사용승인일</span>
+            <span>{basicInfo?.grndFlrCnt}</span>
           </div>
           <div>
-            {' '}
             <span>지하층수</span>
-            <span>사용승인일</span>
+            <span>{basicInfo?.ugrndFlrCnt}</span>
           </div>
           <div>
-            {' '}
             <span>건축면적</span>
-            <span>사용승인일</span>
+            <span>{basicInfo?.archArea}</span>
           </div>
           <div>
-            {' '}
             <span>연면적</span>
-            <span>사용승인일</span>
+            <span>{basicInfo?.totArea}</span>
           </div>
           <div>
-            {' '}
             <span>대지면적</span>
-            <span>사용승인일</span>
+            <span>{basicInfo?.platArea}</span>
           </div>
           <div>
-            {' '}
             <span>건폐율</span>
-            <span>사용승인일</span>
+            <span>{basicInfo?.bcRat}</span>
           </div>
           <div>
-            {' '}
             <span>용적률</span>
-            <span>사용승인일</span>
+            <span>{basicInfo?.vlRat}</span>
           </div>
         </Grid>
       </GridWrapper>

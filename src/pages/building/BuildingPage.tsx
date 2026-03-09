@@ -43,7 +43,6 @@ const BuildingPage = () => {
 
   const handleSelected = (value: Place) => {
     setSelected(value);
-    console.log(value);
   };
 
   return (
