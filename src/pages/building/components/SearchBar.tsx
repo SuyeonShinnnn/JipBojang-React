@@ -35,7 +35,6 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
             <List key={key} onClick={() => onSelect(item)}>
               <TitleWrapper>
                 <span>{item.name}</span>
-                <small>{houseLabel(item.category)}</small>
               </TitleWrapper>
               <Address>{item.address}</Address>
             </List>
@@ -51,7 +50,7 @@ export default SearchBar;
 const Aside = styled.aside<{ hasResult: boolean }>`
   background-color: white;
   box-shadow: 5px 5px 20px var(--color-darkgray);
-  width: 400px;
+  width: 360px;
   border-radius: 12px;
   margin: 5.5rem 0 0 12px;
   padding: 1rem;
@@ -93,9 +92,6 @@ const TitleWrapper = styled.div`
     font-size: 1.1rem;
     font-weight: 500;
     color: var(--text-primary);
-  }
-  small {
-    color: var(--color-darkgray);
   }
 `;
 
