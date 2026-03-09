@@ -124,7 +124,7 @@ const Container = styled.aside`
   box-shadow: 5px 5px 20px var(--color-darkgray);
   width: 400px;
   border-radius: 12px;
-  margin: 5.5rem 0 0 27rem;
+  margin: 5.5rem 0 0 24rem;
   height: 85vh;
 
   position: absolute;
