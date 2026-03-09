@@ -2,6 +2,7 @@ import { useState } from 'react';
 import BaseInput from '../../../components/common/BaseInput';
 import styled from 'styled-components';
 import type { Place } from '../../../types/building';
+import { houseLabel } from '../../../utils/BuildingUtils';
 
 interface SearchBarProps {
   places: Place[];
@@ -16,13 +17,6 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
 
     if (!searchKeyword.trim()) return;
     onSearch(searchKeyword);
-  };
-
-  const houseLabel = (categoryName: string) => {
-    if (!categoryName) return '';
-    if (categoryName.includes('아파트')) return '아파트';
-    if (categoryName.includes('빌라')) return '빌라';
-    return '';
   };
 
   return (
