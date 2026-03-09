@@ -7,6 +7,8 @@ import { LuMapPin } from 'react-icons/lu';
 import { LiaTagsSolid } from 'react-icons/lia';
 import { useEffect, useState } from 'react';
 import bannnerImg from '../../../assets/building/banner.png';
+import apartmentImg from '../../../assets/building/apartment.jpg';
+import villaImg from '../../../assets/building/villa.jpg';
 import { getBasicInfo, getDepositInfo } from '../../../apis/buildingApi';
 
 interface BuildingInfoBarProps {
@@ -51,6 +53,10 @@ const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
       ]
     : [];
 
+  const imgUrl = selectedPlace.category.includes('아파트')
+    ? apartmentImg
+    : villaImg;
+
   useEffect(() => {
     const fetchData = async () => {
       const deposit = await getDepositInfo(selectedPlace.address);
@@ -72,7 +78,7 @@ const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
   return (
     <Container>
       <ImgBox>
-        <img />
+        <img src={imgUrl} />
       </ImgBox>
       <BuildingInfoBox>
         <TitleWrapper>
@@ -133,9 +139,14 @@ const Container = styled.aside`
 `;
 
 const ImgBox = styled.div`
-  background-color: aliceblue;
   width: 100%;
   height: 240px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 const BuildingInfoBox = styled.section`
