@@ -3,8 +3,10 @@ import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import SearchBar from './components/SearchBar';
 import { useState } from 'react';
 import type { Place } from '../../types/building';
+import BuildingInfoBar from './components/BuildingInfoBar';
 
 const BuildingPage = () => {
+  const [selected, setSelected] = useState<Place | null>(null);
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
 
   const [places, setPlaces] = useState<
@@ -40,6 +42,7 @@ const BuildingPage = () => {
   };
 
   const handleSelected = (value: Place) => {
+    setSelected(value);
     console.log(value);
   };
 
@@ -50,6 +53,8 @@ const BuildingPage = () => {
         places={places}
         onSelect={handleSelected}
       />
+
+      {selected && <BuildingInfoBar selectedPlace={selected} />}
 
       <Container>
         <Map
