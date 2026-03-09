@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import type { Place } from '../../../types/building';
-import { houseLabel } from '../../../utils/BuildingUtils';
+import { dateFormat, houseLabel } from '../../../utils/BuildingUtils';
 import { IoIosArrowDown } from 'react-icons/io';
 import { IoIosArrowUp } from 'react-icons/io';
 import { LuMapPin } from 'react-icons/lu';
@@ -91,43 +91,43 @@ const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
         <Grid>
           <div>
             <span>사용승인일</span>
-            <span>{basicInfo?.useAprDay}</span>
+            <span>{dateFormat(basicInfo?.useAprDay)}</span>
           </div>
           <div>
             <span>세대수</span>
-            <span>{basicInfo?.hhldCnt}</span>
+            <span>{basicInfo?.hhldCnt}세대</span>
           </div>
           <div>
             <span>승강기수</span>
-            <span>{basicInfo?.rideUseElvtCnt}</span>
+            <span>{basicInfo?.rideUseElvtCnt}개</span>
           </div>
           <div>
             <span>지상층수</span>
-            <span>{basicInfo?.grndFlrCnt}</span>
+            <span>{basicInfo?.grndFlrCnt}층</span>
           </div>
           <div>
             <span>지하층수</span>
-            <span>{basicInfo?.ugrndFlrCnt}</span>
+            <span>{basicInfo?.ugrndFlrCnt}층</span>
           </div>
           <div>
             <span>건축면적</span>
-            <span>{basicInfo?.archArea}</span>
+            <span>{basicInfo?.archArea}㎡</span>
           </div>
           <div>
             <span>연면적</span>
-            <span>{basicInfo?.totArea}</span>
+            <span>{basicInfo?.totArea}㎡</span>
           </div>
           <div>
             <span>대지면적</span>
-            <span>{basicInfo?.platArea}</span>
+            <span>{basicInfo?.platArea}㎡</span>
           </div>
           <div>
             <span>건폐율</span>
-            <span>{basicInfo?.bcRat}</span>
+            <span>{basicInfo?.bcRat}%</span>
           </div>
           <div>
             <span>용적률</span>
-            <span>{basicInfo?.vlRat}</span>
+            <span>{basicInfo?.vlRat}%</span>
           </div>
         </Grid>
       </GridWrapper>
