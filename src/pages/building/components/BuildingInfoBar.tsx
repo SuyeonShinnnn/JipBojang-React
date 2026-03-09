@@ -10,6 +10,7 @@ import bannnerImg from '../../../assets/building/banner.png';
 import apartmentImg from '../../../assets/building/apartment.jpg';
 import villaImg from '../../../assets/building/villa.jpg';
 import { getBasicInfo, getDepositInfo } from '../../../apis/buildingApi';
+import { useNavigate } from 'react-router-dom';
 
 interface BuildingInfoBarProps {
   selectedPlace: Place;
@@ -35,6 +36,7 @@ interface BasicInfo {
 }
 
 const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
+  const navigate = useNavigate();
   const [clicked, setClicked] = useState<boolean>(false);
   const [depostiInfo, setDepositInfo] = useState<Deposit | null>(null);
   const [basicInfo, setBasicInfo] = useState<BasicInfo | null>(null);
@@ -105,7 +107,7 @@ const BuildingInfoBar = ({ selectedPlace }: BuildingInfoBarProps) => {
           </p>
         </DepositWrapper>
       </BuildingInfoBox>
-      <BannerBox>
+      <BannerBox onClick={() => navigate('/report')}>
         <img src={bannnerImg} />
       </BannerBox>
       <GridWrapper>
@@ -209,6 +211,9 @@ const BannerBox = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  &:hover {
+    cursor: pointer;
   }
 `;
 
