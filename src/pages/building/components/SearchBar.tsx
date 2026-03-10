@@ -8,6 +8,8 @@ import {
   saveRecentSearch,
 } from '../../../utils/BuildingUtils';
 import { RiCloseLargeFill } from 'react-icons/ri';
+import { IoIosArrowBack } from 'react-icons/io';
+import { IoIosArrowForward } from 'react-icons/io';
 
 interface SearchBarProps {
   places: Place[];
@@ -19,20 +21,47 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
   const [recentSearch, setRecentSearch] = useState<string[]>([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const PAGE_SIZE = 15;
+  const PAGE_GROUP_SIZE = 3;
+
+  const startIndex = (page - 1) * PAGE_SIZE;
+  const currentPlaces = places.slice(startIndex, startIndex + PAGE_SIZE);
+
+  const totalPages = Math.ceil(places.length / PAGE_SIZE);
+
+  const currentGroup = Math.ceil(page / PAGE_GROUP_SIZE);
+  const startPage = (currentGroup - 1) * PAGE_GROUP_SIZE + 1;
+  const endPage = Math.min(startPage + PAGE_GROUP_SIZE - 1, totalPages);
+
+  const pageNumbers: number[] = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!searchKeyword.trim()) return;
+
     onSearch(searchKeyword);
+
     saveRecentSearch(searchKeyword);
-    setRecentSearch(getRecentSearch());
+
+    const updated = getRecentSearch().slice(0, 5);
+    setRecentSearch(updated);
+
     (e.target as HTMLFormElement).querySelector('input')?.blur();
   };
 
   useEffect(() => {
-    setRecentSearch(getRecentSearch());
+    setRecentSearch(getRecentSearch().slice(0, 5));
   }, []);
+
+  useEffect(() => {
+    setPage(1);
+  }, [places]);
 
   return (
     <>
@@ -50,7 +79,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
 
         <ResultSection>
           <ul>
-            {places.map((item, key) => (
+            {currentPlaces.map((item, key) => (
               <List key={key} onClick={() => onSelect(item)}>
                 <TitleWrapper>
                   <span>{item.name}</span>
@@ -59,11 +88,48 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
               </List>
             ))}
           </ul>
+
+          {totalPages > 1 && (
+            <Pagination>
+              {startPage > 1 && (
+                <IoIosArrowBack
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    setPage(startPage - 1);
+                  }}
+                />
+              )}
+
+              {pageNumbers.map((num) => (
+                <PageButton
+                  key={num}
+                  active={page === num}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    setPage(num);
+                  }}
+                >
+                  {num}
+                </PageButton>
+              ))}
+
+              {endPage < totalPages && (
+                <IoIosArrowForward
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    setPage(endPage + 1);
+                  }}
+                />
+              )}
+            </Pagination>
+          )}
         </ResultSection>
       </Aside>
+
       {isFocused && (
         <RecentSearchBox>
           <h5>최근 검색어</h5>
+
           {recentSearch.length !== 0 ? (
             recentSearch.map((item, key) => (
               <li
@@ -74,11 +140,14 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
                 }}
               >
                 {item}
+
                 <RiCloseLargeFill
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
+
                     removeRecentSearch(item);
+                    setRecentSearch(getRecentSearch().slice(0, 5));
                   }}
                 />
               </li>
@@ -131,6 +200,7 @@ const RecentSearchBox = styled.ul`
     margin-bottom: 12px;
     padding: 1rem 0 0 1rem;
   }
+
   li {
     display: flex;
     justify-content: space-between;
@@ -144,6 +214,33 @@ const RecentSearchBox = styled.ul`
       cursor: pointer;
       background-color: #f5f5f5;
     }
+  }
+`;
+
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+
+  svg {
+    color: var(--color-darkgray);
+    &:hover {
+      cursor: pointer;
+    }
+  }
+`;
+
+const PageButton = styled.button<{ active: boolean }>`
+  border: none;
+  background: ${({ active }) => (active ? '#eee' : 'transparent')};
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+
+  &:hover {
+    background: #f5f5f5;
   }
 `;
 
