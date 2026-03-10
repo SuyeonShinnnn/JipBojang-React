@@ -1,3 +1,9 @@
+export interface AddressInfo {
+  type: string;
+  address: string;
+  uniqueNo: string;
+}
+
 export interface PropertyDetail {
   commAddrLotNumber: string;
   commUniqueNo: string;

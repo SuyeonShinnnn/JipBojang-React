@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import PropertyCard from './components/PropertyCard';
 import { getRegistedPropertyInfo } from '../../apis/notiApi';
 import WarningCardSection from './components/WarningCardSection';
-import type { PropertyDetail } from '../../types/notification.types';
+import type { PropertyDetail } from '../../types/notification';
 import { useAuthStore } from '../../stores/auth';
 
 const NotiPage: React.FC = () => {

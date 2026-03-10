@@ -7,6 +7,8 @@
   --color-lightgray: #d9d9d9;
   --color-mediumgray: #b9b9b9;
   --color-darkgray: #595959;
+
+  --text-primary: #0d0b47;
 }
 
 * {
@@ -20,10 +22,6 @@ body {
   font-family: 'pretendard';
 }
 
-main {
-  padding-top: 5rem;
-}
-
 a {
   color: #595959 !important;
   text-decoration: none !important;
@@ -34,7 +32,8 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+p {
   margin: 0;
 }
 
@@ -43,4 +42,24 @@ li {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* 스크롤바 배경 */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 움직이는 막대 */
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+/* hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }

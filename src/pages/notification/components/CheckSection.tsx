@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import type { AddressInfo } from '../types/notification';
+import type { AddressInfo } from '../../../types/notification';
 import { BsInfoCircle } from 'react-icons/bs';
 import { HiOutlineBuildingOffice2 } from 'react-icons/hi2';
 import { MdNumbers } from 'react-icons/md';

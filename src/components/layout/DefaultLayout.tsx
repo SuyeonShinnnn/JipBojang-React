@@ -5,17 +5,20 @@ import NotiPage from '../../pages/notification/NotiPage';
 import NotFoundPage from '../../pages/NotFoundPage';
 import LoginPage from '../../pages/auth/LoginPage';
 import styled, { keyframes } from 'styled-components';
+import BuildingPage from '../../pages/building/BuildingPage';
 
 const DefaultLayout = () => {
   const location = useLocation();
+  const isBuildingPage = location.pathname === '/building';
 
   return (
-    <MainContent key={location.pathname}>
+    <MainContent key={location.pathname} $noPadding={isBuildingPage}>
       <Routes location={location}>
         <Route path="login" element={<LoginPage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/report" element={<ReportPage />} />
         <Route path="/notify" element={<NotiPage />} />
+        <Route path="/building" element={<BuildingPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </MainContent>
@@ -35,7 +38,7 @@ const fadeSlideIn = keyframes`
   }
 `;
 
-const MainContent = styled.main`
-  padding-top: 4.5rem;
+const MainContent = styled.main<{ $noPadding?: boolean }>`
+  padding-top: ${({ $noPadding }) => ($noPadding ? '0' : '4.5rem')};
   animation: ${fadeSlideIn} 0.35s ease-out both;
 `;

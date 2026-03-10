@@ -46,7 +46,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
 
           {rest.children}
           {showButton && (
-            <InputButton type="button" onClick={onButtonClick}>
+            <InputButton type="submit" onClick={onButtonClick}>
               <SearchIcon src={searchIcon} />
             </InputButton>
           )}
