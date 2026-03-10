@@ -7,10 +7,14 @@ import LoginPage from '../../pages/auth/LoginPage';
 import styled, { keyframes } from 'styled-components';
 import BuildingPage from '../../pages/building/BuildingPage';
 import chatbotIcon from '../../assets/chatbot/chatbot.png';
+import ChatbotBox from '../../pages/building/chatbot/ChatbotBox';
+import { useState } from 'react';
 
 const DefaultLayout = () => {
   const location = useLocation();
   const isBuildingPage = location.pathname === '/building';
+
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   return (
     <>
@@ -24,11 +28,13 @@ const DefaultLayout = () => {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </MainContent>
-      
-      <ChatbotButton>
+
+      <ChatbotButton onClick={() => setIsChatOpen(!isChatOpen)}>
         <Image src={chatbotIcon} />
         <span>챗봇</span>
       </ChatbotButton>
+
+      {isChatOpen && <ChatbotBox />}
     </>
   );
 };
