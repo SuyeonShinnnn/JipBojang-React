@@ -51,7 +51,7 @@ const Header: React.FC = () => {
   );
 };
 
-export default Header;
+export default React.memo(Header);
 
 const HeaderContainer = styled.header`
   background-color: white;

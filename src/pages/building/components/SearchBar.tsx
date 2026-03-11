@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BaseInput from '../../../components/common/BaseInput';
 import styled from 'styled-components';
 import type { Place } from '../../../types/building';
@@ -163,7 +163,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
   );
 };
 
-export default SearchBar;
+export default React.memo(SearchBar);
 
 const Aside = styled.aside<{ hasResult: boolean }>`
   background-color: white;
