@@ -86,7 +86,13 @@ const BuildingInfoBar = ({ selectedPlace, onClose }: BuildingInfoBarProps) => {
       </CloseButton>
 
       <ImgBox>
-        <img src={imgUrl} />
+        <img
+          src={imgUrl}
+          alt="건물 사진"
+          loading="lazy"
+          width={600}
+          height={400}
+        />
       </ImgBox>
       <BuildingInfoBox>
         {/* 주소 이름 */}
@@ -124,7 +130,13 @@ const BuildingInfoBar = ({ selectedPlace, onClose }: BuildingInfoBarProps) => {
 
       {/* 배너 */}
       <BannerBox onClick={() => navigate('/report')}>
-        <img src={bannnerImg} />
+        <img
+          src={bannnerImg}
+          alt="집보장 리포트 광고 배너"
+          loading="lazy"
+          width={400}
+          height={200}
+        />
       </BannerBox>
 
       {/* 건물 기본 정보 */}
@@ -190,7 +202,7 @@ const ImgBox = styled.div`
 
   img {
     width: 100%;
-    height: 100%;
+    height: auto;
     object-fit: cover;
   }
 `;
@@ -253,7 +265,7 @@ const BannerBox = styled.div`
   width: 100%;
   img {
     width: 100%;
-    height: 100%;
+    height: auto;
     object-fit: cover;
   }
   &:hover {
