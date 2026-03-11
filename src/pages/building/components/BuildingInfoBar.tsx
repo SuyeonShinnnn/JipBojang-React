@@ -63,8 +63,10 @@ const BuildingInfoBar = ({ selectedPlace, onClose }: BuildingInfoBarProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const deposit = await getDepositInfo(selectedPlace.address);
-      const basic = await getBasicInfo(selectedPlace.address);
+      const [deposit, basic] = await Promise.all([
+        getDepositInfo(selectedPlace.address),
+        getBasicInfo(selectedPlace.address),
+      ]);
 
       if (!deposit.averageJeonseRate) deposit.averageJeonseRate = 0;
 
