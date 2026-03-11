@@ -7,7 +7,7 @@ import LoginPage from '../../pages/auth/LoginPage';
 import styled, { keyframes } from 'styled-components';
 import BuildingPage from '../../pages/building/BuildingPage';
 import chatbotIcon from '../../assets/chatbot/chatbot.png';
-import ChatbotBox from '../../pages/building/chatbot/ChatbotBox';
+import ChatbotBox from '../../pages/chatbot/ChatbotBox';
 import { useState } from 'react';
 
 const DefaultLayout = () => {
