@@ -8,7 +8,7 @@ import PropertyRegistModal from './PropertyRegistModal';
 import DeleteModal from './DeleteModal';
 import ModifyModal from './ModifyModal';
 import DetailModal from './DetailModal';
-import type { PropertyDetail } from '../../../types/notification.types';
+import type { PropertyDetail } from '../../../types/notification';
 
 interface PropertyCardProps {
   propertyInfo?: PropertyDetail;

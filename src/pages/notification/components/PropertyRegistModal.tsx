@@ -29,10 +29,6 @@ const PropertyRegistModal: React.FC<PropertyRegistModalProps> = ({
     if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
   };
 
-  const closeClicked = () => {
-    onClose;
-  };
-
   const [selectedAddr, setSelectedAddr] = useState<AddressInfo | undefined>();
 
   const handleSelectedAddr = (address: AddressInfo) => {

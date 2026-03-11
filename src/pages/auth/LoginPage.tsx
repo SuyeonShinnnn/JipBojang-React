@@ -27,6 +27,8 @@ const LoginPage = () => {
       navigate('/');
     } catch (e: any) {
       setError(e.message || '로그인에 실패했습니다.');
+      setShowFindId(showFindId);
+      setShowFindPassword(showFindPassword);
     }
   };
 
@@ -223,17 +225,5 @@ const Separator = styled.div`
     background: #fff;
     font-size: 0.85rem;
     color: #777;
-  }
-`;
-
-const KakaoButton = styled.img`
-  margin: 0 auto;
-  display: block;
-  height: 45px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-
-  &:hover {
-    transform: scale(1.02);
   }
 `;
