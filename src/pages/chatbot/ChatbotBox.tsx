@@ -1,6 +1,7 @@
 import styled, { keyframes } from 'styled-components';
-import chatbotIcon from '../../../assets/chatbot/mini-chatbot.png';
-import sendIcon from '../../../assets/chatbot/send.png';
+import chatbotIcon from '../../assets/chatbot/mini-chatbot.png';
+import sendIcon from '../../assets/chatbot/send.png';
+import ChatBody from './components/ChatBody';
 
 const ChatbotBox = () => {
   return (
@@ -9,6 +10,9 @@ const ChatbotBox = () => {
         <img src={chatbotIcon} />
         <h5>집보장 챗봇</h5>
       </TitleContainer>
+
+      <ChatBody />
+
       <TextSendContainer>
         <Input type="text" placeholder="궁금한 내용을 입력해주세요." />
         <SendButton>
@@ -17,7 +21,6 @@ const ChatbotBox = () => {
           </div>
         </SendButton>
       </TextSendContainer>
-      <hr />
     </Container>
   );
 };
@@ -39,7 +42,7 @@ const Container = styled.div`
   right: 1.5rem;
   bottom: 7.8rem;
 
-  width: 300px;
+  width: 320px;
   height: 60vh;
   border-radius: 12px;
   box-shadow: 8px 8px 20px var(--color-mediumgray);
@@ -57,6 +60,7 @@ const TitleContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  border-bottom: 1px solid var(--color-lightgray);
 
   h5 {
     font-size: 16px;
@@ -76,7 +80,7 @@ const TextSendContainer = styled.div`
   gap: 4px;
   align-items: center;
 
-  width: 300px;
+  width: 320px;
   padding: 8px;
   border-top: 1px solid var(--color-lightgray);
 
