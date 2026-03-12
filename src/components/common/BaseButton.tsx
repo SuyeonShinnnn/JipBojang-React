@@ -91,6 +91,7 @@ const StyledButton = styled.button<{
       case 'secondary':
         return css`
           background-color: var(--color-secondary);
+          border: 1px solid var(--color-secondary);
           color: #000;
         `;
       case 'outline':
@@ -102,6 +103,7 @@ const StyledButton = styled.button<{
       case 'gray':
         return css`
           background-color: #838789;
+          border: 1px solid #838789;
           color: white;
         `;
       case 'options':
@@ -118,6 +120,7 @@ const StyledButton = styled.button<{
         return css`
           background-color: var(--color-primary);
           color: white;
+          border: 1px solid var(--color-primary);
         `;
     }
   }}
