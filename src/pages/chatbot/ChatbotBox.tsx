@@ -47,6 +47,9 @@ const Container = styled.div`
   border-radius: 12px;
   box-shadow: 8px 8px 20px var(--color-mediumgray);
 
+  display: flex;
+  flex-direction: column;
+
   animation: ${slideUp} 0.3s ease-out;
 
   hr {
@@ -83,6 +86,7 @@ const TextSendContainer = styled.div`
   width: 320px;
   padding: 8px;
   border-top: 1px solid var(--color-lightgray);
+  background-color: #fff;
 
   div {
     margin: 0;

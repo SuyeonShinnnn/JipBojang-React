@@ -12,5 +12,8 @@ const ChatBody = () => {
 export default ChatBody;
 
 const BodySection = styled.section`
+  flex: 1;
+  overflow-y: auto;
   padding: 12px;
+  padding-bottom: 4rem;
 `;
