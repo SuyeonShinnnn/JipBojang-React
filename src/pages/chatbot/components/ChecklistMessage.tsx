@@ -6,7 +6,7 @@ const ChecklistMessage = () => {
     <>
       {CHECK_LIST_ITEMS.map((section) => (
         <Section key={section.title}>
-          <Title>{section.title}</Title>
+          <ListTitle>{section.title}</ListTitle>
 
           {section.items.map((item) => (
             <Item key={item}>
@@ -26,7 +26,7 @@ const Section = styled.div`
   margin-bottom: 16px;
 `;
 
-const Title = styled.h4`
+const ListTitle = styled.h4`
   margin-bottom: 4px;
   font-size: 0.95rem;
 `;
