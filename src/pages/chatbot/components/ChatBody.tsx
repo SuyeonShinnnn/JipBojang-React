@@ -1,20 +1,28 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import BaseButton from '../../../components/common/BaseButton';
+
 import {
   QUICK_BUTTONS,
+  REAL_ESTATE_QUIZ_EXPERIENCE_OPTIONS,
   REAL_ESTATE_TERM_QUICK_BUTTONS,
 } from '../../../constants/chatbot/quickButtons';
+
 import {
   SERVICE_GUIDE_END,
   SERVICE_GUIDE_INTRO,
   SERVICE_GUIDE_ITEMS,
   REAL_ESTATE_INTRO,
+  REAL_ESTATE_QUIZ_INTRO,
+  CHECK_LIST_INTRO,
 } from '../../../constants/chatbot/chatbotMessages';
+
+import ChecklistMessage from './ChecklistMessage';
 
 type Message = {
   role: 'bot' | 'user';
   text?: string;
+  component?: React.ReactNode;
 };
 
 const ChatBody = () => {
@@ -36,12 +44,15 @@ const ChatBody = () => {
   const handleButtonClick = (index: number) => {
     setIsSelected(index);
 
+    const clicked = quickButtons[index];
+
     addMessage({
       role: 'user',
-      text: quickButtons[index],
+      text: clicked,
     });
 
-    if (quickButtons[index] === '서비스 이용방법') {
+    // 서비스 이용방법
+    if (clicked === '서비스 이용방법') {
       const botMessages: Message[] = [
         SERVICE_GUIDE_INTRO,
         ...SERVICE_GUIDE_ITEMS,
@@ -55,7 +66,8 @@ const ChatBody = () => {
       return;
     }
 
-    if (quickButtons[index] === '부동산 용어') {
+    // 부동산 용어
+    if (clicked === '부동산 용어') {
       addMessage({
         role: 'bot',
         text: REAL_ESTATE_INTRO,
@@ -66,11 +78,41 @@ const ChatBody = () => {
       return;
     }
 
-    if (REAL_ESTATE_TERM_QUICK_BUTTONS.includes(quickButtons[index])) {
+    // 용어 설명
+    if (REAL_ESTATE_TERM_QUICK_BUTTONS.includes(clicked)) {
       addMessage({
         role: 'bot',
-        text: `${quickButtons[index]}에 대한 설명입니다.`,
+        text: `${clicked}에 대한 설명입니다.`,
       });
+      return;
+    }
+
+    // 퀴즈
+    if (clicked === '부동산 거래 퀴즈') {
+      addMessage({
+        role: 'bot',
+        text: REAL_ESTATE_QUIZ_INTRO,
+      });
+
+      setQuickButtons(REAL_ESTATE_QUIZ_EXPERIENCE_OPTIONS);
+      setIsSelected(null);
+      return;
+    }
+
+    // 체크리스트
+    if (clicked === '부동산 거래 전 체크리스트') {
+      addMessage({
+        role: 'bot',
+        text: CHECK_LIST_INTRO,
+      });
+
+      addMessage({
+        role: 'bot',
+        component: <ChecklistMessage />,
+      });
+
+      setIsSelected(null);
+      return;
     }
   };
 
@@ -78,7 +120,11 @@ const ChatBody = () => {
     <BodySection>
       {messages.map((msg, i) => (
         <ChatBubble key={i} $role={msg.role}>
-          <span dangerouslySetInnerHTML={{ __html: msg.text || '' }} />
+          {msg.component ? (
+            msg.component
+          ) : (
+            <span dangerouslySetInnerHTML={{ __html: msg.text || '' }} />
+          )}
         </ChatBubble>
       ))}
 

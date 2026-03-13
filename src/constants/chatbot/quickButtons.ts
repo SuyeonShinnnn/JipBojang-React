@@ -20,3 +20,8 @@ export const REAL_ESTATE_TERM_QUICK_BUTTONS = [
   '가압류/가처분',
   '대항력',
 ];
+
+export const REAL_ESTATE_QUIZ_EXPERIENCE_OPTIONS = [
+  '네, 처음이에요!',
+  '아니요, 해봤어요!',
+];
