@@ -1,9 +1,12 @@
 import styled, { keyframes } from 'styled-components';
 import chatbotIcon from '../../assets/chatbot/mini-chatbot.png';
-import sendIcon from '../../assets/chatbot/send.png';
 import ChatBody from './components/ChatBody';
+import ChatInput from './components/ChatInput';
+import { useChatbot } from './useChatbot';
 
 const ChatbotBox = () => {
+  const chatbot = useChatbot();
+
   return (
     <Container>
       <TitleContainer>
@@ -11,19 +14,18 @@ const ChatbotBox = () => {
         <h5>집보장 챗봇</h5>
       </TitleContainer>
 
-      <ChatBody />
+      <ChatBody
+        messages={chatbot.messages}
+        quickButtons={chatbot.quickButtons}
+        isSelected={chatbot.isSelected}
+        handleButtonClick={chatbot.handleButtonClick}
+      />
 
-      <TextSendContainer>
-        <Input type="text" placeholder="궁금한 내용을 입력해주세요." />
-        <SendButton>
-          <div>
-            <img src={sendIcon} />
-          </div>
-        </SendButton>
-      </TextSendContainer>
+      <ChatInput sendMessage={chatbot.sendMessage} />
     </Container>
   );
 };
+
 export default ChatbotBox;
 
 const slideUp = keyframes`
@@ -72,53 +74,5 @@ const TitleContainer = styled.div`
 
   img {
     width: 24px;
-  }
-`;
-
-const TextSendContainer = styled.div`
-  position: fixed;
-  bottom: 7.8rem;
-
-  display: flex;
-  gap: 4px;
-  align-items: center;
-
-  width: 320px;
-  padding: 8px;
-  border-top: 1px solid var(--color-lightgray);
-  background-color: #fff;
-
-  div {
-    margin: 0;
-  }
-`;
-
-const Input = styled.input`
-  padding: 12px;
-  width: 100%;
-  border: 1px solid var(--color-lightgray);
-  border-radius: 50px;
-  margin-bottom: 0;
-
-  &:focus {
-    border: 1px solid var(--color-primary);
-    outline: none;
-  }
-`;
-
-const SendButton = styled.button`
-  background-color: white;
-  border: none;
-  width: 10%;
-  display: flex;
-  align-items: center;
-
-  img {
-    width: 20px;
-    transform: rotate(-45deg);
-  }
-
-  &:hover {
-    cursor: pointer;
   }
 `;

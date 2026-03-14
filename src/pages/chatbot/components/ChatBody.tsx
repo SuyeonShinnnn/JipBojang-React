@@ -1,11 +1,20 @@
 import styled from 'styled-components';
 import BaseButton from '../../../components/common/BaseButton';
-import { useChatbot } from '../useChatbot';
+import type { Message } from '../useChatbot';
 
-const ChatBody = () => {
-  const { messages, quickButtons, isSelected, handleButtonClick } =
-    useChatbot();
+type Props = {
+  messages: Message[];
+  quickButtons: string[];
+  isSelected: number | null;
+  handleButtonClick: (index: number) => void;
+};
 
+const ChatBody = ({
+  messages,
+  quickButtons,
+  isSelected,
+  handleButtonClick,
+}: Props) => {
   return (
     <BodySection>
       {messages.map((msg, i) => (

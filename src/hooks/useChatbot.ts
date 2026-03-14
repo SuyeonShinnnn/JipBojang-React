@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import { sendChatMessage } from '../../apis/chatbotApi';
+import { sendChatMessage } from '../apis/chatbotApi';
 import {
   QUICK_BUTTONS,
   REAL_ESTATE_TERM_QUICK_BUTTONS,
   REAL_ESTATE_QUIZ_EXPERIENCE_OPTIONS,
-} from '../../constants/chatbot/quickButtons';
+} from '../constants/chatbot/quickButtons';
 
 import {
   REAL_ESTATE_INTRO,
   REAL_ESTATE_QUIZ_INTRO,
   CHECK_LIST_INTRO,
-} from '../../constants/chatbot/chatbotMessages';
+} from '../constants/chatbot/chatbotMessages';
 
-import { getServiceGuideMessages } from './chatbotHandler';
-import ChecklistMessage from './components/ChecklistMessage';
+import { getServiceGuideMessages } from '../pages/chatbot/chatbotHandler';
+import { createChecklistMessage } from '../pages/chatbot/MessageFactory';
 
 export type Message = {
   role: 'bot' | 'user';
@@ -111,10 +111,7 @@ export const useChatbot = () => {
         text: CHECK_LIST_INTRO,
       });
 
-      addMessage({
-        role: 'bot',
-        component: <ChecklistMessage />,
-      });
+      addMessage(createChecklistMessage());
 
       setIsSelected(null);
       return;
