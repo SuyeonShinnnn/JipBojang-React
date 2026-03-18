@@ -10,6 +10,7 @@ import {
   REAL_ESTATE_INTRO,
   REAL_ESTATE_QUIZ_INTRO,
   CHECK_LIST_INTRO,
+  GLOSSARY,
 } from '../../constants/chatbot/chatbotMessages';
 
 import { getServiceGuideMessages } from './chatbotHandler';
@@ -90,7 +91,12 @@ export const useChatbot = () => {
     }
 
     if (REAL_ESTATE_TERM_QUICK_BUTTONS.includes(clicked)) {
-      sendMessage(clicked);
+      console.log(clicked);
+      console.log(REAL_ESTATE_TERM_QUICK_BUTTONS);
+      const description = GLOSSARY[clicked as keyof typeof GLOSSARY];
+
+      addMessage({ role: 'bot', text: description });
+
       return;
     }
 

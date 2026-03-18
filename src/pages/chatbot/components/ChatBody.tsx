@@ -31,6 +31,7 @@ const ChatBody = ({
         {quickButtons.map((btn, key) => (
           <ButtonItem key={btn} $active={isSelected === key}>
             <BaseButton
+              type="button"
               variant={isSelected === key ? 'primary' : 'outline'}
               onClick={() => handleButtonClick(key)}
             >

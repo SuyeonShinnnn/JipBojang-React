@@ -23,7 +23,11 @@ const RealEstateTerms = ({ addMessage }: Props) => {
     <ButtonWrapper>
       {REAL_ESTATE_TERM_QUICK_BUTTONS.map((term) => (
         <ButtonItem key={term} $active={false}>
-          <BaseButton variant="outline" onClick={() => handleClick(term)}>
+          <BaseButton
+            type="button"
+            variant="outline"
+            onClick={() => handleClick(term)}
+          >
             {term}
           </BaseButton>
         </ButtonItem>
