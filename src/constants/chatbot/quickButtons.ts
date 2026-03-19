@@ -25,3 +25,5 @@ export const REAL_ESTATE_QUIZ_EXPERIENCE_OPTIONS = [
   '네, 처음이에요!',
   '아니요, 해봤어요!',
 ];
+
+export const QUIZ_FINISHED_QUICK_BUTTONS = ['🔁 다시 도전하기', '🏠 처음으로'];

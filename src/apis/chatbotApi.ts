@@ -18,3 +18,14 @@ export const sendToGPT = async (text: string) => {
     return '⚠️ 서버 오류가 발생했습니다.';
   }
 };
+
+export const axiosFetch = async (config: any) => {
+  const controller = new AbortController();
+  // activeControllers.add(controller);
+  try {
+    const res = await axios({ ...config, signal: controller.signal });
+    return res;
+  } finally {
+    // activeControllers.delete(controller);
+  }
+};

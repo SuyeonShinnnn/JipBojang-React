@@ -1,12 +1,19 @@
 import styled from 'styled-components';
 import BaseButton from '../../../components/common/BaseButton';
 import type { Message } from '../useChatbot';
+import ChatbotQuiz from './ChatbotQuiz';
 
 type Props = {
   messages: Message[];
   quickButtons: string[];
   isSelected: number | null;
   handleButtonClick: (index: number) => void;
+
+  currentQuestion: any;
+  quizStarted: boolean;
+  answerResult: boolean | null;
+  selectedIndex: number | null;
+  handleAnswer: (index: number) => void;
 };
 
 const ChatBody = ({
@@ -14,6 +21,11 @@ const ChatBody = ({
   quickButtons,
   isSelected,
   handleButtonClick,
+  currentQuestion,
+  quizStarted,
+  answerResult,
+  selectedIndex,
+  handleAnswer,
 }: Props) => {
   return (
     <BodySection>
@@ -26,6 +38,15 @@ const ChatBody = ({
           )}
         </ChatBubble>
       ))}
+
+      {currentQuestion && quizStarted && (
+        <ChatbotQuiz
+          question={currentQuestion}
+          answerResult={answerResult}
+          selectedIndex={selectedIndex}
+          onAnswer={handleAnswer}
+        />
+      )}
 
       <ButtonWrapper>
         {quickButtons.map((btn, key) => (
@@ -50,36 +71,35 @@ const BodySection = styled.section`
   flex: 1;
   overflow-y: auto;
   padding: 12px;
-  padding-bottom: 4rem;
   display: flex;
   flex-direction: column;
 `;
 
 export const ChatBubble = styled.div<{ $role: 'bot' | 'user' }>`
-  color: ${({ $role }) => ($role === 'user' ? '#fff' : '#000')};
-  background-color: ${({ $role }) =>
+  background: ${({ $role }) =>
     $role === 'bot' ? 'var(--color-accent)' : 'var(--color-primary)'};
-  padding: 8px 12px;
-  max-width: 80%;
+  color: ${({ $role }) => ($role === 'user' ? '#fff' : '#000')};
   border-radius: 16px;
   border-bottom-left-radius: ${({ $role }) =>
     $role === 'bot' ? '4px' : '16px'};
   border-bottom-right-radius: ${({ $role }) =>
     $role === 'user' ? '4px' : '16px'};
-  margin-bottom: 8px;
+  padding: 8px 12px;
+  max-width: 80%;
   white-space: pre-line;
+  margin-bottom: 8px;
   align-self: ${({ $role }) => ($role === 'bot' ? 'flex-start' : 'flex-end')};
+  font-size: 0.9rem;
 `;
 
-export const ButtonWrapper = styled.ul`
-  margin: 8px 0 12px 0;
+const ButtonWrapper = styled.ul`
+  margin-top: 8px;
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  padding: 0;
 `;
 
-export const ButtonItem = styled.li<{ $active: boolean }>`
+const ButtonItem = styled.li<{ $active: boolean }>`
   list-style: none;
 
   button {
