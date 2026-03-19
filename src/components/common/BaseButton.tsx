@@ -126,8 +126,9 @@ const StyledButton = styled.button<{
   }}
 
   &:disabled {
-    background-color: #838789;
-    color: white;
+    color: var(--color-darkgray);
+    background-color: #d9d9d9;
+    border: 1px solid var(--color-mediumgray);
     cursor: not-allowed;
     pointer-events: none;
   }
