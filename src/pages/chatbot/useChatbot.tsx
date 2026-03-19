@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { sendChatMessage } from '../../apis/chatbotApi';
+import { sendToGPT } from '../../apis/chatbotApi';
 import {
   QUICK_BUTTONS,
   REAL_ESTATE_TERM_QUICK_BUTTONS,
@@ -47,7 +47,7 @@ export const useChatbot = () => {
     });
 
     try {
-      const data = await sendChatMessage(text);
+      const data = await sendToGPT(text);
 
       addMessage({
         role: 'bot',
@@ -64,7 +64,7 @@ export const useChatbot = () => {
   /**
    * 퀵버튼
    */
-  const handleButtonClick = (index: number) => {
+  const handleButtonClick = async (index: number) => {
     setIsSelected(index);
 
     const clicked = quickButtons[index];
@@ -98,6 +98,14 @@ export const useChatbot = () => {
       addMessage({ role: 'bot', text: description });
 
       return;
+    }
+
+    if (clicked === '전세 사기 유형') {
+      const botReply = await sendToGPT('전세 사기 유형');
+      addMessage({
+        role: 'bot',
+        text: botReply,
+      });
     }
 
     if (clicked === '부동산 거래 퀴즈') {

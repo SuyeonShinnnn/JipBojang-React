@@ -1,23 +1,20 @@
+import axios from 'axios';
+
 export type ChatbotResponse = {
   reply: string;
 };
 
-export const sendChatMessage = async (
-  message: string,
-): Promise<ChatbotResponse> => {
-  const res = await fetch('/api/chatbot', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      message,
-    }),
-  });
-
-  if (!res.ok) {
-    throw new Error('챗봇 API 요청 실패');
+export const sendToGPT = async (text: string) => {
+  try {
+    const res = await axios({
+      method: 'post',
+      url: '/api/chatbot',
+      data: { message: text },
+    });
+    return res.data.reply;
+  } catch (err: any) {
+    if (err.name === 'CanceledError' || err.message === 'canceled') return ''; // 초기화로 취소된 경우 조용히 무시
+    console.error(err);
+    return '⚠️ 서버 오류가 발생했습니다.';
   }
-
-  return res.json();
 };
