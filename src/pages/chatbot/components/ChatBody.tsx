@@ -14,6 +14,9 @@ type Props = {
   answerResult: boolean | null;
   selectedIndex: number | null;
   handleAnswer: (index: number) => void;
+
+  isLoading: boolean;
+  dots: string;
 };
 
 const ChatBody = ({
@@ -26,6 +29,8 @@ const ChatBody = ({
   answerResult,
   selectedIndex,
   handleAnswer,
+  isLoading,
+  dots,
 }: Props) => {
   return (
     <BodySection>
@@ -38,6 +43,8 @@ const ChatBody = ({
           )}
         </ChatBubble>
       ))}
+
+      {isLoading && <ChatBubble $role="bot">{dots}</ChatBubble>}
 
       {currentQuestion && quizStarted && (
         <ChatbotQuiz

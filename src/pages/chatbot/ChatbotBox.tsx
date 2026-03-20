@@ -24,6 +24,8 @@ const ChatbotBox = () => {
         answerResult={chatbot.answerResult}
         selectedIndex={chatbot.selectedIndex}
         handleAnswer={chatbot.handleAnswer}
+        isLoading={chatbot.isLoading}
+        dots={chatbot.dots}
       />
 
       <ChatInput sendMessage={chatbot.sendMessage} />

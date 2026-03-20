@@ -3,3 +3,8 @@ export type Message = {
   text?: string;
   component?: React.ReactNode;
 };
+
+export type QuizQuestion = {
+  question: string;
+  choices: string[];
+};

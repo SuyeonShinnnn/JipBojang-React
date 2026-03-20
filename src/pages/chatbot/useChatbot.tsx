@@ -19,6 +19,9 @@ import {
 import { getServiceGuideMessages } from './chatbotHandler';
 import ChecklistMessage from './components/ChecklistMessage';
 
+import { useTyping } from '../../hooks/useTyping';
+import { useLoading } from '../../hooks/useLoading';
+
 export type Message = {
   role: 'bot' | 'user';
   text?: string;
@@ -33,41 +36,50 @@ export const useChatbot = () => {
     },
   ]);
 
-  type QuizQuestion = {
-    question: string;
-    choices: string[];
-    answerIndex: number;
-    explanation: string;
-  };
-
   const [quickButtons, setQuickButtons] = useState<string[]>(QUICK_BUTTONS);
   const [isSelected, setIsSelected] = useState<number | null>(null);
+
   const [quizStep, setQuizStep] = useState<'EXPERIENCE' | null>(null);
   const [quizStarted, setQuizStarted] = useState(false);
-  const [explanation, setExplanation] = useState<string>('');
   const [correctCount, setCorrectCount] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState<QuizQuestion | null>(
-    null,
-  );
+  const [currentQuestion, setCurrentQuestion] = useState<any>(null);
   const [answerResult, setAnswerResult] = useState<boolean | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const { isTyping, typeMessage } = useTyping();
+  const { isLoading, dots, startLoading, stopLoading } = useLoading();
 
   const addMessage = (msg: Message) => {
     setMessages((prev) => [...prev, msg]);
   };
 
-  /**
-   * 일반 메시지
-   */
+  // Input 메시지
   const sendMessage = async (text: string) => {
     addMessage({ role: 'user', text });
 
+    startLoading();
+
+    const startTime = Date.now();
+
     try {
+      console.log(isLoading, dots);
       const data = await sendToGPT(text);
-      addMessage({ role: 'bot', text: data.reply });
+
+      const MIN_LOADING_TIME = 1000;
+      const elapsed = Date.now() - startTime;
+
+      if (elapsed < MIN_LOADING_TIME) {
+        await new Promise((r) => setTimeout(r, MIN_LOADING_TIME - elapsed));
+      }
+
+      stopLoading();
+
+      setMessages((prev) => [...prev, { role: 'bot', text: '' }]);
+
+      await typeMessage(setMessages, data.reply);
     } catch {
+      stopLoading();
       addMessage({
         role: 'bot',
         text: '서버 연결에 문제가 발생했습니다.',
@@ -75,14 +87,9 @@ export const useChatbot = () => {
     }
   };
 
-  /**
-   * 퀴즈 시작
-   */
+  // 부동산 관련 퀴즈
   const startQuiz = async () => {
-    addMessage({
-      role: 'bot',
-      text: '문제를 생성 중입니다.\n잠시만 기다려주세요😊',
-    });
+    startLoading();
 
     let currentSession = sessionId;
 
@@ -112,24 +119,26 @@ export const useChatbot = () => {
         params: { sessionId: currentSession },
       });
 
-      if (res.data?.question && Array.isArray(res.data.choices)) {
+      stopLoading();
+
+      if (res.data?.question) {
         setCurrentQuestion(res.data);
         setQuizStarted(true);
-        setAnswerResult(null);
+
+        setMessages(() => [{ role: 'bot', text: '' }]);
+        await typeMessage(setMessages, '퀴즈를 시작합니다! 🎯');
       } else {
         addMessage({ role: 'bot', text: '퀴즈가 종료되었어요!' });
       }
-    } catch (e) {
+    } catch {
+      stopLoading();
       addMessage({
         role: 'bot',
-        text: '⚠️ 퀴즈를 불러오는 중 오류가 발생했어요!',
+        text: '⚠️ 퀴즈를 불러오는 중 오류 발생',
       });
     }
   };
 
-  /**
-   * 정답 처리
-   */
   const handleAnswer = async (index: number) => {
     try {
       setSelectedIndex(index);
@@ -143,14 +152,9 @@ export const useChatbot = () => {
         },
       });
 
-      console.log(res);
-      console.log('선택: ' + index);
-      console.log('정답: ' + res.data);
-
       const isCorrect = res.data;
       setAnswerResult(isCorrect);
 
-      // 정답 카운트
       if (isCorrect) {
         setCorrectCount((prev) => prev + 1);
       }
@@ -163,7 +167,6 @@ export const useChatbot = () => {
             params: { sessionId },
           });
 
-          // 다음 문제 있음
           setCurrentQuestion(next.data);
           setAnswerResult(null);
           setSelectedIndex(null);
@@ -198,30 +201,121 @@ export const useChatbot = () => {
     }
   };
 
-  /**
-   * 버튼 클릭
-   */
+  // 퀵 버튼 클릭
   const handleButtonClick = async (index: number) => {
     setIsSelected(index);
 
     const clicked = quickButtons[index];
 
-    addMessage({
-      role: 'user',
-      text: clicked,
-    });
+    addMessage({ role: 'user', text: clicked });
 
-    if (clicked === '🔁 다시 도전하기') {
-      setCorrectCount(0);
-      setSelectedIndex(null);
-      setAnswerResult(null);
-      setCurrentQuestion(null);
-      setQuizStarted(false);
+    // 서비스 이용방법
+    if (clicked === '서비스 이용방법') {
+      setIsSelected(null);
       setQuickButtons([]);
-      await startQuiz(); // 다시 시작
+      const msgs = getServiceGuideMessages();
+
+      for (const msg of msgs) {
+        setMessages((prev) => [...prev, { role: 'bot', text: '' }]);
+        await typeMessage(setMessages, msg.text || '');
+      }
+      setQuickButtons(QUICK_BUTTONS);
       return;
     }
 
+    // 부동산 용어
+    if (clicked === '부동산 용어') {
+      setIsSelected(null);
+      setQuickButtons([]);
+
+      setMessages((prev) => [...prev, { role: 'bot', text: '' }]);
+      await typeMessage(setMessages, REAL_ESTATE_INTRO);
+
+      setQuickButtons(REAL_ESTATE_TERM_QUICK_BUTTONS);
+      return;
+    }
+
+    // 용어 상세
+    if (REAL_ESTATE_TERM_QUICK_BUTTONS.includes(clicked)) {
+      const desc = GLOSSARY[clicked as keyof typeof GLOSSARY];
+
+      setMessages((prev) => [...prev, { role: 'bot', text: '' }]);
+      await typeMessage(setMessages, desc);
+      return;
+    }
+
+    // 전세 사기
+    if (clicked === '전세 사기 유형') {
+      setIsSelected(null);
+      setQuickButtons([]);
+      startLoading();
+
+      const botReply = await sendToGPT('전세 사기 유형');
+
+      stopLoading();
+
+      setMessages((prev) => [...prev, { role: 'bot', text: '' }]);
+      await typeMessage(setMessages, botReply);
+
+      setQuickButtons(QUICK_BUTTONS);
+      return;
+    }
+
+    // 퀴즈 진입
+    if (clicked === '부동산 거래 퀴즈') {
+      setMessages((prev) => [...prev, { role: 'bot', text: '' }]);
+      await typeMessage(setMessages, REAL_ESTATE_QUIZ_INTRO);
+
+      setQuickButtons(REAL_ESTATE_QUIZ_EXPERIENCE_OPTIONS);
+      setQuizStep('EXPERIENCE');
+      return;
+    }
+
+    // 퀴즈 경험 선택
+    if (quizStep === 'EXPERIENCE') {
+      if (clicked === '네, 처음이에요!') {
+        setMessages(() => [{ role: 'bot', text: '' }]);
+        await typeMessage(
+          setMessages,
+          '부동산 거래 퀴즈에 오신 걸 환영합니다! 🥳\n퀴즈는 총 5문제로 구성되어 있어요.',
+        );
+      } else {
+        setMessages((prev) => [...prev, { role: 'bot', text: '' }]);
+        await typeMessage(setMessages, '좋아요! 다시 도전해볼까요?');
+      }
+      await setMessages((prev) => [
+        ...prev,
+        { role: 'bot', text: '문제를 생성 중입니다.\n 잠시만 기다려주세요😊' },
+      ]);
+
+      setQuizStep(null);
+      setQuickButtons([]);
+
+      await startQuiz();
+      return;
+    }
+
+    // 체크리스트
+    if (clicked === '부동산 거래 전 체크리스트') {
+      setMessages((prev) => [...prev, { role: 'bot', text: '' }]);
+      await typeMessage(setMessages, CHECK_LIST_INTRO);
+
+      addMessage({
+        role: 'bot',
+        component: <ChecklistMessage />,
+      });
+
+      return;
+    }
+
+    // 다시하기
+    if (clicked === '🔁 다시 도전하기') {
+      setCorrectCount(0);
+      await startQuiz();
+      return;
+    }
+
+    // 처음으로
     if (clicked === '🏠 처음으로') {
       setMessages([
         {
@@ -229,88 +323,8 @@ export const useChatbot = () => {
           text: '안녕하세요. 집보장 AI 챗봇입니다.\n궁금한 내용을 선택하거나 입력해주세요.',
         },
       ]);
-
+      setIsSelected(null);
       setQuickButtons(QUICK_BUTTONS);
-      setIsSelected(null);
-
-      // 상태 초기화
-      setQuizStarted(false);
-      setCurrentQuestion(null);
-      setSelectedIndex(null);
-      setAnswerResult(null);
-      setCorrectCount(0);
-
-      return;
-    }
-
-    // 서비스 안내
-    if (clicked === '서비스 이용방법') {
-      setMessages((prev) => [...prev, ...getServiceGuideMessages()]);
-      return;
-    }
-
-    // 부동산 용어
-    if (clicked === '부동산 용어') {
-      addMessage({ role: 'bot', text: REAL_ESTATE_INTRO });
-      setQuickButtons(REAL_ESTATE_TERM_QUICK_BUTTONS);
-      setIsSelected(null);
-      return;
-    }
-
-    if (REAL_ESTATE_TERM_QUICK_BUTTONS.includes(clicked)) {
-      const description = GLOSSARY[clicked as keyof typeof GLOSSARY];
-      addMessage({ role: 'bot', text: description });
-      return;
-    }
-
-    // 전세 사기
-    if (clicked === '전세 사기 유형') {
-      const botReply = await sendToGPT('전세 사기 유형');
-      addMessage({ role: 'bot', text: botReply });
-      return;
-    }
-
-    // 퀴즈 진입
-    if (clicked === '부동산 거래 퀴즈') {
-      addMessage({ role: 'bot', text: REAL_ESTATE_QUIZ_INTRO });
-
-      setQuickButtons(REAL_ESTATE_QUIZ_EXPERIENCE_OPTIONS);
-      setQuizStep('EXPERIENCE');
-      setIsSelected(null);
-      return;
-    }
-
-    // 퀴즈 경험 선택
-    if (quizStep === 'EXPERIENCE') {
-      if (clicked === '네, 처음이에요!') {
-        addMessage({
-          role: 'bot',
-          text: '부동산 거래 퀴즈에 오신 걸 환영합니다! 🥳\n퀴즈는 총 5문제로 구성되어 있어요.',
-        });
-      } else {
-        addMessage({
-          role: 'bot',
-          text: '좋아요! 다시 한 번 도전해볼까요?',
-        });
-      }
-
-      setQuizStep(null);
-      setQuickButtons([]);
-
-      await startQuiz();
-
-      return;
-    }
-
-    // 체크리스트
-    if (clicked === '부동산 거래 전 체크리스트') {
-      addMessage({ role: 'bot', text: CHECK_LIST_INTRO });
-      addMessage({
-        role: 'bot',
-        component: <ChecklistMessage />,
-      });
-
-      setIsSelected(null);
       return;
     }
   };
@@ -324,11 +338,10 @@ export const useChatbot = () => {
     currentQuestion,
     answerResult,
     quizStarted,
-    setCurrentQuestion,
-    setAnswerResult,
-    setQuizStarted,
     handleAnswer,
-    explanation,
+    isLoading,
+    dots,
+    isTyping,
     selectedIndex,
   };
 };
