@@ -2,6 +2,7 @@ import styled, { keyframes } from 'styled-components';
 import BaseButton from '../../../components/common/BaseButton';
 import type { Message } from '../useChatbot';
 import ChatbotQuiz from './ChatbotQuiz';
+import { useAutoScroll } from '../../../hooks/useAutoScroll';
 
 type Props = {
   messages: Message[];
@@ -32,8 +33,17 @@ const ChatBody = ({
   isLoading,
   dots,
 }: Props) => {
+  const bodyRef = useAutoScroll([
+    messages,
+    isLoading,
+    currentQuestion,
+    quickButtons,
+    answerResult,
+    selectedIndex,
+  ]);
+
   return (
-    <BodySection>
+    <BodySection ref={bodyRef}>
       {messages.map((msg, i) => (
         <ChatBubble key={i} $role={msg.role}>
           {msg.component ? (

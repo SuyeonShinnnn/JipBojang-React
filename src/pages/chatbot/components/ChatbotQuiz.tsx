@@ -83,7 +83,7 @@ const ButtonWrapper = styled.div<{ $answered: boolean }>`
 
     button[data-selected="true"]:not([data-correct="true"]) {
       background: #f8d7da;
-      border 1px solid red;
+      border: 1px solid red;
       color:red;
     }
   `}
