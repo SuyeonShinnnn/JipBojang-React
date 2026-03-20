@@ -29,7 +29,10 @@ const DefaultLayout = () => {
         </Routes>
       </MainContent>
 
-      <ChatbotButton onClick={() => setIsChatOpen(!isChatOpen)}>
+      <ChatbotButton
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        $isFocused={isChatOpen}
+      >
         <Image src={chatbotIcon} />
         <span>챗봇</span>
       </ChatbotButton>
@@ -57,13 +60,13 @@ const MainContent = styled.main<{ $noPadding?: boolean }>`
   animation: ${fadeSlideIn} 0.35s ease-out both;
 `;
 
-const ChatbotButton = styled.button`
+const ChatbotButton = styled.button<{ $isFocused: boolean }>`
   position: fixed;
   right: 1.3rem;
   bottom: 1.3rem;
 
-  width: 92px;
-  height: 92px;
+  width: 88px;
+  height: 88px;
   color: white;
   background-color: var(--color-primary);
   box-shadow: 5px 5px 20px var(--color-mediumgray);
@@ -76,8 +79,15 @@ const ChatbotButton = styled.button`
   align-items: center;
   justify-content: center;
 
+  opacity: ${({ $isFocused }) => ($isFocused ? 0.5 : 1)};
+
+  transition:
+    transform 0.3s ease,
+    opacity 0.5s ease;
+
   &:hover {
     cursor: pointer;
+    transform: scale(1.1);
   }
 `;
 
