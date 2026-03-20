@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8080/Jip-Bojang-1.0-SNAPSHOT',
+        target: 'http://localhost:8080/Jip-Bojang',
         changeOrigin: true,
       },
     },

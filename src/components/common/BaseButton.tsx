@@ -91,6 +91,7 @@ const StyledButton = styled.button<{
       case 'secondary':
         return css`
           background-color: var(--color-secondary);
+          border: 1px solid var(--color-secondary);
           color: #000;
         `;
       case 'outline':
@@ -102,6 +103,7 @@ const StyledButton = styled.button<{
       case 'gray':
         return css`
           background-color: #838789;
+          border: 1px solid #838789;
           color: white;
         `;
       case 'options':
@@ -118,13 +120,15 @@ const StyledButton = styled.button<{
         return css`
           background-color: var(--color-primary);
           color: white;
+          border: 1px solid var(--color-primary);
         `;
     }
   }}
 
   &:disabled {
-    background-color: #838789;
-    color: white;
+    color: var(--color-darkgray);
+    background-color: #d9d9d9;
+    border: 1px solid var(--color-mediumgray);
     cursor: not-allowed;
     pointer-events: none;
   }
