@@ -63,6 +63,7 @@ const ButtonWrapper = styled.div<{ $answered: boolean }>`
 
   button {
     width: 100%;
+    font-size: 0.9rem;
     text-align: left;
     justify-content: flex-start;
     padding: 8px 12px;
