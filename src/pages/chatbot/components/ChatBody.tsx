@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import BaseButton from '../../../components/common/BaseButton';
 import type { Message } from '../useChatbot';
 import ChatbotQuiz from './ChatbotQuiz';
@@ -57,7 +57,7 @@ const ChatBody = ({
 
       <ButtonWrapper>
         {quickButtons.map((btn, key) => (
-          <ButtonItem key={btn} $active={isSelected === key}>
+          <ButtonItem key={btn} $active={isSelected === key} $index={key}>
             <BaseButton
               type="button"
               variant={isSelected === key ? 'primary' : 'outline'}
@@ -106,8 +106,23 @@ const ButtonWrapper = styled.ul`
   gap: 4px;
 `;
 
-const ButtonItem = styled.li<{ $active: boolean }>`
+const fadeUp = keyframes`
+  from{
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to{
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const ButtonItem = styled.li<{ $active: boolean; $index: number }>`
   list-style: none;
+  opacity: 0;
+
+  animation: ${fadeUp} 0.5s ease forwards;
+  animation-delay: ${({ $index }) => $index * 0.1}s;
 
   button {
     padding: 4px 8px;
