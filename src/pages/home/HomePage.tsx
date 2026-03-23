@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import BaseInput from '../../components/common/BaseInput';
 import { useNavigate } from 'react-router-dom';
+import BaseModal from '../../components/common/BaseModal';
 
 const HomePage: React.FC = () => {
   const fullText = '지금 바로 적정보증금과 건축물대장을 확인해 보세요!';
@@ -47,45 +48,64 @@ const HomePage: React.FC = () => {
     };
   }, []);
 
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [address, setAddress] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
   const handleAddressSearchButton = () => {
-    navigate('/building', { state: address });
+    if (address.trim() == '') {
+      setIsAlertOpen(true);
+      inputRef.current?.focus();
+      return;
+    }
+    navigate('/building', { state: { address } });
   };
 
   return (
-    <Main>
-      <TextWrapper>
-        <h1>
-          안전한 부동산 거래를 위한 <br />
-          <span>전세 안전 진단 서비스</span>
-        </h1>
+    <>
+      <Main>
+        <TextWrapper>
+          <h1>
+            안전한 부동산 거래를 위한 <br />
+            <span>전세 안전 진단 서비스</span>
+          </h1>
 
-        <p>
-          등기부등본 분석부터 위험도 평가까지, <strong>집보장 리포트</strong>로
-          전세 사기를 미리 예방하세요. <br />
-          전문가 상담과 등기변동 알림으로 안전한 임대차 계약을 보장합니다.
-        </p>
-        <InputWrapper>
-          <p>{displayText}</p>
-          <BaseInput
-            placeholder="주소를 입력하세요"
-            showButton={true}
-            buttonIconColor="var(--color-mediumgray)"
-            onChange={(e) => setAddress(e.target.value)}
-            onButtonClick={() => handleAddressSearchButton}
+          <p>
+            등기부등본 분석부터 위험도 평가까지, <strong>집보장 리포트</strong>
+            로 전세 사기를 미리 예방하세요. <br />
+            전문가 상담과 등기변동 알림으로 안전한 임대차 계약을 보장합니다.
+          </p>
+          <InputWrapper>
+            <p>{displayText}</p>
+            <BaseInput
+              ref={inputRef}
+              placeholder="주소를 입력하세요"
+              showButton={true}
+              buttonIconColor="var(--color-mediumgray)"
+              onChange={(e) => setAddress(e.target.value)}
+              onButtonClick={() => handleAddressSearchButton()}
+            />
+          </InputWrapper>
+        </TextWrapper>
+
+        <ImageWrapper>
+          <img
+            src="../../public/character-logo.png"
+            alt="jipbojang-character-logo"
           />
-        </InputWrapper>
-      </TextWrapper>
-
-      <ImageWrapper>
-        <img
-          src="../../public/character-logo.png"
-          alt="jipbojang-character-logo"
-        />
-      </ImageWrapper>
-    </Main>
+        </ImageWrapper>
+      </Main>
+      {isAlertOpen && (
+        <BaseModal
+          isOpen={isAlertOpen}
+          onClose={() => setIsAlertOpen(!isAlertOpen)}
+          header={<h3>🚨Warning</h3>}
+        >
+          <ModalBody>검색어를 입력해 주세요.</ModalBody>
+        </BaseModal>
+      )}
+    </>
   );
 };
 
@@ -170,4 +190,8 @@ const ImageWrapper = styled.div`
   img {
     width: 380px;
   }
+`;
+
+const ModalBody = styled.p`
+  font-size: 20px;
 `;

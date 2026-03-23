@@ -1,13 +1,16 @@
 import styled from 'styled-components';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import SearchBar from './components/SearchBar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Place } from '../../types/building';
 import BuildingInfoBar from './components/BuildingInfoBar';
+import { useLocation } from 'react-router-dom';
 
 const BuildingPage = () => {
   const [selected, setSelected] = useState<Place | null>(null);
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
+  const location = useLocation();
+  const address = location.state?.address;
 
   const [places, setPlaces] = useState<
     {
@@ -44,6 +47,12 @@ const BuildingPage = () => {
   const handleSelected = (value: Place) => {
     setSelected(value);
   };
+
+  useEffect(() => {
+    if (!map || !address) return;
+
+    handleSearch(address);
+  }, [map, address]);
 
   return (
     <>
