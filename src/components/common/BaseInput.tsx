@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import styled, { css } from 'styled-components';
-import searchIcon from '../../assets/common/magnifying-glass.png';
+import { IoSearch } from 'react-icons/io5';
 
 interface BaseInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -8,6 +8,7 @@ interface BaseInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   padding?: string;
   icon?: string;
   showButton?: boolean;
+  buttonIconColor?: string;
   onButtonClick?: () => void;
 }
 
@@ -21,6 +22,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       disabled,
       showButton = false,
       onButtonClick,
+      buttonIconColor,
       ...rest
     },
     ref,
@@ -47,7 +49,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
           {rest.children}
           {showButton && (
             <InputButton type="submit" onClick={onButtonClick}>
-              <SearchIcon src={searchIcon} />
+              <SearchIcon $color={buttonIconColor} />
             </InputButton>
           )}
         </InputContainer>
@@ -95,8 +97,9 @@ const InputButton = styled.button`
   }
 `;
 
-const SearchIcon = styled.img`
-  width: 24px;
+const SearchIcon = styled(IoSearch)<{ $color?: string }>`
+  font-size: 20px;
+  color: ${({ $color }) => $color || '#fff'};
 `;
 
 const StyledInput = styled.input<{

@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
-import HomePage from '../../pages/HomePage';
+import HomePage from '../../pages/home/HomePage';
 import ReportPage from '../../pages/ReportPage';
 import NotiPage from '../../pages/notification/NotiPage';
 import NotFoundPage from '../../pages/NotFoundPage';
