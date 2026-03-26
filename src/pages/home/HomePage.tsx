@@ -131,7 +131,7 @@ const Main = styled.main`
   align-items: center;
 
   gap: 5rem;
-  height: 80vh;
+  height: 89vh;
 
   p {
     font-size: 20px;
