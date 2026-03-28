@@ -102,7 +102,6 @@ const StyledInput = styled.input<{
 
   &:focus {
     border-color: var(--color-primary) !important;
-    box-shadow: 0 0 0 0.2rem rgba(119, 116, 234, 0.25) !important;
     outline: none;
   }
 
