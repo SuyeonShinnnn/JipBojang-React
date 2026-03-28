@@ -66,12 +66,12 @@ const Overlay = styled.div<{ $isOpen?: boolean }>`
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1050;
+  z-index: 2000;
 `;
 
 const Dialog = styled.div`
