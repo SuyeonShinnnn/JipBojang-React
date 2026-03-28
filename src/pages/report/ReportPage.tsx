@@ -6,6 +6,7 @@ import docIcon from '../../assets/report/ic-report-doc.png';
 import fastIcon from '../../assets/report/ic-report-fast.png';
 import fraudIcon from '../../assets/report/ic-report-fraud.png';
 import priceIcon from '../../assets/report/ic-report-price.png';
+import { useNavigate } from 'react-router-dom';
 
 const ReportPage: React.FC = () => {
   const items = [
@@ -35,12 +36,17 @@ const ReportPage: React.FC = () => {
       sub: '1분 안에 리포트 완성',
     },
   ];
+
+  const navigator = useNavigate();
+
   return (
     <main>
       <MainSection>
         <h1>집포트</h1>
         <p>복잡한 부동산 서류를 쉽고 명확하게 분석해드립니다.</p>
-        <BaseButton>집포트 생성하기</BaseButton>
+        <BaseButton onClick={() => navigator('/report/form')}>
+          집포트 생성하기
+        </BaseButton>
       </MainSection>
       <ExplanationSection>
         <h2>집포트 서비스</h2>
