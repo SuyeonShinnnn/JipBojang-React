@@ -1,60 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import BaseInput from '../../components/common/BaseInput';
 import { useNavigate } from 'react-router-dom';
 import BaseModal from '../../components/common/BaseModal';
+import { useTyping } from '../../hooks/useTyping';
 
 const HomePage: React.FC = () => {
   const fullText = '지금 바로 적정보증금과 건축물대장을 확인해 보세요!';
 
-  const [displayText, setDisplayText] = useState('');
-
-  const iRef = useRef(0);
-  const deletingRef = useRef(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const TYPE_SPEED = 80;
-  const PAUSE_AFTER_TYPE = 2000;
-  const PAUSE_AFTER_DELETE = 600;
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const tick = () => {
-      if (!isMounted) return;
-
-      if (!deletingRef.current) {
-        if (iRef.current < fullText.length) {
-          iRef.current++;
-          setDisplayText(fullText.slice(0, iRef.current));
-          timerRef.current = setTimeout(tick, TYPE_SPEED);
-        } else {
-          deletingRef.current = true;
-          timerRef.current = setTimeout(tick, PAUSE_AFTER_TYPE);
-        }
-      } else {
-        setDisplayText('');
-        iRef.current = 0;
-        deletingRef.current = false;
-        timerRef.current = setTimeout(tick, PAUSE_AFTER_DELETE);
-      }
-    };
-
-    tick();
-
-    return () => {
-      isMounted = false;
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
+  const displayText = useTyping({
+    text: fullText,
+    typeSpeed: 80,
+    pauseAfterType: 2000,
+    pauseAfterDelete: 600,
+  });
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [address, setAddress] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
+
   const handleAddressSearchButton = () => {
-    if (address.trim() == '') {
+    if (address.trim() === '') {
       setIsAlertOpen(true);
       inputRef.current?.focus();
       return;
@@ -76,15 +44,17 @@ const HomePage: React.FC = () => {
             로 전세 사기를 미리 예방하세요. <br />
             전문가 상담과 등기변동 알림으로 안전한 임대차 계약을 보장합니다.
           </p>
+
           <InputWrapper>
             <p>{displayText}</p>
+
             <BaseInput
               ref={inputRef}
               placeholder="주소를 입력하세요"
               showButton={true}
               buttonIconColor="var(--color-mediumgray)"
               onChange={(e) => setAddress(e.target.value)}
-              onButtonClick={() => handleAddressSearchButton()}
+              onButtonClick={handleAddressSearchButton}
             />
           </InputWrapper>
         </TextWrapper>
@@ -96,11 +66,12 @@ const HomePage: React.FC = () => {
           />
         </ImageWrapper>
       </Main>
+
       {isAlertOpen && (
         <BaseModal
           isOpen={isAlertOpen}
-          onClose={() => setIsAlertOpen(!isAlertOpen)}
-          header={<h3>🚨Warning</h3>}
+          onClose={() => setIsAlertOpen(false)}
+          header={<h3>🚨 Warning</h3>}
         >
           <ModalBody>검색어를 입력해 주세요.</ModalBody>
         </BaseModal>

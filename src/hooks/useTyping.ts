@@ -1,40 +1,54 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-export const useTyping = () => {
-  const [isTyping, setIsTyping] = useState(false);
-  const typingEpoch = useRef(0);
+interface UseTypingOptions {
+  text: string;
+  typeSpeed?: number;
+  pauseAfterType?: number;
+  pauseAfterDelete?: number;
+}
 
-  const typeMessage = async (
-    setMessages: React.Dispatch<React.SetStateAction<any>>,
-    text: string,
-    delay = 30,
-  ) => {
-    setIsTyping(true);
-    const currentEpoch = typingEpoch.current;
+export const useTyping = ({
+  text,
+  typeSpeed = 80,
+  pauseAfterType = 2000,
+  pauseAfterDelete = 600,
+}: UseTypingOptions) => {
+  const [displayText, setDisplayText] = useState('');
 
-    let typed = '';
+  const iRef = useRef(0);
+  const deletingRef = useRef(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    for (let i = 0; i < text.length; i++) {
-      if (typingEpoch.current !== currentEpoch) return;
+  useEffect(() => {
+    let isMounted = true;
 
-      typed += text[i];
+    const tick = () => {
+      if (!isMounted) return;
 
-      setMessages((prev: any[]) => {
-        const updated = [...prev];
-        updated[updated.length - 1].text = typed;
-        return updated;
-      });
+      if (!deletingRef.current) {
+        if (iRef.current < text.length) {
+          iRef.current++;
+          setDisplayText(text.slice(0, iRef.current));
+          timerRef.current = setTimeout(tick, typeSpeed);
+        } else {
+          deletingRef.current = true;
+          timerRef.current = setTimeout(tick, pauseAfterType);
+        }
+      } else {
+        setDisplayText('');
+        iRef.current = 0;
+        deletingRef.current = false;
+        timerRef.current = setTimeout(tick, pauseAfterDelete);
+      }
+    };
 
-      await new Promise((r) => setTimeout(r, delay));
-    }
+    tick();
 
-    setIsTyping(false);
-  };
+    return () => {
+      isMounted = false;
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [text, typeSpeed, pauseAfterType, pauseAfterDelete]);
 
-  const stopTyping = () => {
-    typingEpoch.current++;
-    setIsTyping(false);
-  };
-
-  return { isTyping, typeMessage, stopTyping };
+  return displayText;
 };
