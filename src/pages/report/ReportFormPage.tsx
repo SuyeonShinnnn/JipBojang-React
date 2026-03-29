@@ -3,6 +3,7 @@ import BaseButton from '../../components/common/BaseButton';
 import BaseInput from '../../components/common/BaseInput';
 import { useState } from 'react';
 import BaseModal from '../../components/common/BaseModal';
+import { useNavigate } from 'react-router-dom';
 
 const ReportFormPage = () => {
   const [address, setAddress] = useState('');
@@ -28,6 +29,9 @@ const ReportFormPage = () => {
       setIsModalOpen(true);
     } else if (price === 0) {
       setOmissionItem('가격을');
+    } else {
+      const navigate = useNavigate();
+      navigate('/reort/progress');
     }
   };
 

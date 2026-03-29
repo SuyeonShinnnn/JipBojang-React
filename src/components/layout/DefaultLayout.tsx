@@ -10,6 +10,7 @@ import chatbotIcon from '../../assets/chatbot/chatbot.png';
 import ChatbotBox from '../../pages/chatbot/ChatbotBox';
 import { useState } from 'react';
 import ReportFormPage from '../../pages/report/ReportFormPage';
+import ReportProgressPage from '../../pages/report/ReportProgressPage';
 
 const DefaultLayout = () => {
   const location = useLocation();
@@ -25,6 +26,7 @@ const DefaultLayout = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/report" element={<ReportPage />} />
           <Route path="/report/form" element={<ReportFormPage />} />
+          <Route path="/report/progress" element={<ReportProgressPage />} />
           <Route path="/notify" element={<NotiPage />} />
           <Route path="/building" element={<BuildingPage />} />
           <Route path="*" element={<NotFoundPage />} />
