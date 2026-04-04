@@ -19,7 +19,7 @@ import {
 import { getServiceGuideMessages } from './chatbotHandler';
 import ChecklistMessage from './components/ChecklistMessage';
 
-import { useTyping } from '../../hooks/useTyping';
+import { useTyping } from '../../hooks/useChatbotTyping';
 import { useLoading } from '../../hooks/useLoading';
 
 export type Message = {

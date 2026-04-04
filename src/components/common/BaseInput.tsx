@@ -28,49 +28,33 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
     ref,
   ) => {
     return (
-      <Wrapper>
-        {label && <Label>{label}</Label>}
+      <InputContainer>
+        <StyledInput
+          ref={ref}
+          disabled={disabled}
+          $hasError={!!error}
+          $padding={padding}
+          {...rest}
+        />
 
-        <InputContainer>
-          <StyledInput
-            ref={ref}
-            disabled={disabled}
-            $hasError={!!error}
-            $padding={padding}
-            {...rest}
-          />
+        {icon && (
+          <Icon>
+            <i className={`bi bi-${icon}`} />
+          </Icon>
+        )}
 
-          {icon && (
-            <Icon>
-              <i className={`bi bi-${icon}`} />
-            </Icon>
-          )}
-
-          {rest.children}
-          {showButton && (
-            <InputButton type="submit" onClick={onButtonClick}>
-              <SearchIcon $color={buttonIconColor} />
-            </InputButton>
-          )}
-        </InputContainer>
-
-        {error && <ErrorText>{error}</ErrorText>}
-      </Wrapper>
+        {rest.children}
+        {showButton && (
+          <InputButton type="submit" onClick={onButtonClick}>
+            <SearchIcon $color={buttonIconColor} />
+          </InputButton>
+        )}
+      </InputContainer>
     );
   },
 );
 
 export default BaseInput;
-
-const Wrapper = styled.div`
-  margin-bottom: 1rem;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-`;
 
 const InputContainer = styled.div`
   position: relative;
@@ -118,7 +102,6 @@ const StyledInput = styled.input<{
 
   &:focus {
     border-color: var(--color-primary) !important;
-    box-shadow: 0 0 0 0.2rem rgba(119, 116, 234, 0.25) !important;
     outline: none;
   }
 
@@ -143,10 +126,4 @@ const Icon = styled.span`
   color: #999;
   font-size: 1.2rem;
   pointer-events: none;
-`;
-
-const ErrorText = styled.div`
-  color: #e74c3c;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
 `;
