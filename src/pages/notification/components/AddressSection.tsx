@@ -5,7 +5,7 @@ import { searchAddress } from '../../../apis/notiApi';
 import { DotLoader } from 'react-spinners';
 import { useState } from 'react';
 import type { AddressInfo } from '../../../types/notification';
-import type { PropertyDetail } from '../../../types/notification.types';
+import type { PropertyDetail } from '../../../types/notification';
 
 interface AddressSectionProps {
   onSelectedAddr: (address: AddressInfo) => void;

@@ -3,7 +3,7 @@ import BaseModal from '../../../components/common/BaseModal';
 import type {
   PropertyDetail,
   RegistryChanged,
-} from '../../../types/notification.types';
+} from '../../../types/notification';
 import styled from 'styled-components';
 import { getRegistryChanged } from '../../../apis/notiApi';
 
