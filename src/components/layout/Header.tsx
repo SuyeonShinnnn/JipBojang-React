@@ -26,7 +26,7 @@ const Header: React.FC = () => {
     navigate('/login');
   };
 
-  const isLogin = !localStorage.getItem('accessToken');
+  const isLogin = !!localStorage.getItem('accessToken');
 
   const handleLogoutButtonClick = () => {};
 
@@ -42,9 +42,9 @@ const Header: React.FC = () => {
           ))}
         </NavItemsWrapper>
         {isLogin ? (
-          <LoginBtn onClick={handleLoginButtonClick}>로그인</LoginBtn>
-        ) : (
           <LogoutBtn onClick={handleLogoutButtonClick}>로그아웃</LogoutBtn>
+        ) : (
+          <LoginBtn onClick={handleLoginButtonClick}>로그인</LoginBtn>
         )}
       </ItemWrapper>
     </HeaderContainer>
