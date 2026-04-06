@@ -12,6 +12,7 @@ import { useState } from 'react';
 import ReportFormPage from '../../pages/report/ReportFormPage';
 import ReportProgressPage from '../../pages/report/ReportProgressPage';
 import ReportResultPage from '../../pages/report/ReportResultPage';
+import SignupPage from '../../pages/auth/SignupPage';
 
 const DefaultLayout = () => {
   const location = useLocation();
@@ -23,7 +24,8 @@ const DefaultLayout = () => {
     <>
       <MainContent key={location.pathname} $noPadding={isBuildingPage}>
         <Routes location={location}>
-          <Route path="login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/report" element={<ReportPage />} />
           <Route path="/report/form" element={<ReportFormPage />} />
