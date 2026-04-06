@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuthStore } from '../../stores/auth';
+import BaseButton from '../common/BaseButton';
 
 const Header: React.FC = () => {
   type NavItems = {
@@ -29,7 +30,7 @@ const Header: React.FC = () => {
 
   const isLogin = useAuthStore((state) => state.isLogin);
   const logout = useAuthStore((state) => state.logout);
-  
+
   const handleLogoutButtonClick = () => {
     logout();
     navigate('/');
@@ -49,7 +50,12 @@ const Header: React.FC = () => {
         {isLogin ? (
           <LogoutBtn onClick={handleLogoutButtonClick}>로그아웃</LogoutBtn>
         ) : (
-          <LoginBtn onClick={handleLoginButtonClick}>로그인</LoginBtn>
+          <>
+            <BaseButton variant="outline" onClick={() => navigate('/signup')}>
+              회원가입
+            </BaseButton>
+            <LoginBtn onClick={handleLoginButtonClick}>로그인</LoginBtn>
+          </>
         )}
       </ItemWrapper>
     </HeaderContainer>
