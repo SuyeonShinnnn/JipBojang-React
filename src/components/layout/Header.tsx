@@ -48,14 +48,18 @@ const Header: React.FC = () => {
           ))}
         </NavItemsWrapper>
         {isLogin ? (
-          <LogoutBtn onClick={handleLogoutButtonClick}>로그아웃</LogoutBtn>
+          <BaseButton variant="outline" onClick={handleLogoutButtonClick}>
+            로그아웃
+          </BaseButton>
         ) : (
-          <>
-            <BaseButton variant="outline" onClick={() => navigate('/signup')}>
+          <ButtonWrapper>
+            <BaseButton variant="outline" onClick={handleLoginButtonClick}>
+              로그인
+            </BaseButton>{' '}
+            <BaseButton onClick={() => navigate('/signup')}>
               회원가입
             </BaseButton>
-            <LoginBtn onClick={handleLoginButtonClick}>로그인</LoginBtn>
-          </>
+          </ButtonWrapper>
         )}
       </ItemWrapper>
     </HeaderContainer>
@@ -114,36 +118,13 @@ const NavItemsWrapper = styled.nav`
   }
 `;
 
-const LoginBtn = styled.button`
-  padding: 0.5rem 1rem;
-  background-color: var(--color-primary);
-  color: white;
-  border: 0px solid transparent;
-  font-size: 0.9rem;
-  border-radius: 5rem;
+const ButtonWrapper = styled.div`
+  width: 180px;
+  display: flex;
+  gap: 4px;
 
-  &:hover {
-    cursor: pointer;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 12px;
-  }
-`;
-
-const LogoutBtn = styled.button`
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
-  background-color: #fff;
-  font-size: 0.9rem;
-  border-radius: 5rem;
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 12px;
+  button {
+    padding: 8px 12px;
+    border-radius: 50px;
   }
 `;
