@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useAuthStore } from '../../stores/auth';
 
 const Header: React.FC = () => {
   type NavItems = {
@@ -26,9 +27,13 @@ const Header: React.FC = () => {
     navigate('/login');
   };
 
-  const isLogin = !!localStorage.getItem('accessToken');
-
-  const handleLogoutButtonClick = () => {};
+  const isLogin = useAuthStore((state) => state.isLogin);
+  const logout = useAuthStore((state) => state.logout);
+  
+  const handleLogoutButtonClick = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <HeaderContainer>
