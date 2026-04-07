@@ -1,15 +1,15 @@
 @import url('./font.css');
 
 :root {
-  --color-primary-dark: #4b47c2;
-  --color-primary: #7774ea;
-  --color-secondary: #b6caf6;
-  --color-accent: #e0e2fa;
-  --color-lightgray: #d9d9d9;
-  --color-mediumgray: #b9b9b9;
-  --color-darkgray: #595959;
+  --color-primary-dark: rgb(75, 71, 194);
+  --color-primary: rgb(119, 116, 234);
+  --color-secondary: rgb(182, 202, 246);
+  --color-accent: rgb(224, 226, 250);
+  --color-lightgray: rgb(217, 217, 217);
+  --color-mediumgray: rgb(185, 185, 185);
+  --color-darkgray: rgb(89, 89, 89);
 
-  --text-primary: #0d0b47;
+  --text-primary: rgb(13, 11, 71);
 }
 
 * {
