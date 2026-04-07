@@ -46,7 +46,7 @@ const Section = styled.section`
 const Wrapper = styled.div`
   background-color: #fff;
   padding: 12px;
-  border: 1px solid var(--color-lightgray);
+  border: 1px solid rgb(var(--color-lightgray));
   border-radius: 12px;
 
   display: flex;
@@ -84,5 +84,5 @@ const Segmented = styled.div`
   padding: 4px 8px;
   border-radius: 50px;
   color: #fff;
-  background-color: var(--color-primary);
+  background-color: rgb(var(--color-primary));
 `;

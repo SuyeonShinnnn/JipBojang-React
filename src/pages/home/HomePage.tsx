@@ -52,7 +52,7 @@ const HomePage: React.FC = () => {
               ref={inputRef}
               placeholder="주소를 입력하세요"
               showButton={true}
-              buttonIconColor="var(--color-mediumgray)"
+              buttonIconColor="rgb(var(--color-mediumgray))"
               onChange={(e) => setAddress(e.target.value)}
               onButtonClick={handleAddressSearchButton}
             />
@@ -106,7 +106,7 @@ const Main = styled.main`
 
   p {
     font-size: 20px;
-    color: var(--color-darkgray);
+    color: rgb(var(--color-darkgray));
   }
 
   span,

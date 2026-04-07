@@ -61,7 +61,7 @@ const InputContainer = styled.div`
 `;
 
 const InputButton = styled.button`
-  background-color: var(--color-primary);
+  background-color: rgb(var(--color-primary));
   border: none;
   border-radius: 8px;
   padding: 8px 12px;
@@ -101,7 +101,7 @@ const StyledInput = styled.input<{
   padding: ${({ $padding }) => $padding};
 
   &:focus {
-    border-color: var(--color-primary) !important;
+    border-color: rgb(var(--color-primary)) !important;
     outline: none;
   }
 

@@ -96,9 +96,9 @@ const Container = styled.div<{ $isEmpty: boolean }>`
 
   width: 100%;
   padding: 1rem;
-  border: 0.1px solid var(--color-lightgray);
+  border: 0.1px solid rgb(var(--color-lightgray));
   border-radius: 8px;
-  box-shadow: 15px 10px 15px -5px var(--color-accent);
+  box-shadow: 15px 10px 15px -5px rgb(var(--color-accent));
   transition: all 0.3s ease;
 
   ${({ $isEmpty }) =>
@@ -108,8 +108,8 @@ const Container = styled.div<{ $isEmpty: boolean }>`
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      color: var(--color-primary);
-      border: 1px dashed var(--color-primary);
+      color: rgb(var(--color-primary));
+      border: 1px dashed rgb(var(--color-primary));
       box-shadow: none;
 
       &:hover {
@@ -124,7 +124,7 @@ const Container = styled.div<{ $isEmpty: boolean }>`
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 10px 10px 20px -8px var(--color-primary);
+    box-shadow: 10px 10px 20px -8px rgb(var(--color-primary));
   }
 
   @media (max-width: 1024px) {
@@ -150,7 +150,7 @@ const IconWrapper = styled.div`
   margin-top: 1rem;
 
   svg {
-    color: var(--color-darkgray);
+    color: rgb(var(--color-darkgray));
   }
 `;
 
@@ -162,7 +162,7 @@ const IconBox = styled.div`
     transition: all 0.1s ease;
 
     &:hover {
-      color: var(--color-accent);
+      color: rgb(var(--color-accent));
       transform: scale(1.1);
     }
   }
@@ -179,7 +179,7 @@ const Tooltip = styled.span`
   transform: translate(-50%, -20%);
   padding: 4px 8px;
   border-radius: 4px;
-  background: var(--color-darkgray);
+  background: rgb(var(--color-darkgray));
   color: white;
   font-size: 12px;
   white-space: nowrap;

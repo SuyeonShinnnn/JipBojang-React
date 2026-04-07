@@ -132,7 +132,7 @@ const Header = styled.div`
 
   p {
     margin-top: 0.5rem;
-    color: var(--color-darkgray);
+    color: rgb(var(--color-darkgray));
   }
 `;
 
@@ -160,7 +160,7 @@ const Section = styled.article`
   }
 
   small {
-    color: var(--color-darkgray);
+    color: rgb(var(--color-darkgray));
     font-size: 0.8rem;
   }
 `;
@@ -182,7 +182,7 @@ const ButtonWrapper = styled.div`
 const StartButton = styled(BaseButton)`
   position: relative;
   overflow: hidden;
-  background: var(--color-primary);
+  background: rgb(var(--color-primary));
   color: #fff;
   z-index: 1;
 
@@ -194,7 +194,7 @@ const StartButton = styled(BaseButton)`
     top: 0;
     right: 0;
     z-index: -1;
-    background: var(--color-primary-dark);
+    background: rgb(var(--color-primary-dark));
     transition: all 0.3s ease;
   }
 

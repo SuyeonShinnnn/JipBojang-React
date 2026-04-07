@@ -42,7 +42,7 @@ const Container = styled.div`
   align-items: center;
 
   padding: 10px;
-  border-top: 1px solid var(--color-lightgray);
+  border-top: 1px solid rgb(var(--color-lightgray));
   background-color: #fff;
 `;
 
@@ -50,14 +50,14 @@ const Input = styled.input`
   flex: 1;
   padding: 10px 14px;
 
-  border: 1px solid var(--color-lightgray);
+  border: 1px solid rgb(var(--color-lightgray));
   border-radius: 50px;
 
   font-size: 0.95rem;
 
   &:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: rgb(var(--color-primary));
   }
 `;
 

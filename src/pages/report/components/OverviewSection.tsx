@@ -38,7 +38,7 @@ const Section = styled.section`
 const Wrapper = styled.dl`
   background-color: #fff;
   padding: 12px;
-  border: 1px solid var(--color-lightgray);
+  border: 1px solid rgb(var(--color-lightgray));
   border-radius: 12px;
 
   display: grid;

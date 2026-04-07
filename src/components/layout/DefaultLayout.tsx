@@ -76,8 +76,8 @@ const ChatbotButton = styled.button<{ $isFocused: boolean }>`
   width: 88px;
   height: 88px;
   color: white;
-  background-color: var(--color-primary);
-  box-shadow: 5px 5px 20px var(--color-mediumgray);
+  background-color: rgb(var(--color-primary));
+  box-shadow: 5px 5px 20px rgb(var(--color-mediumgray));
   border-style: none;
   border-radius: 50px;
   padding: 1rem;
