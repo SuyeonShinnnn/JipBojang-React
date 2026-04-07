@@ -90,8 +90,8 @@ const StyledButton = styled.button<{
     switch ($variant) {
       case 'secondary':
         return css`
-          background-color: rgb(var(--color-secondary));
-          border: 1px solid rgb(var(--color-secondary));
+          background-color: rgb(var(--color-accent));
+          border: 1px solid rgb(var(--color-accent));
           color: #000;
         `;
       case 'outline':
