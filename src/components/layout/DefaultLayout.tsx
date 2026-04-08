@@ -13,6 +13,7 @@ import ReportFormPage from '../../pages/report/ReportFormPage';
 import ReportProgressPage from '../../pages/report/ReportProgressPage';
 import ReportResultPage from '../../pages/report/ReportResultPage';
 import SignupPage from '../../pages/auth/SignupPage';
+import InfoInputPage from '../../pages/auth/InfoInputPage';
 
 const DefaultLayout = () => {
   const location = useLocation();
@@ -26,6 +27,7 @@ const DefaultLayout = () => {
         <Routes location={location}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/signup/info" element={<InfoInputPage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/report" element={<ReportPage />} />
           <Route path="/report/form" element={<ReportFormPage />} />

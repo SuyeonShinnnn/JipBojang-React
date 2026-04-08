@@ -1,9 +1,17 @@
 import styled, { keyframes } from 'styled-components';
 import BaseButton from '../../components/common/BaseButton';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SignupPage = () => {
   const [userType, setUserType] = useState<string | null>(null);
+
+  const handleTypeButton = (type: string) => {
+    setUserType(type);
+
+    const navigate = useNavigate();
+    navigate('/signup/info');
+  };
 
   return (
     <>
@@ -12,10 +20,13 @@ const SignupPage = () => {
           <h2>회원가입 유형</h2>
           <p>어떤 유형의 회원으로 가입하시겠습니까?</p>
           <ButtonWrapper>
-            <BaseButton variant="secondary" onClick={() => setUserType('USER')}>
+            <BaseButton
+              variant="secondary"
+              onClick={() => handleTypeButton('USER')}
+            >
               일반 사용자
             </BaseButton>
-            <BaseButton onClick={() => setUserType('AGENT')}>
+            <BaseButton onClick={() => handleTypeButton('AGENT')}>
               부동산 전문가
             </BaseButton>
           </ButtonWrapper>
