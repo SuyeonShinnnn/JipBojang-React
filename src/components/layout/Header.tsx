@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useAuthStore } from '../../stores/auth';
 import BaseButton from '../common/BaseButton';
 import { BsBell } from 'react-icons/bs';
+import { useNotificationStore } from '../../stores/notification';
 
 const Header: React.FC = () => {
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -33,6 +34,7 @@ const Header: React.FC = () => {
 
   const [isAlarmCicked, setIsAlarmClicked] = useState(false);
   const alarmRef = useRef<HTMLDivElement>(null);
+  const notifications = useNotificationStore((state) => state.notifications);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -63,7 +65,17 @@ const Header: React.FC = () => {
           <ButtonWrapper>
             <AlarmWrapper ref={alarmRef}>
               <BsBell onClick={() => setIsAlarmClicked(!isAlarmCicked)} />
-              <AlarmBox $open={isAlarmCicked}>알람이 없습니다</AlarmBox>
+              <AlarmBox $open={isAlarmCicked}>
+                {notifications.length === 0 ? (
+                  <p>알람이 없습니다</p>
+                ) : (
+                  <ul>
+                    {notifications.map((item, key) => (
+                      <li key={key}>{item.message}</li>
+                    ))}
+                  </ul>
+                )}
+              </AlarmBox>
             </AlarmWrapper>
             <BaseButton size="size2" variant="outline">
               마이페이지
