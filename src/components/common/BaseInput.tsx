@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, type ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import { IoSearch } from 'react-icons/io5';
 
@@ -8,6 +8,7 @@ interface BaseInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   padding?: string;
   icon?: string;
   showButton?: boolean;
+  buttonContent?: ReactNode;
   buttonIconColor?: string;
   onButtonClick?: () => void;
 }
@@ -21,6 +22,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       icon,
       disabled,
       showButton = false,
+      buttonContent,
       onButtonClick,
       buttonIconColor,
       ...rest
@@ -45,8 +47,8 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
 
         {rest.children}
         {showButton && (
-          <InputButton type="submit" onClick={onButtonClick}>
-            <SearchIcon $color={buttonIconColor} />
+          <InputButton type="button" onClick={onButtonClick}>
+            {buttonContent ?? <SearchIcon $color={buttonIconColor} />}
           </InputButton>
         )}
       </InputContainer>
@@ -61,6 +63,7 @@ const InputContainer = styled.div`
 `;
 
 const InputButton = styled.button`
+  color: #fff;
   background-color: rgb(var(--color-primary));
   border: none;
   border-radius: 8px;
