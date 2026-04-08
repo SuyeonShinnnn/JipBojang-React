@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 const SignupPage = () => {
   const [userType, setUserType] = useState<string | null>(null);
 
+  const navigate = useNavigate();
   const handleTypeButton = (type: string) => {
     setUserType(type);
 
-    const navigate = useNavigate();
     navigate('/signup/info');
   };
 
