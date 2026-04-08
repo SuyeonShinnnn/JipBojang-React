@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/auth';
 
 const axiosInstance = axios.create({
-  baseURL: '/Jip-Bojang-1.0-SNAPSHOT/api',
+  baseURL: '/',
   withCredentials: true,
 });
 

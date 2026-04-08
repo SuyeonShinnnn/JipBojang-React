@@ -167,7 +167,7 @@ export default SearchBar;
 
 const Aside = styled.aside<{ hasResult: boolean }>`
   background-color: white;
-  box-shadow: 5px 5px 20px var(--color-darkgray);
+  box-shadow: 5px 5px 20px rgb(var(--color-darkgray));
   width: 360px;
   border-radius: 12px;
   margin: 5.5rem 0 0 12px;
@@ -207,7 +207,7 @@ const RecentSearchBox = styled.ul`
     padding: 12px;
 
     svg {
-      color: var(--color-darkgray);
+      color: rgb(var(--color-darkgray));
     }
 
     &:hover {
@@ -225,7 +225,7 @@ const Pagination = styled.div`
   margin-top: 10px;
 
   svg {
-    color: var(--color-darkgray);
+    color: rgb(var(--color-darkgray));
     &:hover {
       cursor: pointer;
     }
@@ -247,7 +247,7 @@ const PageButton = styled.button<{ active: boolean }>`
 const EmptyBox = styled.div`
   text-align: center;
   padding: 2rem 0;
-  color: var(--color-darkgray);
+  color: rgb(var(--color-darkgray));
 `;
 
 const ResultSection = styled.section`
@@ -275,10 +275,10 @@ const TitleWrapper = styled.div`
   span {
     font-size: 1.1rem;
     font-weight: 500;
-    color: var(--text-primary);
+    color: rgb(var(--text-primary));
   }
 `;
 
 const Address = styled.span`
-  color: var(--color-darkgray);
+  color: rgb(var(--color-darkgray));
 `;

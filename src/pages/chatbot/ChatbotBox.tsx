@@ -47,7 +47,7 @@ const Container = styled.div`
   width: 320px;
   height: 60vh;
   border-radius: 12px;
-  box-shadow: 8px 8px 20px var(--color-mediumgray);
+  box-shadow: 8px 8px 20px rgb(var(--color-mediumgray));
   display: flex;
   flex-direction: column;
   animation: ${slideUp} 0.3s ease-out;
@@ -58,7 +58,7 @@ const TitleContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid var(--color-lightgray);
+  border-bottom: 1px solid rgb(var(--color-lightgray));
 
   img {
     width: 24px;

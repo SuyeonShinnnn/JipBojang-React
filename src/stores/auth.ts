@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import axiosInstance from '../apis/axiosInstance';
 import type { AxiosError } from 'axios';
-import axios from 'axios';
 
 export interface User {
   id: string;

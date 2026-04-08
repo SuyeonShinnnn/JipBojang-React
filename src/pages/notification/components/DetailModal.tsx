@@ -85,7 +85,7 @@ const InfoSection = styled.section`
 
 const InfoTable = styled.table`
   width: 100%;
-  border-top: 1px solid var(--color-lightgray);
+  border-top: 1px solid rgb(var(--color-lightgray));
   border-collapse: collapse;
   overflow: hidden;
 `;
@@ -95,15 +95,15 @@ const LabelCell = styled.td`
   background-color: #f5f5f5;
   font-weight: 600;
   padding: 12px 16px;
-  border-right: 1px solid var(--color-lightgray);
-  border-bottom: 1px solid var(--color-lightgray);
+  border-right: 1px solid rgb(var(--color-lightgray));
+  border-bottom: 1px solid rgb(var(--color-lightgray));
   vertical-align: top;
 `;
 
 const ValueCell = styled.td`
   padding: 12px 16px;
   background-color: #ffffff;
-  border-bottom: 1px solid var(--color-lightgray);
+  border-bottom: 1px solid rgb(var(--color-lightgray));
   line-height: 1.5;
   word-break: keep-all;
 `;
@@ -126,6 +126,6 @@ const ChangedBox = styled.div`
   flex-direction: column;
   padding: 0.5rem;
   gap: 0.5rem;
-  border: 1px solid var(--color-primary);
+  border: 1px solid rgb(var(--color-primary));
   border-radius: 8px;
 `;

@@ -76,11 +76,11 @@ const AddressBox = styled.div`
   gap: 1rem;
   margin-bottom: 1rem;
   padding: 16px;
-  border: 1px solid var(--color-lightgray);
+  border: 1px solid rgb(var(--color-lightgray));
   border-radius: 8px;
 
   svg {
-    color: var(--color-primary);
+    color: rgb(var(--color-primary));
     font-size: 2.5rem;
   }
 `;

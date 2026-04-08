@@ -94,7 +94,7 @@ const BodySection = styled.section`
 
 export const ChatBubble = styled.div<{ $role: 'bot' | 'user' }>`
   background: ${({ $role }) =>
-    $role === 'bot' ? 'var(--color-accent)' : 'var(--color-primary)'};
+    $role === 'bot' ? 'rgb(var(--color-accent))' : 'rgb(var(--color-primary))'};
   color: ${({ $role }) => ($role === 'user' ? '#fff' : '#000')};
   border-radius: 16px;
   border-bottom-left-radius: ${({ $role }) =>

@@ -95,21 +95,21 @@ const LineInput = styled.input`
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
   border-top: 1px solid transparent;
-  border-bottom: 1px solid var(--color-mediumgray);
+  border-bottom: 1px solid rgb(var(--color-mediumgray));
   width: 40%;
 
   &:focus {
     outline: none;
-    border-bottom: 1px solid var(--color-primary);
+    border-bottom: 1px solid rgb(var(--color-primary));
   }
 `;
 
 const InputLabel = styled.label`
-  color: var(--color-darkgray);
+  color: rgb(var(--color-darkgray));
 `;
 
 const InputSpan = styled.span`
-  color: var(--color-darkgray);
+  color: rgb(var(--color-darkgray));
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -117,7 +117,7 @@ const InputSpan = styled.span`
   margin-bottom: 1.5rem;
 
   svg {
-    color: var(--color-primary) !important ;
+    color: rgb(var(--color-primary)) !important ;
   }
 `;
 
@@ -135,7 +135,7 @@ const SubTitle = styled.h5`
   gap: 0.5rem;
 
   svg {
-    color: var(--color-primary) !important ;
+    color: rgb(var(--color-primary)) !important ;
     font-size: 20px;
   }
 `;

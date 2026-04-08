@@ -35,5 +35,5 @@ const Item = styled.label`
   display: flex;
   gap: 8px;
   margin-bottom: 4px;
-  color: var(--color-darkgray);
+  color: rgb(var(--color-darkgray));
 `;

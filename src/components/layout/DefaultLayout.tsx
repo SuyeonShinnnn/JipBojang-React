@@ -12,6 +12,8 @@ import { useState } from 'react';
 import ReportFormPage from '../../pages/report/ReportFormPage';
 import ReportProgressPage from '../../pages/report/ReportProgressPage';
 import ReportResultPage from '../../pages/report/ReportResultPage';
+import SignupPage from '../../pages/auth/SignupPage';
+import InfoInputPage from '../../pages/auth/InfoInputPage';
 
 const DefaultLayout = () => {
   const location = useLocation();
@@ -23,7 +25,9 @@ const DefaultLayout = () => {
     <>
       <MainContent key={location.pathname} $noPadding={isBuildingPage}>
         <Routes location={location}>
-          <Route path="login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/signup/info" element={<InfoInputPage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/report" element={<ReportPage />} />
           <Route path="/report/form" element={<ReportFormPage />} />
@@ -74,8 +78,8 @@ const ChatbotButton = styled.button<{ $isFocused: boolean }>`
   width: 88px;
   height: 88px;
   color: white;
-  background-color: var(--color-primary);
-  box-shadow: 5px 5px 20px var(--color-mediumgray);
+  background-color: rgb(var(--color-primary));
+  box-shadow: 5px 5px 20px rgb(var(--color-mediumgray));
   border-style: none;
   border-radius: 50px;
   padding: 1rem;
