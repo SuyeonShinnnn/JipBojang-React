@@ -25,32 +25,39 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       buttonContent,
       onButtonClick,
       buttonIconColor,
+      id,
       ...rest
     },
     ref,
   ) => {
     return (
       <InputContainer>
-        <StyledInput
-          ref={ref}
-          disabled={disabled}
-          $hasError={!!error}
-          $padding={padding}
-          {...rest}
-        />
+        {label && <Label htmlFor={id}>{label}</Label>}
 
-        {icon && (
-          <Icon>
-            <i className={`bi bi-${icon}`} />
-          </Icon>
-        )}
+        <InputWrapper>
+          <StyledInput
+            ref={ref}
+            id={id}
+            disabled={disabled}
+            $hasError={!!error}
+            $padding={padding}
+            {...rest}
+          />
 
-        {rest.children}
-        {showButton && (
-          <InputButton type="button" onClick={onButtonClick}>
-            {buttonContent ?? <SearchIcon $color={buttonIconColor} />}
-          </InputButton>
-        )}
+          {icon && (
+            <Icon>
+              <i className={`bi bi-${icon}`} />
+            </Icon>
+          )}
+
+          {showButton && (
+            <InputButton type="button" onClick={onButtonClick}>
+              {buttonContent ?? <SearchIcon $color={buttonIconColor} />}
+            </InputButton>
+          )}
+        </InputWrapper>
+
+        {error && <ErrorText>{error}</ErrorText>}
       </InputContainer>
     );
   },
@@ -59,7 +66,18 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
 export default BaseInput;
 
 const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const InputWrapper = styled.div`
   position: relative;
+`;
+
+const Label = styled.label`
+  font-size: 0.95rem;
+  font-weight: 500;
 `;
 
 const InputButton = styled.button`
@@ -75,7 +93,6 @@ const InputButton = styled.button`
   transform: translateY(-50%);
 
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
 
@@ -104,7 +121,7 @@ const StyledInput = styled.input<{
   padding: ${({ $padding }) => $padding};
 
   &:focus {
-    border-color: rgb(var(--color-primary)) !important;
+    border-color: rgb(var(--color-primary));
     outline: none;
   }
 
@@ -129,4 +146,9 @@ const Icon = styled.span`
   color: #999;
   font-size: 1.2rem;
   pointer-events: none;
+`;
+
+const ErrorText = styled.span`
+  font-size: 0.85rem;
+  color: #e74c3c;
 `;
