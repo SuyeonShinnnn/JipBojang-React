@@ -6,6 +6,7 @@ import type {
 } from '../../../types/notification';
 import styled from 'styled-components';
 import { getRegistedPropertyDetail } from '../../../apis/notiApi';
+import emptyIcon from '../../../assets/character/Character-Empty.png';
 
 interface DetailModalProps {
   isOpen: boolean;
@@ -62,11 +63,19 @@ const DetailModal: React.FC<DetailModalProps> = ({
 
       <ChangedSection>
         <h3>변동내역</h3>
-        <ChangedWrapper>
+        <ChangedWrapper $isChangeExist={!!changedInfo}>
+          {changedInfo.length === 0 && (
+            <>
+              <img
+                style={{ width: '72px' }}
+                src={emptyIcon}
+                alt="Item is Empty"
+              />
+              <p>등록일 이후로 발생한 변동 내역이 없습니다</p>
+            </>
+          )}
           {changedInfo.map((item) => (
-            <ChangedBox key={item.id}>
-             
-            </ChangedBox>
+            <ChangedBox key={item.id}></ChangedBox>
           ))}
         </ChangedWrapper>
       </ChangedSection>
@@ -114,10 +123,14 @@ const ChangedSection = styled.section`
   gap: 8px;
 `;
 
-const ChangedWrapper = styled.div`
+const ChangedWrapper = styled.div<{ $isChangeExist: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  justify-content: ${({ $isChangeExist }) =>
+    $isChangeExist ? 'center' : 'start'};
+  align-items: ${({ $isChangeExist }) => ($isChangeExist ? 'center' : 'start')};
 `;
 
 const ChangedBox = styled.div`
