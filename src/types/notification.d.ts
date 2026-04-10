@@ -21,5 +21,5 @@ export interface RegistryChanged {
   title: string;
   commUniqueNo: string;
   purpose: string;
-  reciptDate: string;
+  receiptDate: string;
 }
