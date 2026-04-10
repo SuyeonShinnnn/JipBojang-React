@@ -5,7 +5,7 @@ import type {
   RegistryChanged,
 } from '../../../types/notification';
 import styled from 'styled-components';
-import { getRegistryChanged } from '../../../apis/notiApi';
+import { getRegistedPropertyDetail } from '../../../apis/notiApi';
 
 interface DetailModalProps {
   isOpen: boolean;
@@ -31,7 +31,7 @@ const DetailModal: React.FC<DetailModalProps> = ({
     if (!isOpen || !propertyDetail?.commUniqueNo) return;
 
     const fetchData = async () => {
-      const data = await getRegistryChanged(
+      const data = await getRegistedPropertyDetail(
         Number(propertyDetail?.userId),
         Number(propertyDetail?.commUniqueNo),
       );
@@ -65,8 +65,7 @@ const DetailModal: React.FC<DetailModalProps> = ({
         <ChangedWrapper>
           {changedInfo.map((item) => (
             <ChangedBox key={item.id}>
-              <span>{item.changedDate}</span>
-              <span>{item.detail}</span>
+             
             </ChangedBox>
           ))}
         </ChangedWrapper>

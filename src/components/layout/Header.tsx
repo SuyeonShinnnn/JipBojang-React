@@ -36,7 +36,10 @@ const Header: React.FC = () => {
   const alarmRef = useRef<HTMLDivElement>(null);
   const notifications = useNotificationStore((state) => state.notifications);
 
-  const handleAlarmItemClick = (id: number) => [navigate('/notify')];
+  const handleAlarmItemClick = (id: number) => [
+    navigate('/notify', { state: { targetPropertyId: id } }),
+    setIsAlarmClicked(false),
+  ];
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

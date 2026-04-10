@@ -5,8 +5,11 @@ import { getRegistedPropertyInfo } from '../../apis/notiApi';
 import WarningCardSection from './components/WarningCardSection';
 import type { PropertyDetail } from '../../types/notification';
 import { useAuthStore } from '../../stores/auth';
+import { useLocation } from 'react-router-dom';
 
 const NotiPage: React.FC = () => {
+  const location = useLocation();
+  const targetId = location.state?.targetPropertyId;
   const userId = useAuthStore((state) => state.user.userId);
   const [propertyInfo, setPropertyInfo] = useState<PropertyDetail[]>([]);
 
@@ -30,7 +33,14 @@ const NotiPage: React.FC = () => {
         {Array.from({ length: totalCards }).map((_, idx) => {
           const item = propertyInfo[idx];
 
-          return <PropertyCard key={idx} propertyInfo={item} isEmpty={!item} />;
+          return (
+            <PropertyCard
+              key={idx}
+              propertyInfo={item}
+              isEmpty={!item}
+              autoOpenDetailModal={!!item && item.id === targetId}
+            />
+          );
         })}
       </PropertyCardWrapper>
       <WarningCardSection />

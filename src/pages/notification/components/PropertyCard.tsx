@@ -2,7 +2,7 @@ import { HiMagnifyingGlassPlus } from 'react-icons/hi2';
 import { GoTrash } from 'react-icons/go';
 import { GoPencil } from 'react-icons/go';
 import { BsPlusLg } from 'react-icons/bs';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import PropertyRegistModal from './PropertyRegistModal';
 import DeleteModal from './DeleteModal';
@@ -13,11 +13,13 @@ import type { PropertyDetail } from '../../../types/notification';
 interface PropertyCardProps {
   propertyInfo?: PropertyDetail;
   isEmpty?: boolean;
+  autoOpenDetailModal: boolean;
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
   propertyInfo,
   isEmpty = false,
+  autoOpenDetailModal = false,
 }) => {
   const [openPropertyRegisterModal, setOpenPropertyRegisterModal] =
     useState(false);
@@ -40,6 +42,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       setOpenDetailModal(!openDetailModal);
     }
   };
+
+  useEffect(() => {
+    if (autoOpenDetailModal && propertyInfo) {
+      setOpenDetailModal(true);
+    }
+  }, [autoOpenDetailModal, propertyInfo]);
 
   return (
     <>
