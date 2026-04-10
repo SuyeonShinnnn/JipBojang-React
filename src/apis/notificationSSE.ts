@@ -1,12 +1,14 @@
+import type { RegistryChanged } from '../types/notification';
+
 export interface NotificationPayload {
-  message: string;
+  message: RegistryChanged;
   createdAt?: string;
   type?: string;
 }
 
 export const connectNotificationSSE = (
   userId: string,
-  onMessage: (data: NotificationPayload) => void,
+  onMessage: (data: RegistryChanged) => void,
   onError?: () => void,
 ) => {
   const eventSource = new EventSource(
@@ -19,7 +21,12 @@ export const connectNotificationSSE = (
   eventSource.addEventListener('notification', (event) => {
     try {
       const parsed = JSON.parse(event.data);
-      onMessage(parsed);
+      console.log(parsed);
+      if (Array.isArray(parsed)) {
+        parsed.forEach((item) => onMessage(item));
+      } else {
+        onMessage(parsed);
+      }
     } catch (error) {
       console.error('SSE 파싱 실패:', error);
     }

@@ -36,6 +36,8 @@ const Header: React.FC = () => {
   const alarmRef = useRef<HTMLDivElement>(null);
   const notifications = useNotificationStore((state) => state.notifications);
 
+  const handleAlarmItemClick = (id: number) => [navigate('/notify')];
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (alarmRef.current && !alarmRef.current.contains(e.target as Node)) {
@@ -64,16 +66,29 @@ const Header: React.FC = () => {
         {isLogin ? (
           <ButtonWrapper>
             <AlarmWrapper ref={alarmRef}>
-              <BsBell onClick={() => setIsAlarmClicked(!isAlarmCicked)} />
+              <BsBell
+                onClick={() => {
+                  setIsAlarmClicked(!isAlarmCicked);
+                  console.log(notifications);
+                }}
+              />
               <AlarmBox $open={isAlarmCicked}>
                 {notifications.length === 0 ? (
                   <p>알람이 없습니다</p>
                 ) : (
-                  <ul>
-                    {notifications.map((item, key) => (
-                      <li key={key}>{item.message}</li>
+                  <AlarmList>
+                    <h5>{notifications.length}건의 알림</h5>
+                    {notifications.map((item) => (
+                      <li
+                        key={item.id}
+                        onClick={() => handleAlarmItemClick(item.id)}
+                      >
+                        🚨
+                        <strong>{item.title}</strong>에서
+                        <strong> {item.purpose}</strong>이 발생했어요
+                      </li>
                     ))}
-                  </ul>
+                  </AlarmList>
                 )}
               </AlarmBox>
             </AlarmWrapper>
@@ -179,16 +194,17 @@ const AlarmWrapper = styled.div`
 
 const AlarmBox = styled.div<{ $open: boolean }>`
   background-color: #fff;
-  width: 320px;
+  max-width: 420px;
+  min-width: 320px;
   min-height: 120px;
   border-radius: 12px;
   box-shadow: 4px 4px 20px rgb(var(--color-lightgray));
+  font-size: 16px;
 
   position: absolute;
   top: 80%;
   right: 10%;
   z-index: 1200;
-  padding: 1rem;
 
   opacity: ${({ $open }) => ($open ? 1 : 0)};
   transform: ${({ $open }) => ($open ? 'translateY(0)' : 'translateY(-12px)')};
@@ -198,4 +214,20 @@ const AlarmBox = styled.div<{ $open: boolean }>`
     opacity 0.25s ease,
     transform 0.25s ease,
     visibility 0.25s ease;
+`;
+
+const AlarmList = styled.ul`
+  color: rgb(var(--color-darkgray));
+  h5 {
+    padding: 12px 0 8px 8px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  li {
+    padding: 12px 8px 12px 8px;
+    &:hover {
+      cursor: pointer;
+      background-color: rgb(var(--color-lightgray) / 30%);
+    }
+  }
 `;

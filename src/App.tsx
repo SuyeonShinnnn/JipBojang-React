@@ -25,9 +25,9 @@ function App() {
 
   useEffect(() => {
     if (!userId) return;
-    const sse = connectNotificationSSE(userId, (data) =>
-      addNotification(data.message),
-    );
+    const sse = connectNotificationSSE(userId, (data) => {
+      addNotification(data);
+    });
 
     return () => {
       sse.close();

@@ -1,15 +1,13 @@
 import { create } from 'zustand';
+import type { RegistryChanged } from '../types/notification';
 
-export interface NotificationItem {
-  id: number;
-  message: string;
-  createdAt?: string;
+export interface NotificationItem extends RegistryChanged {
   isRead: boolean;
 }
 
 interface NotificationState {
   notifications: NotificationItem[];
-  addNotification: (message: string) => void;
+  addNotification: (message: RegistryChanged) => void;
 }
 
 export const useNotificationStore = create<NotificationState>((set) => ({
@@ -18,8 +16,7 @@ export const useNotificationStore = create<NotificationState>((set) => ({
     set((state) => ({
       notifications: [
         {
-          id: Date.now(),
-          message,
+          ...message,
           isRead: false,
         },
         ...state.notifications,
