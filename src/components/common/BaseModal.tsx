@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import styled from 'styled-components';
 import BaseButton from './BaseButton';
+import { createPortal } from 'react-dom';
 
 interface BaseModalProps {
   isOpen: boolean;
@@ -29,7 +30,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <Overlay onClick={onClose} $isOpen={isOpen}>
       <Dialog
         onClick={(e) => e.stopPropagation()} // 내부 클릭 시 닫히지 않게
@@ -55,7 +56,8 @@ const BaseModal: React.FC<BaseModalProps> = ({
           </Footer>
         </Content>
       </Dialog>
-    </Overlay>
+    </Overlay>,
+    document.body,
   );
 };
 
