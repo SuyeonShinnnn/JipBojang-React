@@ -39,6 +39,7 @@ const DetailModal: React.FC<DetailModalProps> = ({
       setChangedInfo(data);
     };
     fetchData();
+    console.log(changedInfo);
   }, [isOpen, propertyDetail?.commUniqueNo]);
 
   return (
@@ -64,7 +65,7 @@ const DetailModal: React.FC<DetailModalProps> = ({
       <ChangedSection>
         <h3>변동내역</h3>
         <ChangedWrapper $isChangeExist={!!changedInfo}>
-          {changedInfo.length === 0 && (
+          {changedInfo.length === 0 ? (
             <>
               <img
                 style={{ width: '72px' }}
@@ -73,10 +74,18 @@ const DetailModal: React.FC<DetailModalProps> = ({
               />
               <p>등록일 이후로 발생한 변동 내역이 없습니다</p>
             </>
+          ) : (
+            <Timeline>
+              {changedInfo.map((item) => (
+                <TimelineItem key={item.id}>
+                  <ChangedCard>
+                    <DateText>{item.receiptDate}</DateText>
+                    <PurposeText>{item.purpose}</PurposeText>
+                  </ChangedCard>
+                </TimelineItem>
+              ))}
+            </Timeline>
           )}
-          {changedInfo.map((item) => (
-            <ChangedBox key={item.id}></ChangedBox>
-          ))}
         </ChangedWrapper>
       </ChangedSection>
     </BaseModal>
@@ -133,11 +142,50 @@ const ChangedWrapper = styled.div<{ $isChangeExist: boolean }>`
   align-items: ${({ $isChangeExist }) => ($isChangeExist ? 'center' : 'start')};
 `;
 
-const ChangedBox = styled.div`
+const Timeline = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
-  gap: 0.5rem;
-  border: 1px solid rgb(var(--color-primary));
-  border-radius: 8px;
+  gap: 20px;
+  padding-left: 20px;
+  width: 100%;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: #d9d9d9;
+  }
+`;
+
+const TimelineItem = styled.div`
+  position: relative;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+`;
+
+const ChangedCard = styled.div`
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #ececec;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+`;
+
+const DateText = styled.p`
+  margin: 0;
+  font-size: 0.9rem;
+  color: #777;
+  font-weight: 500;
+`;
+
+const PurposeText = styled.p`
+  margin: 6px 0 0;
+  font-size: 1rem;
+  font-weight: 700;
 `;
