@@ -3,13 +3,10 @@ import axiosInstance from './axiosInstance';
 
 export const getRegistedPropertyInfo = async (id: number) => {
   try {
-    const response = await axiosInstance.get(
-      `/api/notification/registed/${id}`,
-    );
-    return response.data;
+    const res = await axiosInstance.get(`/api/notification/registed/${id}`);
+    return res.data;
   } catch (e) {
-    console.log('🚨오류 발생');
-    return e;
+    throw e;
   }
 };
 
@@ -37,5 +34,13 @@ export const searchAddress = async (keyword: string) => {
   } catch (e) {
     console.log('🚨getRegistryChanged 오류 발생');
     return [];
+  }
+};
+
+export const deleteProperty = async (retgistId?: number) => {
+  try {
+    await axiosInstance.delete(`/api/notification/${retgistId}`);
+  } catch (e) {
+    throw e;
   }
 };
