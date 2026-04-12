@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropertyCard from './components/PropertyCard';
-import { getRegistedPropertyDetail } from '../../apis/notiApi';
+import { getRegistedPropertyInfo } from '../../apis/notiApi';
 import WarningCardSection from './components/WarningCardSection';
 import { useAuthStore } from '../../stores/auth';
 import { useLocation } from 'react-router-dom';
@@ -17,7 +17,7 @@ const NotiPage: React.FC = () => {
 
   const { isPending, isError, data, refetch } = useQuery({
     queryKey: ['propertyInfo', userId],
-    queryFn: () => getRegistedPropertyDetail(Number(userId)),
+    queryFn: () => getRegistedPropertyInfo(Number(userId)),
     enabled: !!userId,
     retry: false,
   });
