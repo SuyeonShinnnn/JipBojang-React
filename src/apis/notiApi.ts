@@ -25,7 +25,7 @@ export const getRegistedPropertyDetail = async (
     return response.data;
   } catch (e) {
     console.log('🚨getRegistryChanged 오류 발생');
-    return e;
+    throw e;
   }
 };
 
