@@ -92,6 +92,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       />
 
       <DeleteModal
+        itemId={propertyInfo?.id}
         isOpen={openDeleteModal}
         onClose={() => setOpenDeleteModal(false)}
       />
