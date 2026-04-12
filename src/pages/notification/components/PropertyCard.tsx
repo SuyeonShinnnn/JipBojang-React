@@ -56,7 +56,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       <SkeletonCard>
         <SkeletonTitle />
         <SkeletonText />
-        <SkeletonText short />
+        <SkeletonText $short />
       </SkeletonCard>
     );
 
@@ -134,8 +134,8 @@ const SkeletonTitle = styled(SkeletonBase)`
   margin-bottom: 16px;
 `;
 
-const SkeletonText = styled(SkeletonBase)<{ short?: boolean }>`
-  width: ${({ short }) => (short ? '40%' : '100%')};
+const SkeletonText = styled(SkeletonBase)<{ $short?: boolean }>`
+  width: ${({ $short }) => ($short ? '40%' : '100%')};
   height: 16px;
   margin-bottom: 12px;
 `;
