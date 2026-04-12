@@ -3,7 +3,7 @@ import { GoTrash } from 'react-icons/go';
 import { GoPencil } from 'react-icons/go';
 import { BsPlusLg } from 'react-icons/bs';
 import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import PropertyRegistModal from './PropertyRegistModal';
 import DeleteModal from './DeleteModal';
 import ModifyModal from './ModifyModal';
@@ -13,12 +13,14 @@ import type { PropertyDetail } from '../../../types/notification';
 interface PropertyCardProps {
   propertyInfo?: PropertyDetail;
   isEmpty?: boolean;
+  isPending: boolean;
   autoOpenDetailModal: boolean;
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
   propertyInfo,
   isEmpty = false,
+  isPending,
   autoOpenDetailModal = false,
 }) => {
   const [openPropertyRegisterModal, setOpenPropertyRegisterModal] =
@@ -48,6 +50,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       setOpenDetailModal(true);
     }
   }, [autoOpenDetailModal, propertyInfo]);
+
+  if (isPending)
+    return (
+      <SkeletonCard>
+        <SkeletonTitle />
+        <SkeletonText />
+        <SkeletonText short />
+      </SkeletonCard>
+    );
 
   return (
     <>
@@ -96,6 +107,38 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
     </>
   );
 };
+
+const SkeletonCard = styled.div`
+  flex: 1;
+  border-radius: 16px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+`;
+
+const shimmer = keyframes`
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+`;
+
+const SkeletonBase = styled.div`
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400px 100%;
+  animation: ${shimmer} 1.4s ease infinite;
+  border-radius: 8px;
+`;
+
+const SkeletonTitle = styled(SkeletonBase)`
+  width: 60%;
+  height: 24px;
+  margin-bottom: 16px;
+`;
+
+const SkeletonText = styled(SkeletonBase)<{ short?: boolean }>`
+  width: ${({ short }) => (short ? '40%' : '100%')};
+  height: 16px;
+  margin-bottom: 12px;
+`;
 
 const Container = styled.div<{ $isEmpty: boolean }>`
   display: flex;
