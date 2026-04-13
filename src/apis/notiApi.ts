@@ -10,13 +10,10 @@ export const getRegistedPropertyInfo = async (id: number) => {
   }
 };
 
-export const getRegistedPropertyDetail = async (
-  userId: number,
-  commUniqueNo?: number,
-) => {
+export const getRegistedPropertyDetail = async (commUniqueNo?: string) => {
   try {
     const response = await axios.get(
-      `/api/notification/regist/user/${userId}/uniqueNo/${commUniqueNo}`,
+      `/api/notification/regist/uniqueNo/${commUniqueNo}`,
     );
     console.log(response.data[0]);
     return response.data;
