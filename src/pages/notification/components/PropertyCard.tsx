@@ -3,12 +3,13 @@ import { GoTrash } from 'react-icons/go';
 import { GoPencil } from 'react-icons/go';
 import { BsPlusLg } from 'react-icons/bs';
 import React, { useEffect, useState } from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import styled, { css } from 'styled-components';
 import PropertyRegistModal from './PropertyRegistModal';
 import DeleteModal from './DeleteModal';
 import ModifyModal from './ModifyModal';
 import DetailModal from './DetailModal';
 import type { PropertyDetail } from '../../../types/notification';
+import SkeletonCard from '../../../components/skeleton/SkeletonCard';
 
 interface PropertyCardProps {
   propertyInfo?: PropertyDetail;
@@ -51,14 +52,23 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
     }
   }, [autoOpenDetailModal, propertyInfo]);
 
-  if (isPending)
-    return (
-      <SkeletonCard>
-        <SkeletonTitle />
-        <SkeletonText />
-        <SkeletonText $short />
-      </SkeletonCard>
-    );
+  const [showSkeleton, setShowSkeleton] = useState(true);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    if (isPending) {
+      setShowSkeleton(true);
+    } else {
+      timer = setTimeout(() => {
+        setShowSkeleton(false);
+      }, 2000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [isPending]);
+
+  if (showSkeleton) return <SkeletonCard />;
 
   return (
     <>
@@ -109,37 +119,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   );
 };
 
-const SkeletonCard = styled.div`
-  flex: 1;
-  border-radius: 16px;
-  padding: 20px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-`;
-
-const shimmer = keyframes`
-  0% { background-position: -200px 0; }
-  100% { background-position: calc(200px + 100%) 0; }
-`;
-
-const SkeletonBase = styled.div`
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
-  background-size: 400px 100%;
-  animation: ${shimmer} 1.4s ease infinite;
-  border-radius: 8px;
-`;
-
-const SkeletonTitle = styled(SkeletonBase)`
-  width: 60%;
-  height: 24px;
-  margin-bottom: 16px;
-`;
-
-const SkeletonText = styled(SkeletonBase)<{ $short?: boolean }>`
-  width: ${({ $short }) => ($short ? '40%' : '100%')};
-  height: 16px;
-  margin-bottom: 12px;
-`;
+export default PropertyCard;
 
 const Container = styled.div<{ $isEmpty: boolean }>`
   display: flex;
@@ -240,5 +220,3 @@ const Tooltip = styled.span`
 
   transition: all 0.2s ease;
 `;
-
-export default PropertyCard;
