@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import BaseModal from '../../../components/common/BaseModal';
 import type {
   PropertyDetail,
@@ -7,6 +7,10 @@ import type {
 import styled from 'styled-components';
 import { getRegistedPropertyDetail } from '../../../apis/notiApi';
 import emptyIcon from '../../../assets/character/Character-Empty.png';
+import { useQuery } from '@tanstack/react-query';
+import { IoWarningOutline } from 'react-icons/io5';
+import SkeletonTimeline from '../../../components/skeleton/SkeletonTimeline';
+import BaseButton from '../../../components/common/BaseButton';
 
 interface DetailModalProps {
   isOpen: boolean;
@@ -26,21 +30,16 @@ const DetailModal: React.FC<DetailModalProps> = ({
     expiredDate: '만료일',
   };
 
-  const [changedInfo, setChangedInfo] = useState<RegistryChanged[]>([]);
-
-  useEffect(() => {
-    if (!isOpen || !propertyDetail?.commUniqueNo) return;
-
-    const fetchData = async () => {
-      const data = await getRegistedPropertyDetail(
-        Number(propertyDetail?.userId),
-        Number(propertyDetail?.commUniqueNo),
-      );
-      setChangedInfo(data);
-    };
-    fetchData();
-    console.log(changedInfo);
-  }, [isOpen, propertyDetail?.commUniqueNo]);
+  const {
+    isPending,
+    isError,
+    data = [],
+    refetch,
+  } = useQuery<RegistryChanged[]>({
+    queryKey: ['changedInfo', propertyDetail?.commUniqueNo],
+    queryFn: () => getRegistedPropertyDetail(propertyDetail?.commUniqueNo),
+    enabled: isOpen && !!propertyDetail?.commUniqueNo,
+  });
 
   return (
     <BaseModal
@@ -64,29 +63,43 @@ const DetailModal: React.FC<DetailModalProps> = ({
 
       <ChangedSection>
         <h3>변동내역</h3>
-        <ChangedWrapper $isChangeExist={!!changedInfo}>
-          {changedInfo.length === 0 ? (
-            <>
-              <img
-                style={{ width: '72px' }}
-                src={emptyIcon}
-                alt="Item is Empty"
-              />
-              <p>등록일 이후로 발생한 변동 내역이 없습니다</p>
-            </>
-          ) : (
-            <Timeline>
-              {changedInfo.map((item) => (
-                <TimelineItem key={item.id}>
-                  <ChangedCard>
-                    <DateText>{item.receiptDate}</DateText>
-                    <PurposeText>{item.purpose}</PurposeText>
-                  </ChangedCard>
-                </TimelineItem>
-              ))}
-            </Timeline>
-          )}
-        </ChangedWrapper>
+
+        {isPending ? (
+          <SkeletonTimeline />
+        ) : isError ? (
+          <ErrorCard>
+            <IoWarningOutline />
+            <h4>변동내역을 불러오지 못했어요</h4>
+            <p>잠시 후에 다시 시도해주세요</p>
+            <BaseButton variant="outline" onClick={() => refetch()}>
+              재시도
+            </BaseButton>
+          </ErrorCard>
+        ) : (
+          <ChangedWrapper $isChangeExist={!!data}>
+            {data.length === 0 ? (
+              <>
+                <img
+                  style={{ width: '72px' }}
+                  src={emptyIcon}
+                  alt="Item is Empty"
+                />
+                <p>등록일 이후로 발생한 변동 내역이 없습니다</p>
+              </>
+            ) : (
+              <Timeline>
+                {data.map((item) => (
+                  <TimelineItem key={item.id}>
+                    <ChangedCard>
+                      <DateText>{item.receiptDate}</DateText>
+                      <PurposeText>{item.purpose}</PurposeText>
+                    </ChangedCard>
+                  </TimelineItem>
+                ))}
+              </Timeline>
+            )}
+          </ChangedWrapper>
+        )}
       </ChangedSection>
     </BaseModal>
   );
@@ -188,4 +201,37 @@ const PurposeText = styled.p`
   margin: 6px 0 0;
   font-size: 1rem;
   font-weight: 700;
+`;
+
+const ErrorCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  svg {
+    font-size: 3rem;
+    color: #d00000;
+    margin-bottom: 8px;
+  }
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: rgb(var(--color-darkgray));
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: rgb(var(--color-darkgray));
+    opacity: 0.8;
+  }
+
+  button {
+    margin-top: 8px;
+    padding: 4px 8px;
+    border-radius: 50px;
+  }
 `;
