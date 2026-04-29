@@ -3,7 +3,7 @@ import axiosInstance from './axiosInstance';
 
 export const getRegistedPropertyInfo = async (id: number) => {
   try {
-    const response = await axios.get(`/api/notification/regist/${id}`);
+    const response = await axiosInstance.get(`/notification/registed/${id}`);
     return response.data;
   } catch (e) {
     console.log('🚨오류 발생');

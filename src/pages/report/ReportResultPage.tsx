@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 const ReportResultPage = () => {
   const navigate = useNavigate();
-
   return (
     <>
       <Main>
@@ -30,7 +29,9 @@ const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 100px;
+  padding-bottom: 140px;
+  background: #fafafa;
+  min-height: 100vh;
 `;
 
 const FloatingButton = styled.button`
