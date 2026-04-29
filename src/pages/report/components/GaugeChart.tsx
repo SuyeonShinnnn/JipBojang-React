@@ -61,16 +61,7 @@ const GaugeChart = ({ reportScore }: GaugeChart) => {
 export default GaugeChart;
 
 const Card = styled.section`
-  width: 420px;
-  margin: auto;
-
-  background: #fff;
-  border-radius: 28px;
-
-  padding: 32px 28px;
-
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-
+  width: 360px;
   text-align: center;
 `;
 
