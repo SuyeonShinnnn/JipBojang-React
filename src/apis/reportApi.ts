@@ -7,8 +7,8 @@ export const createReport = (formInfo: FormInfo, userId: number) => {
 };
 
 // 리포트 조회
-export const fetchReportById = (reportId: number) => {
-  return axiosInstance.get(`/report/${reportId}`);
+export const fetchReportById = (reportId: number, userId:number) => {
+  return axiosInstance.get(`/report/${reportId}/user/${userId}`);
 };
 
 // 가격 분석 요청
@@ -24,19 +24,23 @@ export const fetchPriceHistory = (reportId: number) => {
 };
 
 // 권리 분석 요청
-export const analyzeRightRisk = (reportId: number, address: string) => {
+export const analyzeRightRisk = (
+  reportId: number,
+  address: string,
+  userId: number,
+) => {
   if (!reportId) throw new Error('reportId가 필요합니다.');
   if (!address) throw new Error('주소가 필요합니다.');
 
-  return axiosInstance.post('/report/right-analysis', {
+  return axiosInstance.post(`/report/right-analysis/${userId}`, {
     reportId: reportId,
     address: address.split('[')[0].trim(),
   });
 };
 
 // 전세 사기 분석
-export const analysisFraud = (reportId: number) => {
-  return axiosInstance.get(`/report/fraud-analysis`, {
+export const analysisFraud = (reportId: number, userId: number) => {
+  return axiosInstance.get(`/report/fraud-analysis/${userId}`, {
     params: { reportId },
   });
 };

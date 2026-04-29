@@ -42,7 +42,7 @@ const ReportFormPage = () => {
       setOmissionItem('가격을');
     } else {
       const userId = Number(auth.user.userId);
-      const res = await createReport(address, type, price, userId);
+      const res = await createReport({ address, type, amount: price }, userId);
       const reportId = res.data.reportId;
       localStorage.setItem('reportId', reportId);
 
