@@ -4,13 +4,22 @@ import BaseInput from '../../components/common/BaseInput';
 import { useState } from 'react';
 import BaseModal from '../../components/common/BaseModal';
 import { useNavigate } from 'react-router-dom';
+import { createReport } from '../../apis/reportApi';
+import { useAuthStore } from '../../stores/auth';
 
 const ReportFormPage = () => {
+  const navigate = useNavigate();
+  const auth = useAuthStore();
+
   const [address, setAddress] = useState('');
   const [type, setType] = useState('전세');
   const [price, setPrice] = useState(0);
+
+  const [submitting, setSubmitting] = useState(false);
+
   const [formattedPrice, setFormattedPrice] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   let [omissionItem, setOmissionItem] = useState('');
 
   const priceFormat = (value: number) => {
@@ -23,21 +32,28 @@ const ReportFormPage = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setSubmitting(true);
+
     if (address.trim() == '') {
       setOmissionItem('주소를');
       setIsModalOpen(true);
     } else if (price === 0) {
       setOmissionItem('가격을');
     } else {
-      const navigate = useNavigate();
-      navigate('/reort/progress');
+      const userId = Number(auth.user.userId);
+      const res = await createReport(address, type, price, userId);
+      const reportId = res.data.reportId;
+      localStorage.setItem('reportId', reportId);
+
+      navigate('/report/progress');
+
+      setSubmitting(false);
     }
   };
 
   return (
     <>
-      {' '}
       <Wrapper>
         <Header>
           <h1>전세 사기 위험 진단</h1>
@@ -48,6 +64,8 @@ const ReportFormPage = () => {
           <Section>
             <h3>📍 주소 검색</h3>
             <BaseInput
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
               showButton={true}
               placeholder="예) 서울특별시 강남구 테헤란로 123"
             />
@@ -94,7 +112,9 @@ const ReportFormPage = () => {
             <small>{formattedPrice}</small>
           </Section>
 
-          <StartButton onClick={() => handleSubmit()}>제출하기</StartButton>
+          <StartButton onClick={() => handleSubmit()} disabled={submitting}>
+            {submitting ? '생성 중...' : '제출하기'}
+          </StartButton>
         </FormCard>
       </Wrapper>
       {isModalOpen && (

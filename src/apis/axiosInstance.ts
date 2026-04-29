@@ -2,24 +2,27 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/auth';
 
 const axiosInstance = axios.create({
-  baseURL: '/Jip-Bojang-1.0-SNAPSHOT/api',
+  baseURL: 'http://localhost:8080/api',
   withCredentials: true,
 });
 
 /* =====================
  * Request Interceptor
  * ===================== */
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = useAuthStore.getState().accessToken;
+axiosInstance.interceptors.request.use((config) => {
+  const auth = localStorage.getItem('auth');
+
+  if (auth) {
+    const parsed = JSON.parse(auth);
+    const token = parsed.accessToken;
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
+  }
+
+  return config;
+});
 
 /* =====================
  * Response Interceptor
@@ -27,8 +30,9 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 || error.response?.status === 403) {
       useAuthStore.getState().logout();
+      localStorage.removeItem('accessToken');
       window.location.href = '/login';
     }
     return Promise.reject(error);
