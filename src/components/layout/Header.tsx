@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useAuthStore } from '../../stores/auth';
 
 const Header: React.FC = () => {
   type NavItems = {
@@ -26,7 +27,8 @@ const Header: React.FC = () => {
     navigate('/login');
   };
 
-  const isLogin = !localStorage.getItem('accessToken');
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const isLoggedIn = !!accessToken;
 
   const handleLogoutButtonClick = () => {};
 
@@ -41,10 +43,12 @@ const Header: React.FC = () => {
             </Link>
           ))}
         </NavItemsWrapper>
-        {isLogin ? (
-          <LoginBtn onClick={handleLoginButtonClick}>로그인</LoginBtn>
+        {isLoggedIn ? (
+          <LogoutBtn onClick={() => handleLoginButtonClick()}>
+            로그아웃
+          </LogoutBtn>
         ) : (
-          <LogoutBtn onClick={handleLogoutButtonClick}>로그아웃</LogoutBtn>
+          <LoginBtn onClick={() => handleLoginButtonClick()}>로그인</LoginBtn>
         )}
       </ItemWrapper>
     </HeaderContainer>
