@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import type { Place } from "../../types/building";
 import BuildingInfoBar from "./components/BuildingInfoBar";
 import { useLocation } from "react-router-dom";
+import markerIcon from "../../assets/building/marker.png";
 
 const BuildingPage = () => {
   const [center, setCenter] = useState({ lat: 37.579617, lng: 126.977041 });
@@ -115,10 +116,10 @@ const BuildingPage = () => {
               position={{ lat: place.lat, lng: place.lng }}
               title={place.name}
               onClick={() => setSelected(place)}
-              // image={{
-              //   src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
-              //   size: { width: 24, height: 35 },
-              // }}
+              image={{
+                src: markerIcon,
+                size: { width: 35, height: 35 },
+              }}
             />
           ))}
         </Map>
