@@ -1,69 +1,80 @@
-# React + TypeScript + Vite
+# 🏠 집보장
+> KB IT's Your Life 최종 프로젝트
+> Vue에서 React로 마이그레이션
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+부동산 계약 과정에서 발생할 수 있는 위험 요소를 사전에 분석하고, 사용자에게 직관적인 리스크 진단 리포트와 교육 콘텐츠를 제공하는 서비스
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📌 프로젝트 개요
+**집보장**은 2030 세대를 위한 **전세사기 진단 및 예방 플랫폼**입니다. <br>
+전세사기와 같은 부동산 거래 리스크를 사전에 인지하고 예방할 수 있도록<br>
+등기부 기반 진단 리포트, AI 챗봇, 커뮤니티 정보 공유 기능을 제공하여<br>
+누구나 쉽게 부동산 위험을 판단하고 안전한 부동산 거래가 가능한 환경 조성을 목표로 합니다.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🧑‍💻 기획 배경
+해당 프로젝트는 단순한 부동산 정보 제공을 넘어<br>
+데이터 기반 의사결정, 리스크 예방, 교육 기능을 결합한<br>
+프롭테크 서비스 구축을 목표로 합니다.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## 🛠️ 사용 기술
+#### 🎨 Frontend
+<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black">
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+#### ⚙️ Backend
+![Spring](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
+![MyBatis](https://img.shields.io/badge/MyBatis-000000?style=for-the-badge)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🚀 주요 기능
+**1. 회원 관리**
+- 이메일/소셜 로그인 (카카오 로그인)
+- 회원가입 및 비밀번호 재설정
+- 마이페이지: 관심 매물 관리, 진단 리포트 히스토리, 알림 설정
+  
+**2. 지도 기반 건물 검색 및 정보 조회**
+- 카카오 지도 API 기반 건물 마커 표시- 지도 필터링 기능 (위험도, 가격대, 지역 등)
+- 매물 상세 정보 제공 (보증금 / 실거래가 / 주택 유형 등)
+- 주변 위험도 시각화
+
+**3. 리스크 진단 리포트 발행**
+- 사용자 입력 기반 부동산 분석
+- 리포트 구성 요소
+  - 전세가율 분석 (실거래가 vs 보증금)
+  - 등기부등본 기반 권리 관계 분석
+  - 건축물 대장 기반 불법 증축 여부 확인
+  - AI 기반 종합 위험 등급 제공
+- 리포트 PDF 다운로드 및 리포트 저장 기능
+  
+**4. 등기부 변동 알림**
+- 알림 수신 희망 부동산 정보 등록 및 관리
+- 등기부 등본 변동 감지 알림 및 이메일 발송
+- 주기적 데이터 체크 및 사용자 알림
+  
+**5. 챗봇 기능**
+- 일반 정보형 챗봇 (부동산 용어, 계약 절차 등 질의응답)
+- 퀴즈형 챗봇 (O/X, 객관식 퀴즈)
+  - 주제별 레벨 시스템
+  - 즉각적인 정답 피드백과 해설
+  - 성적에 따른 간단한 통계 제공
+  
+**6. 커뮤니티 기능**
+- 전세사기·부동산 정보 공유 커뮤니티
+- 사용자 위치 인증을 통한 지역 기반 정보의 신뢰성 확보
+- 게시글, 댓글, 좋아요, 스크랩 기능을 통한 정보 교류 활성화
+- 신고 및 블라인드 처리 기능으로 신뢰도 높은 커뮤니티 환경 유지
+
+---
+
+## 🎯 기대 효과
+- 전세 사기 및 부동산 계약 리스크 감소
+- 사용자 중심의 직관적인 부동산 정보 제공
+- 교육 기반 부동산 이해도 향상
+- 실시간 위험 감지 시스템 구축
