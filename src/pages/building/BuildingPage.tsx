@@ -1,32 +1,56 @@
 import styled from "styled-components";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import SearchBar from "./components/SearchBar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type { Place } from "../../types/building";
 import BuildingInfoBar from "./components/BuildingInfoBar";
 import { useLocation } from "react-router-dom";
 
 const BuildingPage = () => {
-  const [center, setCenter] = useState({
-    lat: 37.579617,
-    lng: 126.977041,
-  });
-
+  const [center, setCenter] = useState({ lat: 37.579617, lng: 126.977041 });
   const [selected, setSelected] = useState<Place | null>(null);
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
+  const [places, setPlaces] = useState<Place[]>([]);
+
   const location = useLocation();
   const address = location.state?.address;
 
-  const [places, setPlaces] = useState<
-    {
-      lat: number;
-      lng: number;
-      name: string;
-      address: string;
-      roadAddress: string;
-      category: string;
-    }[]
-  >([]);
+  const searchNearbyBuildings = useCallback((currentMap: kakao.maps.Map) => {
+    const ps = new kakao.maps.services.Places();
+    const keywords = ["아파트", "오피스텔", "빌라"];
+    let combinedResults: Place[] = [];
+    let completedQueries = 0;
+
+    keywords.forEach((kw) => {
+      ps.keywordSearch(
+        kw,
+        (data, status) => {
+          if (status === kakao.maps.services.Status.OK) {
+            const results = data.map((place) => ({
+              lat: Number(place.y),
+              lng: Number(place.x),
+              name: place.place_name,
+              address: place.address_name,
+              roadAddress: place.road_address_name,
+              category: place.category_name,
+            }));
+            combinedResults = [...combinedResults, ...results];
+          }
+
+          completedQueries++;
+
+          if (completedQueries === keywords.length) {
+            setPlaces(combinedResults);
+          }
+        },
+        {
+          location: currentMap.getCenter(),
+          radius: 1000,
+          sort: kakao.maps.services.SortBy.DISTANCE,
+        },
+      );
+    });
+  }, []);
 
   const handleSearch = (keyword: string) => {
     if (!map) return;
@@ -45,41 +69,35 @@ const BuildingPage = () => {
       }));
 
       setPlaces(results);
-      map.panTo(new kakao.maps.LatLng(results[0].lat, results[0].lng));
+      const firstResult = new kakao.maps.LatLng(results[0].lat, results[0].lng);
+      map.panTo(firstResult);
     });
   };
 
-  const handleSelected = (value: Place) => {
-    setSelected(value);
-  };
-
   useEffect(() => {
-    if (!map || !address) return;
+    if (!map) return;
 
-    handleSearch(address);
+    if (address) {
+      handleSearch(address);
+    } else if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const loc = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setCenter(loc);
+        map.setCenter(new kakao.maps.LatLng(loc.lat, loc.lng));
+        searchNearbyBuildings(map);
+      });
+    }
   }, [map, address]);
-
-  useEffect(() => {
-    if (!navigator.geolocation) return;
-
-    navigator.geolocation.getCurrentPosition((position) => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-
-      setCenter({ lat, lng });
-
-      if (map) {
-        map.panTo(new kakao.maps.LatLng(lat, lng));
-      }
-    });
-  }, [map]);
 
   return (
     <>
       <SearchBar
         onSearch={handleSearch}
         places={places}
-        onSelect={handleSelected}
+        onSelect={(p) => setSelected(p)}
       />
 
       {selected && (
@@ -90,17 +108,17 @@ const BuildingPage = () => {
       )}
 
       <Container>
-        <Map
-          center={{ lat: center.lat, lng: center.lng }}
-          className="map"
-          level={3}
-          onCreate={setMap}
-        >
+        <Map center={center} className="map" level={3} onCreate={setMap}>
           {places.map((place, idx) => (
             <MapMarker
-              key={idx}
+              key={`${place.lat}-${place.lng}-${idx}`}
               position={{ lat: place.lat, lng: place.lng }}
               title={place.name}
+              onClick={() => setSelected(place)}
+              // image={{
+              //   src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+              //   size: { width: 24, height: 35 },
+              // }}
             />
           ))}
         </Map>
