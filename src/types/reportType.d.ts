@@ -40,3 +40,8 @@ export interface Report {
 
   priceHistor: PriceHistory[];
 }
+
+export interface RentDealAnalysisResult {
+  report: Report;
+  pirceHistory: PriceHistory[];
+}
