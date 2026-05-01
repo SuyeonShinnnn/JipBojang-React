@@ -76,7 +76,7 @@ const Svg = styled.svg`
 `;
 
 const ProgressArc = styled.path`
-  stroke: #efd64b;
+  stroke: var(--color-primary-dark);
   stroke-width: 34;
   fill: none;
 

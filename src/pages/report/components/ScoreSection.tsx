@@ -57,15 +57,12 @@ const Title = styled.h3`
 `;
 
 const Card = styled.div`
-  background: #fff;
   border: 1px solid var(--color-lightgray);
   border-radius: 20px;
   padding: 24px;
 
   display: flex;
   gap: 28px;
-
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
 
   @media (max-width: 768px) {
     flex-direction: column;

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Chart from 'chart.js/auto';
 import { useReportStore } from '../../../stores/reportStore';
+import { Title } from '../../../style/reportCommon';
 
 // ✅ 타입 정의
 interface PriceData {
@@ -210,13 +211,6 @@ const PriceAnalysisSection = () => {
 };
 
 export default PriceAnalysisSection;
-
-const Title = styled.h5`
-  color: #6a5bff;
-  font-weight: 600;
-  border-left: 3px solid #6a5bff;
-  padding-left: 8px;
-`;
 
 const SubTitle = styled.div`
   font-weight: 600;

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useReportStore } from '../../../stores/reportStore';
+import { Title } from '../../../style/reportCommon';
 
 const OverviewSection = () => {
   const { report } = useReportStore();
@@ -30,20 +31,13 @@ const OverviewSection = () => {
 
 export default OverviewSection;
 
-const Title = styled.h3`
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 14px;
-`;
-
 const Card = styled.dl`
-  background: #fff;
   border: 1px solid var(--color-lightgray);
   border-radius: 20px;
+  margin: 0;
   padding: 24px;
   display: grid;
   gap: 18px;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
 `;
 
 const Row = styled.div`

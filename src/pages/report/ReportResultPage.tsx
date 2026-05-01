@@ -13,26 +13,28 @@ const ReportResultPage = () => {
   return (
     <>
       <Main>
-        <Section>
-          <OverviewSection />
-        </Section>
-        <Section>
-          <ScoreSection />
-        </Section>
-        <Section>
-          <PriceAnalysisSection />
-        </Section>
-        <Section>
-          <RightAnalysisSection />
-        </Section>
+        <Container>
+          <Section>
+            <OverviewSection />
+          </Section>
+          <Section>
+            <ScoreSection />
+          </Section>
+          <Section>
+            <PriceAnalysisSection />
+          </Section>
+          <Section>
+            <RightAnalysisSection />
+          </Section>
 
-        <Section>
-          <FraudAnalysisSection />
-        </Section>
+          <Section>
+            <FraudAnalysisSection />
+          </Section>
 
-        <Section>
-          <ReferenceSection />
-        </Section>
+          <Section>
+            <ReferenceSection />
+          </Section>
+        </Container>
       </Main>
 
       {createPortal(
@@ -49,16 +51,28 @@ export default ReportResultPage;
 
 const Main = styled.main`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-bottom: 140px;
-  background: #fafafa;
+  justify-content: center;
+  padding: 60px 20px 140px;
   min-height: 100vh;
+
+  background: linear-gradient(180deg, #f8f9ff 0%, #f1f3ff 100%);
+`;
+
+const Container = styled.div`
+  width: min(920px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+
+  padding: 48px 40px;
+  border-radius: 24px;
+
+  background: #ffffff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
 `;
 
 const Section = styled.section`
-  width: min(92vw, 680px);
-  margin-top: 28px;
+  width: 100%;
 `;
 
 const FloatingButton = styled.button`

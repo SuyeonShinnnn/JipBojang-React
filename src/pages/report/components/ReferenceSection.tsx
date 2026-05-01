@@ -1,12 +1,11 @@
 import styled from 'styled-components';
+import { Title } from '../../../style/reportCommon';
 
 const ReferenceSection = () => {
   return (
     <>
       <div>
-        <Title>
-          <i className="bi bi-info-circle-fill" /> 참고
-        </Title>
+        <Title>참고</Title>
 
         <Card>
           <SectionTitle>| 점수 구간 안내</SectionTitle>
@@ -83,19 +82,6 @@ const ReferenceSection = () => {
 };
 
 export default ReferenceSection;
-
-const Title = styled.h5`
-  color: #6a5bff;
-  font-weight: 700;
-  border-left: 4px solid #6a5bff;
-  padding-left: 10px;
-  font-size: 1.2rem;
-  margin-bottom: 12px;
-
-  i {
-    margin-right: 6px;
-  }
-`;
 
 const Card = styled.div`
   background: #fff;

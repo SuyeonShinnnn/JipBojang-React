@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 import { useReportStore } from '../../../stores/reportStore';
 import { formatMoney } from '../../../utils/format';
+import { Title } from '../../../style/reportCommon';
 
 interface Report {
   amount?: number;
@@ -86,7 +87,7 @@ const FraudAnalysisSection = () => {
 
   return (
     <>
-      <Title>🔐 전세 사기 분석</Title>
+      <Title>전세 사기 분석</Title>
 
       {/* 내 전세금 */}
       <HighlightCard>
@@ -155,10 +156,6 @@ const FraudAnalysisSection = () => {
 
 export default FraudAnalysisSection;
 
-const Title = styled.h2`
-  color: #6a5bff;
-`;
-
 const SectionTitle = styled.h4`
   margin-top: 30px;
 `;
@@ -209,10 +206,12 @@ const Box = styled.div`
   background: #fff;
   padding: 12px;
   border-radius: 12px;
+  border: 1px solid var(--color-lightgray);
   text-align: center;
 `;
 
 const ResultBox = styled(Box)<{ danger?: boolean }>`
+  margin-top: 12px;
   border: ${(p) => (p.danger ? '1px solid #ff6b6b' : '1px solid #2ecc71')};
 `;
 
@@ -236,6 +235,7 @@ const Condition = styled.div<{ $valid: boolean }>`
   padding: 10px;
   margin-bottom: 8px;
   border-radius: 8px;
+  border: 1px solid ${({ $valid }) => ($valid ? '#bfefff' : '#ffc9c9')};
   background: ${(p) => (p.$valid ? '#e6f7ff' : '#fff0f0')};
 `;
 
