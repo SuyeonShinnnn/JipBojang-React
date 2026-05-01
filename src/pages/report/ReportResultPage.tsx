@@ -20,8 +20,8 @@ const ReportResultPage = () => {
         <Container>
           <Title>
             <MainTitle>
-              <span>{userName}</span>님이 <span>{report.type}</span>으로{' '}
-              <span>{report.amount}</span>에 계약한
+              <span>{userName}</span>님이 <span>{report.type}</span>로{' '}
+              <span>{report.amount}</span>원에 계약한
               <br />
               <span>{report.address}</span>
             </MainTitle>
