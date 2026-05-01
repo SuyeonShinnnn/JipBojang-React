@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import OverviewSection from './components/OverviewSection';
 import ScoreSection from './components/ScoreSection';
 import { useNavigate } from 'react-router-dom';
+import PriceAnalysisSection from './components/PriceAnalysisSection';
 
 const ReportResultPage = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const ReportResultPage = () => {
       <Main>
         <OverviewSection />
         <ScoreSection />
+        <PriceAnalysisSection />
       </Main>
 
       {createPortal(
