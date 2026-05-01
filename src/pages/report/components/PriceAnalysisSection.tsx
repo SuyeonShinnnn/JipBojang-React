@@ -28,8 +28,8 @@ const PriceAnalysisSection = () => {
     queryKey: ['priceAnalysis', reportId],
     queryFn: async () => {
       if (!reportId) throw new Error('리포트 ID 없음');
-      const res = await store.fetchPrice(reportId);
-      return res.data;
+      const data = await store.fetchPrice(reportId);
+      return data;
     },
     enabled: !!reportId,
   });
