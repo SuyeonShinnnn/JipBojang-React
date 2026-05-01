@@ -139,7 +139,8 @@ export const useReportStore = create<ReportState>((set) => ({
   // 가격 분석
   fetchPrice: async (reportId) => {
     try {
-      const res = await rentDealPrice(reportId);
+      const userId = useAuthStore.getState().user.userId;
+      const res = await rentDealPrice(reportId, Number(userId));
       console.log(res.data);
       set({
         priceResult: {

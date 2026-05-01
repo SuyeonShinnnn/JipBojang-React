@@ -7,13 +7,13 @@ export const createReport = (formInfo: FormInfo, userId: number) => {
 };
 
 // 리포트 조회
-export const fetchReportById = (reportId: number, userId:number) => {
+export const fetchReportById = (reportId: number, userId: number) => {
   return axiosInstance.get(`/report/${reportId}/user/${userId}`);
 };
 
 // 가격 분석 요청
-export const rentDealPrice = (reportId: number) => {
-  return axiosInstance.get('/report/rent-deal-analysis', {
+export const rentDealPrice = (reportId: number, userId: number) => {
+  return axiosInstance.get(`/report/rent-deal-analysis/${userId}`, {
     params: { reportId },
   });
 };
@@ -46,8 +46,8 @@ export const analysisFraud = (reportId: number, userId: number) => {
 };
 
 // 등기부등본 조회
-export const fetchRightAnalysisResult = (reportId: number) => {
-  return axiosInstance.get(`/report/certificate/${reportId}`);
+export const fetchRightAnalysisResult = (reportId: number, userId: number) => {
+  return axiosInstance.get(`/report/certificate/${reportId}/user/${userId}`);
 };
 
 // 내 리포트 조회
@@ -56,8 +56,15 @@ export const fetchMyReports = () => {
 };
 
 // 총 점수 업데이트
-export const updateTotalScore = (reportId: number, payload: any) => {
-  return axiosInstance.patch(`/report/score/${reportId}`, payload);
+export const updateTotalScore = (
+  reportId: number,
+  userId: number,
+  payload: any,
+) => {
+  return axiosInstance.patch(
+    `/report/score/${reportId}/user/${userId}`,
+    payload,
+  );
 };
 
 // 임대인 이름 위험 여부 조회
