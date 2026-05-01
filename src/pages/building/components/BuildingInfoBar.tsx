@@ -158,7 +158,7 @@ const slideIn = keyframes`
 
 const Container = styled.aside`
   background-color: white;
-  box-shadow: 5px 5px 20px var(--color-darkgray);
+  box-shadow: 5px 5px 20px rgb(var(--color-darkgray));
   width: 400px;
   border-radius: 12px;
   margin: 5.5rem 0 0 24rem;
@@ -207,11 +207,11 @@ const TitleWrapper = styled.div`
   gap: 8px;
 
   h3 {
-    color: var(--text-primary);
+    color: rgb(var(--text-primary));
   }
 
   small {
-    color: var(--color-darkgray);
+    color: rgb(var(--color-darkgray));
   }
 `;
 
@@ -221,7 +221,7 @@ const TextIconWrapper = styled.div`
   align-items: center;
 
   svg {
-    color: var(--color-mediumgray);
+    color: rgb(var(--color-mediumgray));
     &:hover {
       cursor: pointer;
     }
@@ -231,7 +231,7 @@ const TextIconWrapper = styled.div`
 const Line = styled.hr`
   width: 100%;
   height: 1px;
-  color: var(--color-lightgray);
+  color: rgb(var(--color-lightgray));
   margin-top: 12px;
 `;
 
@@ -244,7 +244,7 @@ const DepositWrapper = styled.div`
   }
 
   span {
-    color: var(--color-primary);
+    color: rgb(var(--color-primary));
     font-weight: bold;
   }
 `;
@@ -291,5 +291,5 @@ const InfoTitle = styled.span`
 `;
 
 const Info = styled.span`
-  color: var(--color-darkgray);
+  color: rgb(var(--color-darkgray));
 `;

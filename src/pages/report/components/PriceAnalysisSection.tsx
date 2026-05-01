@@ -1,16 +1,18 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import Chart from 'chart.js/auto';
-import { useReportStore } from '../../../stores/reportStore';
+import { useQuery } from '@tanstack/react-query';
 import { Title } from '../../../style/reportCommon';
 import { formatMoney } from '../../../utils/format';
+import { useReportStore } from '../../../stores/reportStore';
+// import errorCharacter from '../../../assets/common'
 
-// ✅ 타입 정의
 interface PriceData {
   amount: number;
   minPrice: number;
   maxPrice: number;
   avgPrice: number;
+  priceHistory?: PriceHistoryItem[];
 }
 
 interface PriceHistoryItem {
@@ -19,18 +21,25 @@ interface PriceHistoryItem {
 }
 
 const PriceAnalysisSection = () => {
-  const { reportId, report, priceResult, fetchPrice } = useReportStore();
+  const store = useReportStore();
+  const reportId = Number(store.reportId);
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const [priceData, setPriceData] = useState<PriceData | null>(null);
-  const [chartData, setChartData] = useState<PriceHistoryItem[]>([]);
+  const { data, isLoading, isError } = useQuery<PriceData>({
+    queryKey: ['priceAnalysis', reportId],
+    queryFn: async () => {
+      if (!reportId) throw new Error('리포트 ID 없음');
+      const res = await store.fetchPrice(reportId);
+      return res.data;
+    },
+    enabled: !!reportId,
+  });
 
   const chartRef = useRef<Chart | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // 금액 차이
+  const priceData = data;
+  const chartData = data?.priceHistory ?? [];
+
   const diffFromMin = useMemo(() => {
     return priceData ? priceData.amount - priceData.minPrice : 0;
   }, [priceData]);
@@ -44,39 +53,8 @@ const PriceAnalysisSection = () => {
   }, [priceData]);
 
   useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-
-      if (!reportId) {
-        setError('리포트 ID가 없습니다.');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        await fetchPrice(Number(reportId));
-
-        if (report) {
-          setPriceData(report as PriceData);
-        }
-
-        setChartData(priceResult?.priceHistory ?? []);
-      } catch (err) {
-        console.error(err);
-        setError('데이터를 불러오는 중 오류가 발생했습니다.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    load();
-  }, [reportId]);
-
-  // 차트 렌더링
-  useEffect(() => {
     if (!canvasRef.current || chartData.length === 0) return;
 
-    // 기존 차트 제거
     if (chartRef.current) {
       chartRef.current.destroy();
     }
@@ -99,7 +77,7 @@ const PriceAnalysisSection = () => {
           {
             label: '전세가 시세 추이',
             data: deposits,
-            borderColor: 'var(--color-primary-dark',
+            borderColor: 'var(--color-primary-dark)',
             backgroundColor: 'var(--color-accent)',
             tension: 0.4,
             fill: true,
@@ -120,14 +98,16 @@ const PriceAnalysisSection = () => {
     <>
       <Title>가격 분석</Title>
 
-      {loading && <CenterText>로딩 중...</CenterText>}
-      {error && <ErrorText>{error}</ErrorText>}
+      {isLoading && <StateBox>시세 데이터를 불러오는 중입니다...</StateBox>}
 
-      {!loading && !error && !priceData && (
-        <ErrorText>시세 데이터가 없습니다.</ErrorText>
+      {isError && (
+        <StateBox $error>
+          <img src="/" />
+          데이터를 불러오지 못했습니다.
+        </StateBox>
       )}
 
-      {!loading && priceData && (
+      {!isLoading && !isError && priceData && (
         <>
           <SubTitle>• 해당 매물 시세 정보</SubTitle>
           <Card>
@@ -139,9 +119,7 @@ const PriceAnalysisSection = () => {
             <Canvas ref={canvasRef} />
           </Card>
 
-          <SmallText>
-            * 해당 매물의 동일한 형태(㎡)에 대한 분석입니다.
-          </SmallText>
+          <SmallText>* 동일 면적 기준 시세 분석입니다.</SmallText>
 
           <PriceRow>
             <PriceBox>
@@ -199,9 +177,10 @@ const SubTitle = styled.div`
 
 const Card = styled.div`
   border: 1px solid #eee;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 20px;
   text-align: center;
+  background: #fff;
 `;
 
 const Canvas = styled.canvas`
@@ -222,6 +201,8 @@ const PriceBox = styled.div`
   border: 1px solid #eee;
   padding: 16px;
   text-align: center;
+  border-radius: 10px;
+  background: #fff;
 `;
 
 const Analysis = styled.div`
@@ -236,17 +217,19 @@ const AnalysisBox = styled.div<{ $red: boolean }>`
   padding: 16px;
   text-align: center;
   color: white;
+  border-radius: 10px;
   background-color: ${({ $red }) =>
-    $red ? 'rgba(185,0,0,0.65)' : 'rgba(0,128,0,0.65)'};
+    $red ? 'rgba(185,0,0,0.7)' : 'rgba(0,128,0,0.7)'};
 `;
 
-const CenterText = styled.div`
+const StateBox = styled.div<{ $error?: boolean }>`
+  margin-top: 20px;
+  padding: 24px;
+  border-radius: 12px;
   text-align: center;
-  color: #777;
-`;
-
-const ErrorText = styled.div`
-  color: red;
+  background: ${({ $error }) => ($error ? '#fff0f0' : '#f4f6ff')};
+  color: ${({ $error }) => ($error ? '#d32f2f' : '#555')};
+  border: 1px solid ${({ $error }) => ($error ? '#ffcdd2' : '#e0e4ff')};
 `;
 
 const SmallText = styled.div`

@@ -69,7 +69,7 @@ const Container = styled.section`
 const Card = styled.div`
   width: 100%;
   padding: 1rem;
-  border: 1px solid var(--color-lightgray);
+  border: 1px solid rgb(var(--color-lightgray));
   border-radius: 8px;
 
   display: flex;
@@ -111,7 +111,7 @@ const WarningTitle = styled.span`
 `;
 
 const WarningText = styled.span`
-  color: var(--color-darkgray);
+  color: rgb(var(--color-darkgray));
 `;
 
 export default WarningCardSection;

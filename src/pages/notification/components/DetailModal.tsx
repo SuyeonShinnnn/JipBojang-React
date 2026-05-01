@@ -5,7 +5,8 @@ import type {
   RegistryChanged,
 } from '../../../types/notification';
 import styled from 'styled-components';
-import { getRegistryChanged } from '../../../apis/notiApi';
+import { getRegistedPropertyDetail } from '../../../apis/notiApi';
+import emptyIcon from '../../../assets/character/Character-Empty.png';
 
 interface DetailModalProps {
   isOpen: boolean;
@@ -31,13 +32,14 @@ const DetailModal: React.FC<DetailModalProps> = ({
     if (!isOpen || !propertyDetail?.commUniqueNo) return;
 
     const fetchData = async () => {
-      const data = await getRegistryChanged(
+      const data = await getRegistedPropertyDetail(
         Number(propertyDetail?.userId),
         Number(propertyDetail?.commUniqueNo),
       );
       setChangedInfo(data);
     };
     fetchData();
+    console.log(changedInfo);
   }, [isOpen, propertyDetail?.commUniqueNo]);
 
   return (
@@ -62,13 +64,28 @@ const DetailModal: React.FC<DetailModalProps> = ({
 
       <ChangedSection>
         <h3>변동내역</h3>
-        <ChangedWrapper>
-          {changedInfo.map((item) => (
-            <ChangedBox key={item.id}>
-              <span>{item.changedDate}</span>
-              <span>{item.detail}</span>
-            </ChangedBox>
-          ))}
+        <ChangedWrapper $isChangeExist={!!changedInfo}>
+          {changedInfo.length === 0 ? (
+            <>
+              <img
+                style={{ width: '72px' }}
+                src={emptyIcon}
+                alt="Item is Empty"
+              />
+              <p>등록일 이후로 발생한 변동 내역이 없습니다</p>
+            </>
+          ) : (
+            <Timeline>
+              {changedInfo.map((item) => (
+                <TimelineItem key={item.id}>
+                  <ChangedCard>
+                    <DateText>{item.receiptDate}</DateText>
+                    <PurposeText>{item.purpose}</PurposeText>
+                  </ChangedCard>
+                </TimelineItem>
+              ))}
+            </Timeline>
+          )}
         </ChangedWrapper>
       </ChangedSection>
     </BaseModal>
@@ -85,7 +102,7 @@ const InfoSection = styled.section`
 
 const InfoTable = styled.table`
   width: 100%;
-  border-top: 1px solid var(--color-lightgray);
+  border-top: 1px solid rgb(var(--color-lightgray));
   border-collapse: collapse;
   overflow: hidden;
 `;
@@ -95,15 +112,15 @@ const LabelCell = styled.td`
   background-color: #f5f5f5;
   font-weight: 600;
   padding: 12px 16px;
-  border-right: 1px solid var(--color-lightgray);
-  border-bottom: 1px solid var(--color-lightgray);
+  border-right: 1px solid rgb(var(--color-lightgray));
+  border-bottom: 1px solid rgb(var(--color-lightgray));
   vertical-align: top;
 `;
 
 const ValueCell = styled.td`
   padding: 12px 16px;
   background-color: #ffffff;
-  border-bottom: 1px solid var(--color-lightgray);
+  border-bottom: 1px solid rgb(var(--color-lightgray));
   line-height: 1.5;
   word-break: keep-all;
 `;
@@ -115,17 +132,60 @@ const ChangedSection = styled.section`
   gap: 8px;
 `;
 
-const ChangedWrapper = styled.div`
+const ChangedWrapper = styled.div<{ $isChangeExist: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  justify-content: ${({ $isChangeExist }) =>
+    $isChangeExist ? 'center' : 'start'};
+  align-items: ${({ $isChangeExist }) => ($isChangeExist ? 'center' : 'start')};
 `;
 
-const ChangedBox = styled.div`
+const Timeline = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
-  gap: 0.5rem;
-  border: 1px solid var(--color-primary);
-  border-radius: 8px;
+  gap: 20px;
+  padding-left: 20px;
+  width: 100%;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: #d9d9d9;
+  }
+`;
+
+const TimelineItem = styled.div`
+  position: relative;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+`;
+
+const ChangedCard = styled.div`
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #ececec;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+`;
+
+const DateText = styled.p`
+  margin: 0;
+  font-size: 0.9rem;
+  color: #777;
+  font-weight: 500;
+`;
+
+const PurposeText = styled.p`
+  margin: 6px 0 0;
+  font-size: 1rem;
+  font-weight: 700;
 `;

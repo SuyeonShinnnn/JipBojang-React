@@ -5,7 +5,7 @@ import { searchAddress } from '../../../apis/notiApi';
 import { DotLoader } from 'react-spinners';
 import { useState } from 'react';
 import type { AddressInfo } from '../../../types/notification';
-import type { PropertyDetail } from '../../../types/notification.types';
+import type { PropertyDetail } from '../../../types/notification';
 
 interface AddressSectionProps {
   onSelectedAddr: (address: AddressInfo) => void;
@@ -63,7 +63,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({ onSelectedAddr }) => {
         {searched && isPending && (
           <>
             <DotLoader
-              color="var(--color-primary)"
+              color="rgb(var(--color-primary))"
               loading={isPending}
               size={52}
               aria-label="Loading Spinner"
@@ -110,7 +110,7 @@ const ResultBox = styled.div<{ $center?: boolean }>`
 
 const LoadingSpan = styled.span`
   margin-top: 12px;
-  color: var(--color-darkgray);
+  color: rgb(var(--color-darkgray));
 `;
 
 const ResultUL = styled.ul`
@@ -136,10 +136,10 @@ const ResultList = styled.li`
   &:focus {
     outline: none;
     background-color: #f0f1ff;
-    border: 1px solid var(--color-primary);
+    border: 1px solid rgb(var(--color-primary));
   }
 `;
 
 const TypeSpan = styled.span`
-  color: var(--color-primary);
+  color: rgb(var(--color-primary));
 `;

@@ -90,15 +90,15 @@ const StyledButton = styled.button<{
     switch ($variant) {
       case 'secondary':
         return css`
-          background-color: var(--color-secondary);
-          border: 1px solid var(--color-secondary);
+          background-color: rgb(var(--color-accent));
+          border: 1px solid rgb(var(--color-accent));
           color: #000;
         `;
       case 'outline':
         return css`
           background-color: white;
-          border: 1px solid var(--color-primary);
-          color: var(--color-primary);
+          border: 1px solid rgb(var(--color-primary));
+          color: rgb(var(--color-primary));
         `;
       case 'gray':
         return css`
@@ -109,26 +109,26 @@ const StyledButton = styled.button<{
       case 'options':
         return css`
           background-color: white;
-          border: 1px solid var(--color-lightgray);
+          border: 1px solid rgb(var(--color-lightgray));
         `;
       case 'selected':
         return css`
           background-color: white;
-          border: 1px solid var(--color-primary);
+          border: 1px solid rgb(var(--color-primary));
         `;
       default:
         return css`
-          background-color: var(--color-primary);
+          background-color: rgb(var(--color-primary));
           color: white;
-          border: 1px solid var(--color-primary);
+          border: 1px solid rgb(var(--color-primary));
         `;
     }
   }}
 
   &:disabled {
-    color: var(--color-darkgray);
+    color: rgb(var(--color-darkgray));
     background-color: #d9d9d9;
-    border: 1px solid var(--color-mediumgray);
+    border: 1px solid rgb(var(--color-mediumgray));
     cursor: not-allowed;
     pointer-events: none;
   }

@@ -69,7 +69,7 @@ const ButtonWrapper = styled.div<{ $answered: boolean }>`
     padding: 8px 12px;
     color: #000;
     background: white;
-    border: 1px solid var(--color-darkgray);
+    border: 1px solid rgb(var(--color-darkgray));
   }
 
   ${({ $answered }) =>

@@ -126,7 +126,7 @@ const List = styled.li<{ $active: boolean }>`
 
   border: 1px solid
     ${({ $active }) =>
-      $active ? 'var(--color-primary)' : 'var(--color-darkgray)'};
+      $active ? 'rgb(var(--color-primary))' : 'rgb(var(--color-darkgray))'};
   border-radius: 12px;
   padding: 1rem;
   width: 148px;
@@ -146,6 +146,6 @@ const List = styled.li<{ $active: boolean }>`
 
 const NumberText = styled.strong<{ $active: boolean }>`
   color: ${({ $active }) =>
-    $active ? 'var(--color-primary-dark)' : 'var(--color-darkgray)'};
+    $active ? 'rgb(var(--color-primary-dark))' : 'rgb(var(--color-darkgray))'};
   font-size: 40px;
 `;

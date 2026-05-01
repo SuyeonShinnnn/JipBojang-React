@@ -17,6 +17,9 @@ export interface PropertyDetail {
 
 export interface RegistryChanged {
   id: number;
-  changedDate: string;
-  detail: string;
+  userId: number;
+  title: string;
+  commUniqueNo: string;
+  purpose: string;
+  receiptDate: string;
 }

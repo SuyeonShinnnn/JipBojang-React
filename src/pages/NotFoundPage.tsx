@@ -18,7 +18,7 @@ const Container = styled.div`
   text-align: center;
 
   a {
-    color: var(--color-primary) !important;
+    color: rgb(var(--color-primary)) !important;
     text-decoration: underline !important;
   }
 `;

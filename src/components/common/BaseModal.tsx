@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import styled from 'styled-components';
 import BaseButton from './BaseButton';
+import { createPortal } from 'react-dom';
 
 interface BaseModalProps {
   isOpen: boolean;
@@ -29,7 +30,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <Overlay onClick={onClose} $isOpen={isOpen}>
       <Dialog
         onClick={(e) => e.stopPropagation()} // 내부 클릭 시 닫히지 않게
@@ -55,7 +56,8 @@ const BaseModal: React.FC<BaseModalProps> = ({
           </Footer>
         </Content>
       </Dialog>
-    </Overlay>
+    </Overlay>,
+    document.body,
   );
 };
 
@@ -66,7 +68,7 @@ const Overlay = styled.div<{ $isOpen?: boolean }>`
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
@@ -78,7 +80,7 @@ const Dialog = styled.div`
   background: white;
   border-radius: 8px;
   width: 500px;
-  max-height: 80vh;
+  max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 

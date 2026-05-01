@@ -123,7 +123,7 @@ const ExplanationUL = styled.ul`
 
     width: 220px;
     padding: 12px;
-    border: 1px solid var(--color-lightgray);
+    border: 1px solid rgb(var(--color-lightgray));
     border-radius: 12px;
   }
 
@@ -133,6 +133,6 @@ const ExplanationUL = styled.ul`
   }
 
   small {
-    color: var(--color-darkgray);
+    color: rgb(var(--color-darkgray));
   }
 `;
