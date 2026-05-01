@@ -45,3 +45,43 @@ export interface RentDealAnalysisResult {
   report: Report;
   pirceHistory: PriceHistory[];
 }
+
+export interface Certificate {
+  certificateId: number;
+
+  address: string;
+  deposit: number;
+
+  hasCollateral: boolean;
+  priorClaim: number;
+  hasRight: boolean;
+  registrationDetails: string;
+  entryCount: number;
+
+  answerName: string;
+  finalShare: number;
+  note: string;
+
+  gapItem: string;
+  gapDate: string;
+  gapRegistrar: string;
+  gapMainInfo: string;
+
+  eulItem: string;
+  eulDate: string;
+  eulRegistrar: string;
+  eulMainInfo: string;
+
+  LtvRatio: number;
+  guaranteeLimit: number;
+
+  isSeized: boolean;
+  isProvisionallySeized: boolean;
+  isInjunction: boolean;
+  hasLeaseRight: boolean;
+  isIllegalBuilding: boolean;
+  isTrustSalePossible: boolean;
+
+  createdAt: string;
+  updatedAt: string;
+}

@@ -9,6 +9,7 @@ import {
 
 import { useAuthStore } from './auth';
 import type {
+  Certificate,
   FormInfo,
   RentDealAnalysisResult,
   Report,
@@ -40,7 +41,7 @@ interface ReportState {
   createReport: (reportDto: FormInfo) => Promise<Report>;
   fetchReport: (reportId: number) => Promise<Report>;
   fetchPrice: (reportId: number) => Promise<RentDealAnalysisResult>;
-  fetchRight: (reportId: number, address: string) => Promise<any>;
+  fetchRight: (reportId: number, address: string) => Promise<Certificate>;
   fetchFraud: (reportId: number) => Promise<any>;
 }
 
