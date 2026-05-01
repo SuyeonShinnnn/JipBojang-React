@@ -17,7 +17,7 @@ export interface Report {
   type: string;
   amount: number;
 
-  minPirce: number;
+  minPrice: number;
   maxPrice: number;
   avgPrice: number;
 
@@ -30,7 +30,7 @@ export interface Report {
   fraudComment: string;
 
   score: number;
-  riskComment: number;
+  riskComment: string;
 
   userId: number;
   certificateId: number;
@@ -38,12 +38,12 @@ export interface Report {
   createdAt: string;
   updatedAt: string;
 
-  priceHistor: PriceHistory[];
+  priceHistory: PriceHistory[];
 }
 
 export interface RentDealAnalysisResult {
   report: Report;
-  pirceHistory: PriceHistory[];
+  priceHistory: PriceHistory[];
 }
 
 export interface Certificate {
