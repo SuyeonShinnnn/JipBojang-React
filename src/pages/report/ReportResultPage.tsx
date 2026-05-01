@@ -5,6 +5,7 @@ import ScoreSection from './components/ScoreSection';
 import { useNavigate } from 'react-router-dom';
 import PriceAnalysisSection from './components/PriceAnalysisSection';
 import RightAnalysisSection from './components/RightAnalysisSection';
+import FraudAnalysisSection from './components/FraudAnalysisSection';
 
 const ReportResultPage = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const ReportResultPage = () => {
         <ScoreSection />
         <PriceAnalysisSection />
         <RightAnalysisSection />
+        <FraudAnalysisSection />
       </Main>
 
       {createPortal(
