@@ -8,7 +8,7 @@ import {
 } from '../apis/reportApi';
 
 import { useAuthStore } from './auth';
-import type { FormInfo } from '../types/reportType';
+import type { FormInfo, Report } from '../types/reportType';
 
 interface ReportState {
   reportId: string | null;
@@ -33,7 +33,7 @@ interface ReportState {
   setReportId: (id: string) => void;
   setAddress: (addr: string) => void;
 
-  createReport: (reportDto: FormInfo) => Promise<any>;
+  createReport: (reportDto: FormInfo) => Promise<Report>;
   fetchReport: (reportId: number) => Promise<any>;
   fetchPrice: (reportId: number) => Promise<any>;
   fetchRight: (reportId: number, address: string) => Promise<any>;
