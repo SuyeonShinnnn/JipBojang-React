@@ -11,6 +11,7 @@ import { useAuthStore } from './auth';
 import type {
   Certificate,
   FormInfo,
+  FraudAnalysisResponse,
   RentDealAnalysisResult,
   Report,
 } from '../types/reportType';
@@ -42,7 +43,7 @@ interface ReportState {
   fetchReport: (reportId: number) => Promise<Report>;
   fetchPrice: (reportId: number) => Promise<RentDealAnalysisResult>;
   fetchRight: (reportId: number, address: string) => Promise<Certificate>;
-  fetchFraud: (reportId: number) => Promise<any>;
+  fetchFraud: (reportId: number) => Promise<FraudAnalysisResponse>;
 }
 
 export const useReportStore = create<ReportState>((set) => ({

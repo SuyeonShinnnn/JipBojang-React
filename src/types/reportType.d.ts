@@ -85,3 +85,24 @@ export interface Certificate {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface FraudAnalysisResponse {
+  reportId: number;
+  amount: number;
+  avgPrice: number;
+  guaranteeLimit: number;
+
+  isSeized: boolean;
+  isProvisionallySeized: boolean;
+  isInjunction: boolean;
+  hasLeaseRight: boolean;
+  isIllegalBuilding: boolean;
+  isTrustSalePossible: boolean;
+
+  analysis: Analysis;
+}
+
+export interface Analysis {
+  ownerName: string;
+  priorClaim: number;
+}
