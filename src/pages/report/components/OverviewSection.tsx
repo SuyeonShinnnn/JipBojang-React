@@ -5,7 +5,7 @@ const OverviewSection = () => {
   const { report } = useReportStore();
 
   return (
-    <Section>
+    <>
       <Title>개요</Title>
 
       <Card>
@@ -24,16 +24,11 @@ const OverviewSection = () => {
           <Value>{report.amount}</Value>
         </Row>
       </Card>
-    </Section>
+    </>
   );
 };
 
 export default OverviewSection;
-
-const Section = styled.section`
-  width: min(92vw, 680px);
-  margin-top: 32px;
-`;
 
 const Title = styled.h3`
   font-size: 22px;

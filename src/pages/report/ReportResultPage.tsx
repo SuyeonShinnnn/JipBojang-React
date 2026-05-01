@@ -13,12 +13,26 @@ const ReportResultPage = () => {
   return (
     <>
       <Main>
-        <OverviewSection />
-        <ScoreSection />
-        <PriceAnalysisSection />
-        <RightAnalysisSection />
-        <FraudAnalysisSection />
-        <ReferenceSection />
+        <Section>
+          <OverviewSection />
+        </Section>
+        <Section>
+          <ScoreSection />
+        </Section>
+        <Section>
+          <PriceAnalysisSection />
+        </Section>
+        <Section>
+          <RightAnalysisSection />
+        </Section>
+
+        <Section>
+          <FraudAnalysisSection />
+        </Section>
+
+        <Section>
+          <ReferenceSection />
+        </Section>
       </Main>
 
       {createPortal(
@@ -40,6 +54,11 @@ const Main = styled.main`
   padding-bottom: 140px;
   background: #fafafa;
   min-height: 100vh;
+`;
+
+const Section = styled.section`
+  width: min(92vw, 680px);
+  margin-top: 28px;
 `;
 
 const FloatingButton = styled.button`

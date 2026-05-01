@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const ReferenceSection = () => {
   return (
-    <Wrapper>
+    <>
       <div>
         <Title>
           <i className="bi bi-info-circle-fill" /> 참고
@@ -78,15 +78,11 @@ const ReferenceSection = () => {
           </List>
         </Card>
       </div>
-    </Wrapper>
+    </>
   );
 };
 
 export default ReferenceSection;
-
-const Wrapper = styled.div`
-  padding: 16px;
-`;
 
 const Title = styled.h5`
   color: #6a5bff;

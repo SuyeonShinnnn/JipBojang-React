@@ -85,7 +85,7 @@ const FraudAnalysisSection = () => {
   ];
 
   return (
-    <Wrapper>
+    <>
       <Title>🔐 전세 사기 분석</Title>
 
       {/* 내 전세금 */}
@@ -149,15 +149,11 @@ const FraudAnalysisSection = () => {
           </Chip>
         ))}
       </ChipWrap>
-    </Wrapper>
+    </>
   );
 };
 
 export default FraudAnalysisSection;
-
-const Wrapper = styled.div`
-  padding: 20px;
-`;
 
 const Title = styled.h2`
   color: #6a5bff;

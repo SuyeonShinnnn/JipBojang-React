@@ -136,7 +136,7 @@ const PriceAnalysisSection = () => {
   }, [chartData]);
 
   return (
-    <Wrapper>
+    <>
       <Title>가격 분석</Title>
 
       {loading && <CenterText>로딩 중...</CenterText>}
@@ -205,13 +205,11 @@ const PriceAnalysisSection = () => {
           </Analysis>
         </>
       )}
-    </Wrapper>
+    </>
   );
 };
 
 export default PriceAnalysisSection;
-
-const Wrapper = styled.div``;
 
 const Title = styled.h5`
   color: #6a5bff;

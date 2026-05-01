@@ -65,7 +65,6 @@ const RightAnalysisSection = () => {
     enabled: !!report?.ownerName,
   });
 
-
   if (isLoading) {
     return (
       <CenterBox>
@@ -80,7 +79,7 @@ const RightAnalysisSection = () => {
   }
 
   return (
-    <Wrapper>
+    <>
       <Title>🔐 권리 분석</Title>
       <SubText>이 집이 안전한지 분석했습니다.</SubText>
 
@@ -148,15 +147,11 @@ const RightAnalysisSection = () => {
           <EmptyText>을구 정보 없음</EmptyText>
         )}
       </Card>
-    </Wrapper>
+    </>
   );
 };
 
 export default RightAnalysisSection;
-
-const Wrapper = styled.div`
-  padding: 20px;
-`;
 
 const Title = styled.h2`
   font-weight: 600;

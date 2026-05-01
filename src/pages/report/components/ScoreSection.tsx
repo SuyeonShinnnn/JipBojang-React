@@ -18,7 +18,7 @@ const ScoreSection = () => {
   ];
 
   return (
-    <Section>
+    <>
       <Title>안심 점수</Title>
 
       <Card>
@@ -44,16 +44,11 @@ const ScoreSection = () => {
           ))}
         </RiskPanel>
       </Card>
-    </Section>
+    </>
   );
 };
 
 export default ScoreSection;
-
-const Section = styled.section`
-  width: min(92vw, 680px);
-  margin-top: 28px;
-`;
 
 const Title = styled.h3`
   font-size: 22px;
