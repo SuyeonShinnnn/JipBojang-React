@@ -1,22 +1,34 @@
 import styled from 'styled-components';
 import { createPortal } from 'react-dom';
-import OverviewSection from './components/OverviewSection';
 import ScoreSection from './components/ScoreSection';
 import { useNavigate } from 'react-router-dom';
 import PriceAnalysisSection from './components/PriceAnalysisSection';
 import RightAnalysisSection from './components/RightAnalysisSection';
 import FraudAnalysisSection from './components/FraudAnalysisSection';
 import ReferenceSection from './components/ReferenceSection';
+import { useReportStore } from '../../stores/reportStore';
+import { useAuthStore } from '../../stores/auth';
 
 const ReportResultPage = () => {
   const navigate = useNavigate();
+  const { report } = useReportStore();
+  const auth = useAuthStore();
+  const userName = auth.user.nickname;
   return (
     <>
       <Main>
         <Container>
-          <Section>
-            <OverviewSection />
-          </Section>
+          <Title>
+            <MainTitle>
+              <span>{userName}</span>님이 <span>{report.type}</span>으로{' '}
+              <span>{report.amount}</span>에 계약한
+              <br />
+              <span>{report.address}</span>
+            </MainTitle>
+
+            <SubTitle>집포트 분석 결과📝</SubTitle>
+          </Title>
+
           <Section>
             <ScoreSection />
           </Section>
@@ -51,11 +63,37 @@ export default ReportResultPage;
 
 const Main = styled.main`
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   padding: 60px 20px 140px;
   min-height: 100vh;
 
   background: linear-gradient(180deg, #f8f9ff 0%, #f1f3ff 100%);
+`;
+
+const Title = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  margin-bottom: 20px;
+`;
+
+const MainTitle = styled.h1`
+  font-size: 24px;
+
+  line-height: 1.5;
+  color: #555;
+
+  span {
+    color: var(--color-primary-dark);
+  }
+`;
+
+const SubTitle = styled.h2`
+  font-size: 20px;
+  color: var(--text-primary);
 `;
 
 const Container = styled.div`
