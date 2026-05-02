@@ -58,7 +58,7 @@ export interface Certificate {
   registrationDetails: string;
   entryCount: number;
 
-  answerName: string;
+  ownerName: string;
   finalShare: number;
   note: string;
 
