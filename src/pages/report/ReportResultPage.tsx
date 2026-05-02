@@ -81,13 +81,15 @@ const Title = styled.div`
 `;
 
 const MainTitle = styled.h1`
-  font-size: 24px;
-
+  font-size: 20px;
+  font-weight: 600;
   line-height: 1.5;
   color: #555;
 
   span {
-    color: var(--color-primary-dark);
+    font-size: 24px;
+    color: rgb(var(--color-primary-dark));
+    font-weight: 700;
   }
 `;
 
