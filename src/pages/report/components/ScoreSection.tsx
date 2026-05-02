@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import GaugeChart from './GaugeChart';
+import GaugeChart from '../../../components/chart/GaugeChart';
 import { useReportStore } from '../../../stores/reportStore';
 
 const ScoreSection = () => {
