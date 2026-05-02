@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useTyping } from '../../hooks/useTyping';
 import { useReportStore } from '../../stores/reportStore';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../stores/auth';
 
 const ReportProgressPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -20,6 +21,9 @@ const ReportProgressPage = () => {
     pauseAfterType: 500,
     pauseAfterDelete: 500,
   });
+
+  const auth = useAuthStore();
+  const userId = Number(auth.user.userId);
 
   const navigate = useNavigate();
   const store = useReportStore();
@@ -50,7 +54,7 @@ const ReportProgressPage = () => {
             }
 
             if (prev === 3) {
-              store.fetchFraud(reportId);
+              store.fetchFraud(reportId, userId);
             }
 
             if (prev >= steps.length - 1) {
