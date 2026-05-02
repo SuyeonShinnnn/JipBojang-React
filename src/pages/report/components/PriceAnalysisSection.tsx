@@ -5,26 +5,17 @@ import { useQuery } from '@tanstack/react-query';
 import { Title } from '../../../style/reportCommon';
 import { formatMoney } from '../../../utils/format';
 import { useReportStore } from '../../../stores/reportStore';
-// import errorCharacter from '../../../assets/common'
+import type { RentDealAnalysisResult } from '../../../types/reportType';
+import { getCssVar } from '../../../utils/color';
+import PriceTrendChart from '../../../components/chart/PriceTrendChart';
 
-interface PriceData {
-  amount: number;
-  minPrice: number;
-  maxPrice: number;
-  avgPrice: number;
-  priceHistory?: PriceHistoryItem[];
-}
-
-interface PriceHistoryItem {
-  fullDate: string;
-  deposit: number;
-}
+const primary = getCssVar('--color-primary-dark');
 
 const PriceAnalysisSection = () => {
   const store = useReportStore();
   const reportId = Number(store.reportId);
 
-  const { data, isLoading, isError } = useQuery<PriceData>({
+  const { data, isLoading, isError } = useQuery<RentDealAnalysisResult>({
     queryKey: ['priceAnalysis', reportId],
     queryFn: async () => {
       if (!reportId) throw new Error('리포트 ID 없음');
@@ -37,8 +28,15 @@ const PriceAnalysisSection = () => {
   const chartRef = useRef<Chart | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const priceData = data;
+  const priceData = data?.report;
   const chartData = data?.priceHistory ?? [];
+
+  const labels = chartData.map((item) => {
+    const d = item.fullDate;
+    return `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`;
+  });
+
+  const deposits = chartData.map((item) => item.deposit);
 
   const diffFromMin = useMemo(() => {
     return priceData ? priceData.amount - priceData.minPrice : 0;
@@ -62,37 +60,10 @@ const PriceAnalysisSection = () => {
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
 
-    const labels = chartData.map((item) => {
-      const d = item.fullDate;
-      return `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`;
-    });
-
-    const deposits = chartData.map((item) => item.deposit);
-
-    chartRef.current = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: '전세가 시세 추이',
-            data: deposits,
-            borderColor: 'var(--color-primary-dark)',
-            backgroundColor: 'var(--color-accent)',
-            tension: 0.4,
-            fill: true,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-      },
-    });
-
     return () => {
       chartRef.current?.destroy();
     };
-  }, [chartData]);
+  }, [chartData, priceData]);
 
   return (
     <>
@@ -116,7 +87,13 @@ const PriceAnalysisSection = () => {
 
           <SubTitle>• 시세 추이</SubTitle>
           <Card>
-            <Canvas ref={canvasRef} />
+            <PriceTrendChart
+              labels={labels}
+              deposits={deposits}
+              avgPrice={priceData.avgPrice}
+              myPrice={priceData.amount}
+              primaryColor={primary}
+            />
           </Card>
 
           <SmallText>* 동일 면적 기준 시세 분석입니다.</SmallText>
@@ -183,11 +160,6 @@ const Card = styled.div`
   background: #fff;
 `;
 
-const Canvas = styled.canvas`
-  width: 100%;
-  height: 300px;
-`;
-
 const PriceRow = styled.div`
   display: flex;
   gap: 16px;
@@ -209,6 +181,7 @@ const Analysis = styled.div`
   display: flex;
   margin-top: 20px;
   flex-wrap: wrap;
+  gap: 8px;
 `;
 
 const AnalysisBox = styled.div<{ $red: boolean }>`
@@ -218,8 +191,11 @@ const AnalysisBox = styled.div<{ $red: boolean }>`
   text-align: center;
   color: white;
   border-radius: 10px;
-  background-color: ${({ $red }) =>
-    $red ? 'rgba(185,0,0,0.7)' : 'rgba(0,128,0,0.7)'};
+  background-color: ${({ $red }) => ($red ? '#ffebee' : '#e8f5e9')};
+
+  color: ${({ $red }) => ($red ? '#c62828' : '#2e7d32')};
+
+  border: 1px solid ${({ $red }) => ($red ? '#ef9a9a' : '#a5d6a7')};
 `;
 
 const StateBox = styled.div<{ $error?: boolean }>`
