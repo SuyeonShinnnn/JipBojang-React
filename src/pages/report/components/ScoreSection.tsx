@@ -3,17 +3,21 @@ import GaugeChart from '../../../components/chart/GaugeChart';
 import { useReportStore } from '../../../stores/reportStore';
 
 const ScoreSection = () => {
-  const { report } = useReportStore();
+  const store = useReportStore();
+  const report = store.report;
 
   const riskFields = [
-    { name: '가격', reasons: report.priceComment ? [report.priceComment] : [] },
+    {
+      name: '가격',
+      reasons: report?.priceComment ? [report.priceComment] : [],
+    },
     {
       name: '권리',
-      reasons: report.rightsComment ? [report.rightsComment] : [],
+      reasons: report?.rightsComment ? [report.rightsComment] : [],
     },
     {
       name: '전세 사기',
-      reasons: report.fraudComment ? [report.fraudComment] : [],
+      reasons: report?.fraudComment ? [report.fraudComment] : [],
     },
   ];
 
