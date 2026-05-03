@@ -1,81 +1,41 @@
 import styled from 'styled-components';
-import LoadingSpinner from '../../../components/common/LoadingSpanner';
-import {
-  fetchCautionByOwnerName,
-  fetchRightAnalysisResult,
-} from '../../../apis/reportApi';
 import { useAuthStore } from '../../../stores/auth';
 import { useReportStore } from '../../../stores/reportStore';
-import { useQuery } from '@tanstack/react-query';
 import { formatMoney } from '../../../utils/format';
 import { Title } from '../../../style/reportCommon';
+import { useEffect } from 'react';
 
 const RightAnalysisSection = () => {
   const store = useReportStore();
   const auth = useAuthStore();
 
   const reportId = Number(store.reportId);
-  const userId = auth.user?.userId;
+  const userId = Number(auth.user?.userId);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['rightAnalysis', reportId, userId],
-    queryFn: async () => {
-      if (!reportId || isNaN(reportId)) {
-        throw new Error('invalid reportId');
-      }
+  const {
+    certificate,
+    cautionOwner,
+    loading,
+    error,
+    fetchRightAnalysisResult,
+  } = useReportStore();
 
-      const res = await fetchRightAnalysisResult(reportId, Number(userId));
-      let report: any = res.data;
+  useEffect(() => {
+    if (reportId && userId) {
+      fetchRightAnalysisResult(reportId, userId);
+    }
+  }, [reportId, userId]);
 
-      let isOwnerInDelinquentList = false;
-
-      if (report.ownerName) {
-        const delinquentRes = await fetchCautionByOwnerName(report.ownerName);
-        isOwnerInDelinquentList = delinquentRes.data.cautious;
-      }
-
-      if (!report.gapgu && report.gapItem) {
-        report.gapgu = [
-          {
-            rightType: report.gapItem,
-            details: report.gapMainInfo,
-            date: report.gapDate,
-          },
-        ];
-      }
-
-      if (!report.eulgu && report.eulItem) {
-        report.eulgu = [
-          {
-            rightType: report.eulItem,
-            details: report.eulMainInfo,
-            date: report.eulDate,
-          },
-        ];
-      }
-
-      return {
-        report,
-        isOwnerInDelinquentList,
-      };
-    },
-    enabled: !!reportId && !!userId,
-  });
-
-  if (isLoading) {
-    return (
-      <CenterBox>
-        <LoadingSpinner />
-        <p>분석 데이터를 불러오는 중...</p>
-      </CenterBox>
-    );
+  if (loading) {
+    return <CenterBox>로딩중...</CenterBox>;
   }
 
-  if (isError || !data) {
+  if (error || !certificate) {
     return <ErrorBox>조회 실패</ErrorBox>;
   }
 
-  const { report, isOwnerInDelinquentList } = data;
+  const report = certificate;
+  const isOwnerInDelinquentList = cautionOwner?.isCautious;
 
   return (
     <>
@@ -117,6 +77,15 @@ const RightAnalysisSection = () => {
           <Value>{report.ownerName || '-'}</Value>
         </InfoItem>
 
+        <InfoItem>
+          <Label>최종지분</Label>
+          <Value>{report.finalShare}%</Value>
+        </InfoItem>
+        <InfoItem>
+          <Label>비고</Label>
+          <Value>{report.note === '비고 없음' ? '-' : report.note}</Value>
+        </InfoItem>
+
         {isOwnerInDelinquentList && (
           <WarningBox>
             ⚠️ {report.ownerName}님은 상습채무자 명단에 있습니다.
@@ -126,7 +95,9 @@ const RightAnalysisSection = () => {
 
       {/* 갑구 */}
       <Card>
-        <CardTitle>갑구</CardTitle>
+        <CardTitle>
+          갑구<small>(소유권에 관한 사항)</small>
+        </CardTitle>
 
         {report.gapgu?.length ? (
           report.gapgu.map((item: any, idx: number) => (
@@ -142,7 +113,9 @@ const RightAnalysisSection = () => {
 
       {/* 을구 */}
       <Card>
-        <CardTitle>을구</CardTitle>
+        <CardTitle>
+          을구 <small>(소유권 이외의 권리)</small>
+        </CardTitle>
 
         {report.eulgu?.length ? (
           report.eulgu.map((item: any, idx: number) => (
@@ -172,6 +145,11 @@ const Card = styled.div`
 const CardTitle = styled.h4`
   margin-bottom: 12px;
   font-weight: 600;
+
+  small {
+    margin-left: 4px;
+    color: rgba(var(--color-darkgray));
+  }
 `;
 
 const InfoItem = styled.div`
