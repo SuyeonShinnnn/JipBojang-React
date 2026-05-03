@@ -20,29 +20,30 @@ const ReportResultPage = () => {
         <Container>
           <Title>
             <MainTitle>
-              <span>{userName}</span>님이 <span>{report.type}</span>로{' '}
-              <span>{report.amount}</span>원에 계약한
+              <span>{userName}</span>님이 <span>{report?.type}</span>로{' '}
+              <span>{report?.amount}</span>원에 계약한
               <br />
-              <span>{report.address}</span>
+              <span>{report?.address}</span>
             </MainTitle>
 
             <SubTitle>집포트 분석 결과📝</SubTitle>
           </Title>
-
           <Section>
             <ScoreSection />
           </Section>
+          <hr />
           <Section>
             <PriceAnalysisSection />
           </Section>
+          <hr />
           <Section>
             <RightAnalysisSection />
           </Section>
-
+          <hr />
           <Section>
             <FraudAnalysisSection />
           </Section>
-
+          <hr />
           <Section>
             <ReferenceSection />
           </Section>
@@ -109,6 +110,10 @@ const Container = styled.div`
 
   background: #ffffff;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+
+  hr {
+    border: 1px solid rgba(var(--color-lightgray));
+  }
 `;
 
 const Section = styled.section`
