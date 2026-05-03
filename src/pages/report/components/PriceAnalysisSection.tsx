@@ -116,27 +116,36 @@ const PriceAnalysisSection = () => {
           <SubTitle>• 내 매물 분석</SubTitle>
           <Analysis>
             <AnalysisBox $red={diffFromMin > 0}>
-              {diffFromMin > 0 ? '+' : '-'}
-              {formatMoney(Math.abs(diffFromMin))}
-              <br />
-              호가 최저가보다 <br />
-              {diffFromMin > 0 ? '비쌉니다.' : '저렴합니다.'}
+              <strong>
+                {diffFromMin > 0 ? '+' : '-'}
+                {formatMoney(Math.abs(diffFromMin))}
+              </strong>
+              <span>
+                호가 최저가보다{' '}
+                <strong>{diffFromMin > 0 ? '비쌉니다.' : '저렴합니다.'}</strong>
+              </span>
             </AnalysisBox>
 
             <AnalysisBox $red={diffFromAvg > 0}>
-              {diffFromAvg > 0 ? '+' : '-'}
-              {formatMoney(Math.abs(diffFromAvg))}
-              <br />
-              평균 실거래가보다 <br />
-              {diffFromAvg > 0 ? '비쌉니다.' : '저렴합니다.'}
+              <strong>
+                {diffFromAvg > 0 ? '+' : '-'}
+                {formatMoney(Math.abs(diffFromAvg))}
+              </strong>
+              <span>
+                평균 실거래가보다{' '}
+                <strong>{diffFromAvg > 0 ? '비쌉니다.' : '저렴합니다.'}</strong>
+              </span>
             </AnalysisBox>
 
             <AnalysisBox $red={diffFromMax > 0}>
-              {diffFromMax > 0 ? '+' : '-'}
-              {formatMoney(Math.abs(diffFromMax))}
-              <br />
-              호가 최고가보다 <br />
-              {diffFromMax > 0 ? '비쌉니다.' : '저렴합니다.'}
+              <strong>
+                {diffFromMax > 0 ? '+' : '-'}
+                {formatMoney(Math.abs(diffFromMax))}
+              </strong>
+              <span>
+                호가 최고가보다{' '}
+                <strong>{diffFromMax > 0 ? '비쌉니다.' : '저렴합니다.'}</strong>
+              </span>
             </AnalysisBox>
           </Analysis>
         </>
@@ -178,24 +187,32 @@ const PriceBox = styled.div`
 `;
 
 const Analysis = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   margin-top: 20px;
   flex-wrap: wrap;
   gap: 8px;
+
+  span {
+    color: rgba(var(--color-darkgray));
+  }
 `;
 
 const AnalysisBox = styled.div<{ $red: boolean }>`
-  flex: 1;
+  display: grid;
+  gap: 8px;
   min-width: 150px;
   padding: 16px;
   text-align: center;
   color: white;
   border-radius: 10px;
   background-color: ${({ $red }) => ($red ? '#ffebee' : '#e8f5e9')};
+  border: 1px solid ${({ $red }) => ($red ? '#ef9a9a' : '#a5d6a7')};
 
   color: ${({ $red }) => ($red ? '#c62828' : '#2e7d32')};
-
-  border: 1px solid ${({ $red }) => ($red ? '#ef9a9a' : '#a5d6a7')};
+  strong {
+    color: ${({ $red }) => ($red ? '#c62828' : '#2e7d32')};
+  }
 `;
 
 const StateBox = styled.div<{ $error?: boolean }>`
