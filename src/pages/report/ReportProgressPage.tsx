@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useTyping } from '../../hooks/useTyping';
+import { useReportStore } from '../../stores/reportStore';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../stores/auth';
 
 const ReportProgressPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -19,15 +22,66 @@ const ReportProgressPage = () => {
     pauseAfterDelete: 500,
   });
 
+  const auth = useAuthStore();
+  const userId = Number(auth.user.userId);
+
+  const navigate = useNavigate();
+  const store = useReportStore();
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   useEffect(() => {
-    if (currentStep >= steps.length) return;
+    const createReportProgress = async () => {
+      const reportId = Number(store.reportId);
+      const address = store.address;
 
-    const timer = setTimeout(() => {
-      setCurrentStep((prev) => prev + 1);
-    }, 1000); // 1초마다 다음 step
+      console.log(reportId);
+      console.log(address);
+      console.log(Number(reportId));
+      if (!reportId) return;
+      if (!store.report) await store.fetchReport(reportId);
 
-    return () => clearTimeout(timer);
-  }, [currentStep]);
+      intervalRef.current = setInterval(async () => {
+        try {
+          setCurrentStep((prev) => {
+            const next = prev + 1;
+
+            if (prev === 1) {
+              store.fetchPrice(reportId);
+            }
+
+            if (prev === 2) {
+              store.fetchRight(reportId, address!);
+            }
+
+            if (prev === 3) {
+              store.fetchFraud(reportId, userId);
+            }
+
+            if (prev >= steps.length - 1) {
+              if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+              }
+
+              navigate('/report/result');
+              return prev;
+            }
+
+            return next;
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }, 2000);
+    };
+
+    createReportProgress();
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -39,8 +93,8 @@ const ReportProgressPage = () => {
         </h1>
         <ListWrapper>
           {steps.map((item, key) => (
-            <List $active={key <= currentStep}>
-              <Number $active={key <= currentStep}>0{key + 1}</Number>
+            <List key={key} $active={key <= currentStep}>
+              <NumberText $active={key <= currentStep}>0{key + 1}</NumberText>
               <p>{item}</p>
             </List>
           ))}
@@ -94,7 +148,7 @@ const List = styled.li<{ $active: boolean }>`
   }
 `;
 
-const Number = styled.strong<{ $active: boolean }>`
+const NumberText = styled.strong<{ $active: boolean }>`
   color: ${({ $active }) =>
     $active ? 'rgb(var(--color-primary-dark))' : 'rgb(var(--color-darkgray))'};
   font-size: 40px;

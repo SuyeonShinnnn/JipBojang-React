@@ -1,43 +1,72 @@
 import styled from 'styled-components';
 import BaseButton from '../../components/common/BaseButton';
 import BaseInput from '../../components/common/BaseInput';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import BaseModal from '../../components/common/BaseModal';
 import { useNavigate } from 'react-router-dom';
+import { createReport } from '../../apis/reportApi';
+import { useAuthStore } from '../../stores/auth';
+import { formatMoney } from '../../utils/format';
 
 const ReportFormPage = () => {
+  const navigate = useNavigate();
+  const auth = useAuthStore();
+
   const [address, setAddress] = useState('');
   const [type, setType] = useState('전세');
-  const [price, setPrice] = useState(0);
-  const [formattedPrice, setFormattedPrice] = useState('');
+  const [price, setPrice] = useState<number>(0);
+
+  const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  let [omissionItem, setOmissionItem] = useState('');
+  const [omissionItem, setOmissionItem] = useState('');
 
-  const priceFormat = (value: number) => {
-    if (value < 9999) {
-      setFormattedPrice(value + '원');
-    } else if (value < 99999999) {
-      setFormattedPrice(value / 10000 + '만원');
-    } else {
-      setFormattedPrice(value / 100000000 + '억원');
-    }
-  };
+  const isFormValid = useMemo(() => {
+    return address.trim() !== '' && type.trim() !== '' && price > 0;
+  }, [address, type, price]);
 
-  const handleSubmit = () => {
-    if (address.trim() == '') {
+  const handleSubmit = async () => {
+    if (submitting) return;
+
+    if (!address.trim()) {
       setOmissionItem('주소를');
       setIsModalOpen(true);
-    } else if (price === 0) {
+      return;
+    }
+
+    if (price <= 0) {
       setOmissionItem('가격을');
-    } else {
-      const navigate = useNavigate();
-      navigate('/reort/progress');
+      setIsModalOpen(true);
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const userId = Number(auth.user.userId);
+
+      const res = await createReport(
+        {
+          address,
+          type,
+          amount: price,
+        },
+        userId,
+      );
+
+      const reportId = res.data.reportId;
+      localStorage.setItem('reportId', reportId);
+
+      navigate('/report/progress');
+    } catch (e) {
+      console.error(e);
+      alert('리포트 생성에 실패했습니다.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <>
-      {' '}
       <Wrapper>
         <Header>
           <h1>전세 사기 위험 진단</h1>
@@ -48,8 +77,10 @@ const ReportFormPage = () => {
           <Section>
             <h3>📍 주소 검색</h3>
             <BaseInput
-              showButton={true}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
               placeholder="예) 서울특별시 강남구 테헤란로 123"
+              showButton={true}
             />
             <small>
               도로명 주소로 조회되지 않으면 지번 주소를 입력해 보세요.
@@ -59,49 +90,57 @@ const ReportFormPage = () => {
           <Section>
             <h3>🏠 거래 유형</h3>
             <ButtonWrapper>
-              <BaseButton
-                variant={type === '전세' ? 'primary' : 'options'}
-                onClick={() => setType('전세')}
-              >
-                전세
-              </BaseButton>
-              <BaseButton
-                variant={type === '월세' ? 'primary' : 'options'}
-                onClick={() => setType('월세')}
-              >
-                월세
-              </BaseButton>
+              {['전세', '월세'].map((t) => (
+                <BaseButton
+                  key={t}
+                  variant={type === t ? 'primary' : 'options'}
+                  onClick={() => setType(t)}
+                >
+                  {t}
+                </BaseButton>
+              ))}
             </ButtonWrapper>
           </Section>
 
           <Section>
             <h3>💰 거래 금액</h3>
             <BaseInput
+              value={price === 0 ? '' : price}
               placeholder="보증금액을 입력해 주세요."
               type="number"
               min="0"
               onKeyDown={(e) => {
-                if (e.key === '-' || e.key === 'e') {
+                if (['-', 'e', '+'].includes(e.key)) {
                   e.preventDefault();
                 }
               }}
               onChange={(e) => {
-                const value = Number(e.target.value);
-                setPrice(value);
-                priceFormat(value);
+                const value = e.target.value;
+                const num = Number(value);
+
+                setPrice(value === '' ? 0 : Number.isNaN(num) ? 0 : num);
               }}
             />
-            <small>{formattedPrice}</small>
+
+            <small>{price > 0 ? formatMoney(price) : '-'}</small>
           </Section>
 
-          <StartButton onClick={() => handleSubmit()}>제출하기</StartButton>
+          {/* 버튼 */}
+          <StartButton
+            onClick={handleSubmit}
+            disabled={!isFormValid || submitting}
+          >
+            {submitting ? '생성 중...' : '제출하기'}
+          </StartButton>
         </FormCard>
       </Wrapper>
+
+      {/* modal */}
       {isModalOpen && (
         <BaseModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          header={<h3>🚨필수 입력 누락</h3>}
+          header={<h3>🚨 필수 입력 누락</h3>}
         >
           {omissionItem} 입력해 주세요.
         </BaseModal>

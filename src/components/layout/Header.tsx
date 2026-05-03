@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuthStore } from '../../stores/auth';
 import BaseButton from '../common/BaseButton';
 import { BsBell } from 'react-icons/bs';
 import { useNotificationStore } from '../../stores/notification';
+import { NavLink } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -61,9 +62,9 @@ const Header: React.FC = () => {
         <LogoImage src="/logo.svg" onClick={handleLogoClick} />
         <NavItemsWrapper>
           {navItems.map((item, index) => (
-            <Link key={index} to={item.path}>
+            <StyledNavLink key={index} to={item.path}>
               {item.name}
-            </Link>
+            </StyledNavLink>
           ))}
         </NavItemsWrapper>
         {isLogin ? (
@@ -121,18 +122,23 @@ const Header: React.FC = () => {
 export default Header;
 
 const HeaderContainer = styled.header`
-  background-color: white;
-  width: 100%;
-  padding: 0.5rem 0;
-
   position: fixed;
-  top: 0;
-  left: 0;
   z-index: 1000;
+
+  width: 100%;
+
+  padding: 0.6rem 1.2rem;
 
   display: flex;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.08),
+    inset 0 1px rgba(255, 255, 255, 0.6);
 `;
 
 const ItemWrapper = styled.div`
@@ -160,13 +166,36 @@ const LogoImage = styled.img`
 
 const NavItemsWrapper = styled.nav`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 3rem;
-  font-size: 20px;
+  gap: 2rem;
+  font-size: 18px;
 
   @media (max-width: 1024px) {
     display: none;
+  }
+`;
+
+const StyledNavLink = styled(NavLink)`
+  color: rgb(var(--color-darkgray));
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: rgba(var(--color-primary-dark));
+    font-weight: 600;
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    color: rgb(var(--color-primary-dark)) !important;
+    font-weight: 600;
+  }
+
+  &.active::after {
+    transform: scaleX(1);
+  }
+
+  &:focus-visible {
+    outline: none;
+    color: rgb(var(--color-primary));
   }
 `;
 

@@ -12,6 +12,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.90.20",
     "axios": "^1.12.2",
+    "chart.js": "^4.5.1",
     "lucide-react": "^0.547.0",
     "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",
