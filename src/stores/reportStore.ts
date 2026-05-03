@@ -5,15 +5,17 @@ import {
   createReport,
   fetchCautionByOwnerName,
   fetchMyReports,
-  fetchPriceHistory,
   fetchReportById,
   fetchRightAnalysisResult,
   rentDealPrice,
   updateTotalScore,
+  fetchPriceHistory,
 } from '../apis/reportApi';
 
 import { useAuthStore } from './auth';
 import type {
+  Analysis,
+  CautionResponse,
   Certificate,
   FormInfo,
   RentDealAnalysisResult,
@@ -22,20 +24,22 @@ import type {
 
 interface ReportState {
   reportId: string | null;
-  report: any | null;
+  report: Report | null;
   address: string | null;
 
   resType: string;
   commUniqueNo: string;
 
-  priceResult: any;
-  rightResult: any;
-  fraudResult: any;
+  priceResult: RentDealAnalysisResult | null;
+  rightResult: Certificate | null;
+  certificate: Certificate | null;
+  fraudResult: Analysis;
 
   totalScore: number | null;
 
+  // 타입 변경 필요
   myReports: any[];
-  cautionOwner: boolean | null;
+  cautionOwner: CautionResponse | null;
 
   loading: boolean;
   error: string | null;
@@ -51,7 +55,10 @@ interface ReportState {
   fetchPriceHistory: (reportId: number) => Promise<void>;
   fetchRightAnalysisResult: (reportId: number, userId: number) => Promise<void>;
   fetchMyReports: () => Promise<void>;
-  updateTotalScore: (reportId: number, payload: any) => Promise<void>;
+  updateTotalScore: (
+    reportId: number,
+    payload: Record<string, number>,
+  ) => Promise<void>;
   fetchCautionByOwnerName: (ownerName: string) => Promise<void>;
 }
 
@@ -63,12 +70,11 @@ export const useReportStore = create<ReportState>((set) => ({
   resType: '',
   commUniqueNo: '',
 
-  priceResult: {
-    priceHistory: [],
-  },
+  priceResult: null,
 
-  rightResult: {},
-  fraudResult: {},
+  rightResult: null,
+  certificate: {} as Certificate,
+  fraudResult: {} as Analysis,
 
   totalScore: null,
 
@@ -165,10 +171,12 @@ export const useReportStore = create<ReportState>((set) => ({
       const res = await fetchPriceHistory(reportId);
 
       set((state) => ({
-        priceResult: {
-          ...state.priceResult,
-          priceHistory: res.data.priceHistory || [],
-        },
+        priceResult: state.priceResult
+          ? {
+              ...state.priceResult,
+              priceHistory: res.data.priceHistory || [],
+            }
+          : null,
       }));
     } catch (err) {
       console.error('시세 추이 조회 실패', err);
@@ -207,25 +215,25 @@ export const useReportStore = create<ReportState>((set) => ({
       set({ loading: true });
 
       const res = await fetchRightAnalysisResult(reportId, userId);
-      let report = res.data;
+      let certificate: Certificate = res.data;
 
       // gapgu / eulgu 기본값 처리
-      if (!report.gapgu && report.gapItem) {
-        report.gapgu = [
+      if (!certificate.gapgu && certificate.gapItem) {
+        certificate.gapgu = [
           {
-            rightType: report.gapItem,
-            details: report.gapMainInfo,
-            date: report.gapDate,
+            rightType: certificate.gapItem,
+            details: certificate.gapMainInfo,
+            date: certificate.gapDate,
           },
         ];
       }
 
-      if (!report.eulgu && report.eulItem) {
-        report.eulgu = [
+      if (!certificate.eulgu && certificate.eulItem) {
+        certificate.eulgu = [
           {
-            rightType: report.eulItem,
-            details: report.eulMainInfo,
-            date: report.eulDate,
+            rightType: certificate.eulItem,
+            details: certificate.eulMainInfo,
+            date: certificate.eulDate,
           },
         ];
       }
@@ -233,13 +241,15 @@ export const useReportStore = create<ReportState>((set) => ({
       let cautionOwner = null;
 
       // 임대인 주의 여부
-      if (report.ownerName) {
-        const delinquentRes = await fetchCautionByOwnerName(report.ownerName);
+      if (certificate.ownerName) {
+        const delinquentRes = await fetchCautionByOwnerName(
+          certificate.ownerName,
+        );
         cautionOwner = delinquentRes.data.cautious;
       }
 
       set({
-        report,
+        certificate,
         cautionOwner,
         loading: false,
         error: null,

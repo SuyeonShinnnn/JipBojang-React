@@ -62,11 +62,13 @@ export interface Certificate {
   finalShare: number;
   note: string;
 
+  gapgu: { rightType: string; details: string; date: string }[];
   gapItem: string;
   gapDate: string;
   gapRegistrar: string;
   gapMainInfo: string;
 
+  eulgu: { rightType: string; details: string; date: string }[];
   eulItem: string;
   eulDate: string;
   eulRegistrar: string;
@@ -105,4 +107,9 @@ export interface FraudAnalysisResponse {
 export interface Analysis {
   ownerName: string;
   priorClaim: number;
+}
+
+export interface CautionResponse {
+  isCautious: boolean;
+  cautionNames: string[];
 }
