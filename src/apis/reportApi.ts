@@ -59,7 +59,7 @@ export const fetchMyReports = () => {
 export const updateTotalScore = (
   reportId: number,
   userId: number,
-  payload: any,
+  payload:  Record<string, number>,
 ) => {
   return axiosInstance.patch(
     `/report/score/${reportId}/user/${userId}`,
