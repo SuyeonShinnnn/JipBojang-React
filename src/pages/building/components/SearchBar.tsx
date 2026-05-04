@@ -65,7 +65,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
 
   return (
     <>
-      <Aside hasResult={places.length > 0}>
+      <Aside $hasResult={places.length > 0}>
         <form onSubmit={handleSubmit}>
           <BaseInput
             showButton={true}
@@ -165,14 +165,14 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
 
 export default SearchBar;
 
-const Aside = styled.aside<{ hasResult: boolean }>`
+const Aside = styled.aside<{ $hasResult: boolean }>`
   background-color: white;
   box-shadow: 5px 5px 20px rgb(var(--color-darkgray));
   width: 360px;
   border-radius: 12px;
   margin: 5.5rem 0 0 12px;
   padding: 1rem;
-  height: ${(props) => (props.hasResult ? '85vh' : '80px')};
+  height: ${(props) => (props.$hasResult ? '85vh' : '80px')};
 
   position: absolute;
   z-index: 1000;
