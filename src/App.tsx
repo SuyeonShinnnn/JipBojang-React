@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useAuthStore } from './stores/auth';
 import Header from './components/layout/Header';
 import DefaultLayout from './components/layout/DefaultLayout';
-import { useNotificationStore } from './stores/notification';
+import { useNotificationStore } from './stores/notiStore';
 import { connectNotificationSSE } from './apis/notificationSSE';
 
 function App() {
