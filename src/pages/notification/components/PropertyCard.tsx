@@ -2,7 +2,7 @@ import { HiMagnifyingGlassPlus } from 'react-icons/hi2';
 import { GoTrash } from 'react-icons/go';
 import { GoPencil } from 'react-icons/go';
 import { BsPlusLg } from 'react-icons/bs';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
 import PropertyRegistModal from './PropertyRegistModal';
 import DeleteModal from './DeleteModal';
@@ -24,12 +24,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   type ModalType = 'delete' | 'modify' | 'detail' | 'register' | null;
   const [modal, setModal] = useState<ModalType>(null);
 
-  const iconList = [
-    { icon: <GoTrash />, label: '삭제', type: 'delete' },
-    { icon: <GoPencil />, label: '수정', type: 'modify' },
-    { icon: <HiMagnifyingGlassPlus />, label: '상세보기', type: 'detail' },
-  ] as const;
-
+  const iconList = useMemo(
+    () =>
+      [
+        { icon: <GoTrash />, label: '삭제', type: 'delete' },
+        { icon: <GoPencil />, label: '수정', type: 'modify' },
+        { icon: <HiMagnifyingGlassPlus />, label: '상세보기', type: 'detail' },
+      ] as const,
+    [],
+  );
   const openModal = (type: ModalType) => {
     setModal(type);
   };
