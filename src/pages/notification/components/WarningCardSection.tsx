@@ -1,11 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import bellIcon from '../../../assets/notification/alert-icon-50.png';
+import sirenIcon from '../../../assets/notification/siren-icon-50.png';
+import docIcon from '../../../assets/notification/doc-icon-50.png';
+import magnifyIcon from '../../../assets/notification/magnifying-glass-icon-50.png';
 
 const WarningCardSection: React.FC = () => {
   return (
     <Container>
       <Card>
-        <Icon src="src/assets/notification/doc-icon.png" />
+        <Icon src={docIcon} width={40} />
         <TextBox>
           <WarningTitle>등록한도</WarningTitle>
           <WarningText>
@@ -15,7 +19,7 @@ const WarningCardSection: React.FC = () => {
       </Card>
 
       <Card>
-        <Icon src="src/assets/notification/siren-icon.png" />
+        <Icon src={sirenIcon} width={40} />
         <TextBox>
           <WarningTitle>주의사항</WarningTitle>
           <WarningText>
@@ -26,7 +30,7 @@ const WarningCardSection: React.FC = () => {
       </Card>
 
       <Card>
-        <Icon src="src/assets/notification/alert-icon.png" />
+        <Icon src={bellIcon} width={40} />
         <TextBox>
           <WarningTitle>실시간 알림</WarningTitle>
           <WarningText>
@@ -37,7 +41,7 @@ const WarningCardSection: React.FC = () => {
       </Card>
 
       <Card>
-        <Icon src="src/assets/notification/magnifying-glass-icon.png" />
+        <Icon src={magnifyIcon} width={40} />
         <TextBox>
           <WarningTitle>상세확인</WarningTitle>
           <WarningText>
