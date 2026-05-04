@@ -1,9 +1,9 @@
-import styled from "styled-components";
-import { PiWarningCircleBold } from "react-icons/pi";
-import { TbReload } from "react-icons/tb";
-import BaseButton from "./BaseButton";
+import styled from 'styled-components';
+import BaseButton from './BaseButton';
+import { ArrowRotateForwardIcon } from '../../assets/icon/ArrowRotateForwardIcon';
+import { WarningIcon } from '../../assets/icon/WarningIcon';
 
-type ErrorType = "network" | "empty" | "auth";
+type ErrorType = 'network' | 'empty' | 'auth';
 
 interface ErrorStateProps {
   type?: ErrorType;
@@ -16,21 +16,21 @@ interface ErrorStateProps {
 
 const defaultMessages = {
   network: {
-    message: "네트워크 오류가 발생했습니다",
-    subMessage: "잠시 후 다시 시도해주세요",
+    message: '네트워크 오류가 발생했습니다',
+    subMessage: '잠시 후 다시 시도해주세요',
   },
   empty: {
-    message: "데이터가 없습니다",
-    subMessage: "다른 조건으로 검색해보세요",
+    message: '데이터가 없습니다',
+    subMessage: '다른 조건으로 검색해보세요',
   },
   auth: {
-    message: "권한이 없습니다",
-    subMessage: "로그인이 필요합니다",
+    message: '권한이 없습니다',
+    subMessage: '로그인이 필요합니다',
   },
 };
 
 const ErrorState = ({
-  type = "network",
+  type = 'network',
   message,
   subMessage,
   buttonMessage,
@@ -42,7 +42,7 @@ const ErrorState = ({
 
   return (
     <Container>
-      <PiWarningCircleBold />
+      <WarningIcon />
 
       <span>{finalMessage}</span>
       <span>{finalSubMessage}</span>
@@ -51,12 +51,12 @@ const ErrorState = ({
         <CustomBaseButton
           size="size2"
           onClick={onRetry}
-          variant={disabled ? "gray" : "primary"}
+          variant={disabled ? 'gray' : 'primary'}
           disabled={disabled}
         >
           {buttonMessage ?? (
             <>
-              <TbReload />
+              <ArrowRotateForwardIcon />
               재시도
             </>
           )}
