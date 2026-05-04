@@ -1,43 +1,10 @@
 import { BrowserRouter } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useAuthStore } from './stores/auth';
-import Header from './components/layout/Header';
-import DefaultLayout from './components/layout/DefaultLayout';
-import { useNotificationStore } from './stores/notiStore';
-import { connectNotificationSSE } from './apis/notificationSSE';
+import AppShell from './app/AppShell';
 
 function App() {
-  const addNotification = useNotificationStore(
-    (state) => state.addNotification,
-  );
-  const userId = useAuthStore((state) => state.user?.userId);
-
-  useEffect(() => {
-    const auth = localStorage.getItem('auth');
-    if (auth) {
-      const parsed = JSON.parse(auth);
-      useAuthStore.setState({
-        ...parsed,
-        isLogin: true,
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!userId) return;
-    const sse = connectNotificationSSE(userId, (data) => {
-      addNotification(data);
-    });
-
-    return () => {
-      sse.close();
-    };
-  }, [userId]);
-
   return (
     <BrowserRouter>
-      <Header />
-      <DefaultLayout />
+      <AppShell />
     </BrowserRouter>
   );
 }
