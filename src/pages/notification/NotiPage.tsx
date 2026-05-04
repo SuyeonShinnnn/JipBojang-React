@@ -1,74 +1,105 @@
-import React from "react";
-import styled from "styled-components";
-import PropertyCard from "./components/PropertyCard";
-import { getRegistedPropertyInfo } from "../../apis/notiApi";
-import WarningCardSection from "./components/WarningCardSection";
-import { useAuthStore } from "../../stores/auth";
-import { useLocation } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import type { PropertyDetail } from "../../types/notification";
-import SkeletonCard from "../../components/common/skeleton/SkeletonCard";
-import ErrorState from "../../components/common/ErrorState";
+import React from 'react';
+import styled from 'styled-components';
+import PropertyCard from './components/PropertyCard';
+import { getRegistedPropertyInfo } from '../../apis/notiApi';
+import WarningCardSection from './components/WarningCardSection';
+import { useAuthStore } from '../../stores/auth';
+import { useLocation } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import type { PropertyDetail } from '../../types/notification';
+import SkeletonCard from '../../components/common/skeleton/SkeletonCard';
+import ErrorState from '../../components/common/ErrorState';
+
+import PropertyRegistModal from './components/PropertyRegistModal';
+import DeleteModal from './components/DeleteModal';
+import ModifyModal from './components/ModifyModal';
+import DetailModal from './components/DetailModal';
+
+const SKELETON_LIST = Array.from({ length: 3 });
+
+type ModalType = 'register' | 'delete' | 'modify' | 'detail' | null;
 
 const NotiPage: React.FC = () => {
   const location = useLocation();
-  const targetId = location.state?.targetPropertyId;
+  // const targetId = location.state?.targetPropertyId;
   const userId = useAuthStore((state) => state.user.userId);
 
+  const [modalType, setModalType] = React.useState<ModalType>(null);
+  const [selectedProperty, setSelectedProperty] =
+    React.useState<PropertyDetail | null>(null);
+
   const { data, isPending, isError, refetch } = useQuery<PropertyDetail[]>({
-    queryKey: ["propertyInfo", userId],
+    queryKey: ['propertyInfo', userId],
     queryFn: async () =>
       await getRegistedPropertyInfo(Number(userId)).then((res) => res.data),
     enabled: !!userId,
-    staleTime: 5 * 1000 * 60,
+    staleTime: 5 * 60 * 1000,
   });
 
-  const totalCards = 3;
-
-  const renderContent = () => {
-    if (isError) {
-      return <ErrorState onRetry={refetch} />;
-    }
-
-    if (isPending) {
-      return Array.from({ length: totalCards }).map((_, idx) => (
-        <SkeletonCard key={idx} />
-      ));
-    }
-
-    return Array.from({ length: totalCards }).map((_, idx) => {
-      const item = data?.[idx];
-
-      return (
-        <PropertyCard
-          key={idx}
-          propertyInfo={item}
-          isEmpty={!item}
-          autoOpenDetailModal={!!item && item.id === targetId}
-        />
-      );
-    });
+  const openModal = (type: ModalType, item?: PropertyDetail) => {
+    setModalType(type);
+    if (item) setSelectedProperty(item);
   };
+
+  const closeModal = () => {
+    setModalType(null);
+    setSelectedProperty(null);
+  };
+
+  if (isError) {
+    return (
+      <Container>
+        <ErrorState onRetry={refetch} />
+      </Container>
+    );
+  }
 
   return (
     <Container>
       <h1>등기변동 알림 서비스</h1>
       <SubTitle>알림 설정된 부동산</SubTitle>
-      <PropertyCardWrapper>{renderContent()}</PropertyCardWrapper>
+
+      <PropertyCardWrapper>
+        {isPending
+          ? SKELETON_LIST.map((_, idx) => <SkeletonCard key={idx} />)
+          : Array.from({ length: 3 }).map((_, idx) => {
+              const item = data?.[idx];
+
+              return (
+                <PropertyCard
+                  key={idx}
+                  propertyInfo={item}
+                  isEmpty={!item}
+                  onOpenModal={openModal}
+                />
+              );
+            })}
+      </PropertyCardWrapper>
+
       <WarningCardSection />
+
+      <PropertyRegistModal
+        isOpen={modalType === 'register'}
+        onClose={closeModal}
+      />
+
+      <DeleteModal isOpen={modalType === 'delete'} onClose={closeModal} />
+
+      <ModifyModal isOpen={modalType === 'modify'} onClose={closeModal} />
+
+      <DetailModal
+        isOpen={modalType === 'detail'}
+        propertyDetail={selectedProperty ?? undefined}
+        onClose={closeModal}
+      />
     </Container>
   );
 };
 
+export default NotiPage;
+
 const Container = styled.div`
   padding: 2rem 8rem;
-
-  @media (max-width: 1024px) {
-    padding: 2rem;
-  }
-  @media (max-width: 768px) {
-    padding: 0 12px;
-  }
 `;
 
 const SubTitle = styled.span`
@@ -83,16 +114,4 @@ const PropertyCardWrapper = styled.section`
   display: flex;
   justify-content: space-between;
   gap: 2rem;
-  min-height: 156px;
-
-  @media (max-width: 1024px) {
-    gap: 8px;
-  }
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 8px;
-    height: auto;
-  }
 `;
-
-export default NotiPage;

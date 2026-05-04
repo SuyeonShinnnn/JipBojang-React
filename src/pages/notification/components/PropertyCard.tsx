@@ -2,28 +2,24 @@ import { HiMagnifyingGlassPlus } from 'react-icons/hi2';
 import { GoTrash } from 'react-icons/go';
 import { GoPencil } from 'react-icons/go';
 import { BsPlusLg } from 'react-icons/bs';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import styled, { css } from 'styled-components';
-import PropertyRegistModal from './PropertyRegistModal';
-import DeleteModal from './DeleteModal';
-import ModifyModal from './ModifyModal';
-import DetailModal from './DetailModal';
 import type { PropertyDetail } from '../../../types/notification';
 
 interface PropertyCardProps {
   propertyInfo?: PropertyDetail;
   isEmpty?: boolean;
-  autoOpenDetailModal: boolean;
+  onOpenModal: (
+    type: 'register' | 'delete' | 'modify' | 'detail',
+    item?: PropertyDetail,
+  ) => void;
 }
 
-const PropertyCard: React.FC<PropertyCardProps> = ({
+const PropertyCard = ({
   propertyInfo,
   isEmpty = false,
-  autoOpenDetailModal = false,
-}) => {
-  type ModalType = 'delete' | 'modify' | 'detail' | 'register' | null;
-  const [modal, setModal] = useState<ModalType>(null);
-
+  onOpenModal,
+}: PropertyCardProps) => {
   const iconList = useMemo(
     () =>
       [
@@ -33,24 +29,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       ] as const,
     [],
   );
-  const openModal = (type: ModalType) => {
-    setModal(type);
-  };
-
-  const closeModal = () => {
-    setModal(null);
-  };
-
-  useEffect(() => {
-    if (autoOpenDetailModal && propertyInfo) {
-      setModal('register');
-    }
-  }, [autoOpenDetailModal, propertyInfo]);
 
   return (
     <>
       {isEmpty ? (
-        <Container $isEmpty={isEmpty} onClick={() => setModal('register')}>
+        <Container $isEmpty={isEmpty} onClick={() => onOpenModal('register')}>
           <BsPlusLg />
         </Container>
       ) : (
@@ -59,7 +42,10 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           <span>{propertyInfo?.commAddrLotNumber}</span>
           <IconWrapper>
             {iconList.map((item, key) => (
-              <IconBox key={key} onClick={() => openModal(item.type)}>
+              <IconBox
+                key={key}
+                onClick={() => onOpenModal(item.type, propertyInfo)}
+              >
                 {item.icon}
                 <Tooltip>{item.label}</Tooltip>
               </IconBox>
@@ -67,16 +53,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           </IconWrapper>
         </Container>
       )}
-
-      <PropertyRegistModal isOpen={modal === 'register'} onClose={closeModal} />
-
-      <DeleteModal isOpen={modal === 'delete'} onClose={closeModal} />
-      <ModifyModal isOpen={modal === 'modify'} onClose={closeModal} />
-      <DetailModal
-        isOpen={modal === 'detail'}
-        propertyDetail={propertyInfo}
-        onClose={closeModal}
-      />
     </>
   );
 };
