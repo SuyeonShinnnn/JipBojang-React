@@ -114,4 +114,4 @@ const WarningText = styled.span`
   color: rgb(var(--color-darkgray));
 `;
 
-export default WarningCardSection;
+export default React.memo(WarningCardSection);
