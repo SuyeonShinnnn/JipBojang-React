@@ -4,23 +4,26 @@ import PropertyCard from './components/PropertyCard';
 import { getRegistedPropertyInfo } from '../../apis/notiApi';
 import WarningCardSection from './components/WarningCardSection';
 import { useAuthStore } from '../../stores/auth';
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import type { PropertyDetail } from '../../types/notification';
 import SkeletonCard from '../../components/common/skeleton/SkeletonCard';
 import ErrorState from '../../components/common/ErrorState';
+import { lazy, Suspense } from 'react';
 
-import PropertyRegistModal from './components/PropertyRegistModal';
-import DeleteModal from './components/DeleteModal';
-import ModifyModal from './components/ModifyModal';
-import DetailModal from './components/DetailModal';
+const DetailModal = lazy(() => import('./components/DetailModal'));
+const DeleteModal = lazy(() => import('./components/DeleteModal'));
+const ModifyModal = lazy(() => import('./components/ModifyModal'));
+const PropertyRegistModal = lazy(
+  () => import('./components/PropertyRegistModal'),
+);
 
 const SKELETON_LIST = Array.from({ length: 3 });
 
 type ModalType = 'register' | 'delete' | 'modify' | 'detail' | null;
 
 const NotiPage: React.FC = () => {
-  const location = useLocation();
+  // const location = useLocation();
   // const targetId = location.state?.targetPropertyId;
   const userId = useAuthStore((state) => state.user.userId);
 
@@ -78,20 +81,33 @@ const NotiPage: React.FC = () => {
 
       <WarningCardSection />
 
-      <PropertyRegistModal
-        isOpen={modalType === 'register'}
-        onClose={closeModal}
-      />
+      {modalType === 'register' && (
+        <Suspense fallback={null}>
+          <PropertyRegistModal isOpen onClose={closeModal} />
+        </Suspense>
+      )}
 
-      <DeleteModal isOpen={modalType === 'delete'} onClose={closeModal} />
+      {modalType === 'delete' && (
+        <Suspense fallback={null}>
+          <DeleteModal isOpen onClose={closeModal} />
+        </Suspense>
+      )}
 
-      <ModifyModal isOpen={modalType === 'modify'} onClose={closeModal} />
+      {modalType === 'modify' && (
+        <Suspense fallback={null}>
+          <ModifyModal isOpen onClose={closeModal} />
+        </Suspense>
+      )}
 
-      <DetailModal
-        isOpen={modalType === 'detail'}
-        propertyDetail={selectedProperty ?? undefined}
-        onClose={closeModal}
-      />
+      {modalType === 'detail' && (
+        <Suspense fallback={null}>
+          <DetailModal
+            isOpen
+            propertyDetail={selectedProperty ?? undefined}
+            onClose={closeModal}
+          />
+        </Suspense>
+      )}
     </Container>
   );
 };
