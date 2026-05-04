@@ -7,6 +7,7 @@ import { useAuthStore } from "../../stores/auth";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import type { PropertyDetail } from "../../types/notification";
+import SkeletonCard from "../../components/common/skeleton/SkeletonCard";
 
 const NotiPage: React.FC = () => {
   const location = useLocation();
@@ -29,7 +30,7 @@ const NotiPage: React.FC = () => {
 
     if (isPending) {
       return Array.from({ length: totalCards }).map((_, idx) => (
-        <div key={idx}>ㅇㅇㅇ</div>
+        <SkeletonCard key={idx} />
       ));
     }
 
