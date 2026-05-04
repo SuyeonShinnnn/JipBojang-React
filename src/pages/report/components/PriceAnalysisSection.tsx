@@ -1,15 +1,16 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import styled from 'styled-components';
-import Chart from 'chart.js/auto';
 import { useQuery } from '@tanstack/react-query';
 import { Title } from '../../../style/reportCommon';
 import { formatMoney } from '../../../utils/format';
 import { useReportStore } from '../../../stores/reportStore';
 import type { RentDealAnalysisResult } from '../../../types/reportType';
 import { getCssVar } from '../../../utils/color';
-import PriceTrendChart from '../../../components/chart/PriceTrendChart';
 
 const primary = getCssVar('--color-primary-dark');
+const PriceTrendChart = lazy(
+  () => import('../../../components/chart/PriceTrendChart'),
+);
 
 const PriceAnalysisSection = () => {
   const store = useReportStore();
@@ -24,9 +25,6 @@ const PriceAnalysisSection = () => {
     },
     enabled: !!reportId,
   });
-
-  const chartRef = useRef<Chart | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const priceData = data?.report;
   const chartData = data?.priceHistory ?? [];
@@ -50,21 +48,6 @@ const PriceAnalysisSection = () => {
     return priceData ? priceData.amount - priceData.avgPrice : 0;
   }, [priceData]);
 
-  useEffect(() => {
-    if (!canvasRef.current || chartData.length === 0) return;
-
-    if (chartRef.current) {
-      chartRef.current.destroy();
-    }
-
-    const ctx = canvasRef.current.getContext('2d');
-    if (!ctx) return;
-
-    return () => {
-      chartRef.current?.destroy();
-    };
-  }, [chartData, priceData]);
-
   return (
     <>
       <Title>가격 분석</Title>
@@ -87,13 +70,15 @@ const PriceAnalysisSection = () => {
 
           <SubTitle>• 시세 추이</SubTitle>
           <Card>
-            <PriceTrendChart
-              labels={labels}
-              deposits={deposits}
-              avgPrice={priceData.avgPrice}
-              myPrice={priceData.amount}
-              primaryColor={primary}
-            />
+            <Suspense fallback={<div>차트 로딩중...</div>}>
+              <PriceTrendChart
+                labels={labels}
+                deposits={deposits}
+                avgPrice={priceData.avgPrice}
+                myPrice={priceData.amount}
+                primaryColor={primary}
+              />
+            </Suspense>
           </Card>
 
           <SmallText>* 동일 면적 기준 시세 분석입니다.</SmallText>
