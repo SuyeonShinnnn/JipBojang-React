@@ -1,13 +1,7 @@
 import axiosInstance from './axiosInstance';
 
 export const getRegistedPropertyInfo = async (id: number) => {
-  try {
-    const response = await axiosInstance.get(`/notification/registed/${id}`);
-    return response.data;
-  } catch (e) {
-    console.log('🚨오류 발생');
-    return e;
-  }
+  return await axiosInstance.get(`/notification/registed/${id}`);
 };
 
 export const getRegistedPropertyDetail = async (commUniqueNo?: number) => {
