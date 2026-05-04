@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { BsBell } from 'react-icons/bs';
 import { useNotificationStore } from '../../stores/notiStore';
 import { useNavigate } from 'react-router-dom';
+import { BellIcon } from '../../assets/icon/BellIcon';
 
 const Alarm: React.FC = React.memo(() => {
   const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ const Alarm: React.FC = React.memo(() => {
 
   return (
     <Wrapper ref={ref}>
-      <BsBell onClick={() => setOpen((prev) => !prev)} />
+      <BellIcon onClick={() => setOpen((prev) => !prev)} />
 
       <Box $open={open}>
         {notifications.length === 0 ? (
@@ -59,6 +59,7 @@ const Wrapper = styled.div`
   svg {
     &:hover {
       cursor: pointer;
+      color: rgb(var(--color-accent));
     }
   }
 `;

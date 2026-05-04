@@ -7,9 +7,9 @@ import {
   removeRecentSearch,
   saveRecentSearch,
 } from '../../../utils/BuildingUtils';
-import { RiCloseLargeFill } from 'react-icons/ri';
-import { IoIosArrowBack } from 'react-icons/io';
-import { IoIosArrowForward } from 'react-icons/io';
+import { AngleLeftIcon } from '../../../assets/icon/AngleLeftIcon';
+import { AngleRightIcon } from '../../../assets/icon/AngleRightIcon';
+import { CloseOutlineIcon } from '../../../assets/icon/CloseOutlineIcon';
 
 interface SearchBarProps {
   places: Place[];
@@ -92,7 +92,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
           {totalPages > 1 && (
             <Pagination>
               {startPage > 1 && (
-                <IoIosArrowBack
+                <AngleLeftIcon
                   onMouseDown={(e) => {
                     e.preventDefault();
                     setPage(startPage - 1);
@@ -114,7 +114,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
               ))}
 
               {endPage < totalPages && (
-                <IoIosArrowForward
+                <AngleRightIcon
                   onMouseDown={(e) => {
                     e.preventDefault();
                     setPage(endPage + 1);
@@ -141,7 +141,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
               >
                 {item}
 
-                <RiCloseLargeFill
+                <CloseOutlineIcon
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -207,7 +207,9 @@ const RecentSearchBox = styled.ul`
     padding: 12px;
 
     svg {
-      color: rgb(var(--color-darkgray));
+      width: 20px;
+      height: auto;
+      color: rgb(var(--color-mediumgray)) !important;
     }
 
     &:hover {

@@ -1,17 +1,17 @@
 import styled, { keyframes } from 'styled-components';
 import type { Place } from '../../../types/building';
 import { dateFormat, houseLabel } from '../../../utils/BuildingUtils';
-import { IoIosArrowDown } from 'react-icons/io';
-import { IoIosArrowUp } from 'react-icons/io';
-import { LuMapPin } from 'react-icons/lu';
-import { LiaTagsSolid } from 'react-icons/lia';
-import { IoClose } from 'react-icons/io5';
 import { useEffect, useState } from 'react';
 import bannnerImg from '../../../assets/building/banner.png';
 import apartmentImg from '../../../assets/building/apartment.jpg';
 import villaImg from '../../../assets/building/villa.jpg';
 import { getBasicInfo, getDepositInfo } from '../../../apis/buildingApi';
 import { useNavigate } from 'react-router-dom';
+import { CloseOutlineIcon } from '../../../assets/icon/CloseOutlineIcon';
+import { LocationOutlineIcon } from '../../../assets/icon/LocationOutlineIcon';
+import { AngleDownIcon } from '../../../assets/icon/AngleDownIcon';
+import { AngleUpIcon } from '../../../assets/icon/AngleUpIcon';
+import { PricetagsOutlineIcon } from '../../../assets/icon/PricetagsOutlineIcon';
 
 interface BuildingInfoBarProps {
   selectedPlace: Place;
@@ -82,7 +82,7 @@ const BuildingInfoBar = ({ selectedPlace, onClose }: BuildingInfoBarProps) => {
   return (
     <Container>
       <CloseButton onClick={onClose}>
-        <IoClose />
+        <CloseOutlineIcon />
       </CloseButton>
 
       <ImgBox>
@@ -97,15 +97,15 @@ const BuildingInfoBar = ({ selectedPlace, onClose }: BuildingInfoBarProps) => {
 
         {/* 주소 */}
         <TextIconWrapper>
-          <LuMapPin />
+          <LocationOutlineIcon />
           <span>{selectedPlace.address}</span>
-          {!clicked && <IoIosArrowDown onClick={() => setClicked(!clicked)} />}
-          {clicked && <IoIosArrowUp onClick={() => setClicked(!clicked)} />}
+          {!clicked && <AngleDownIcon onClick={() => setClicked(!clicked)} />}
+          {clicked && <AngleUpIcon onClick={() => setClicked(!clicked)} />}
         </TextIconWrapper>
 
         {/* 카테고리 */}
         <TextIconWrapper>
-          <LiaTagsSolid />
+          <PricetagsOutlineIcon />
           <span>{selectedPlace.category}</span>
         </TextIconWrapper>
 
@@ -182,6 +182,10 @@ const CloseButton = styled.div`
     cursor: pointer;
     opacity: 0.5;
   }
+  svg {
+    width: 32px;
+    height: auto;
+  }
 `;
 
 const ImgBox = styled.div`
@@ -221,6 +225,9 @@ const TextIconWrapper = styled.div`
   align-items: center;
 
   svg {
+    width: 16px;
+    height: auto;
+
     color: rgb(var(--color-mediumgray));
     &:hover {
       cursor: pointer;
