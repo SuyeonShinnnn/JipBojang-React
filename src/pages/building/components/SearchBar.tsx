@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import BaseInput from '../../../components/common/BaseInput';
-import styled from 'styled-components';
-import type { Place } from '../../../types/building';
+import { useEffect, useState } from "react";
+import BaseInput from "../../../components/common/BaseInput";
+import styled from "styled-components";
+import type { Place } from "../../../types/building";
 import {
   getRecentSearch,
   removeRecentSearch,
   saveRecentSearch,
-} from '../../../utils/BuildingUtils';
-import { RiCloseLargeFill } from 'react-icons/ri';
-import { IoIosArrowBack } from 'react-icons/io';
-import { IoIosArrowForward } from 'react-icons/io';
+} from "../../../utils/BuildingUtils";
+import { RiCloseLargeFill } from "react-icons/ri";
+import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 
 interface SearchBarProps {
   places: Place[];
@@ -19,7 +19,7 @@ interface SearchBarProps {
 
 const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
   const [recentSearch, setRecentSearch] = useState<string[]>([]);
-  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [page, setPage] = useState(1);
 
@@ -52,7 +52,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
     const updated = getRecentSearch().slice(0, 5);
     setRecentSearch(updated);
 
-    (e.target as HTMLFormElement).querySelector('input')?.blur();
+    (e.target as HTMLFormElement).querySelector("input")?.blur();
   };
 
   useEffect(() => {
@@ -81,9 +81,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
           <ul>
             {currentPlaces.map((item, key) => (
               <List key={key} onClick={() => onSelect(item)}>
-                <TitleWrapper>
-                  <span>{item.name}</span>
-                </TitleWrapper>
+                <BuildingName>{item.name}</BuildingName>
                 <Address>{item.address}</Address>
               </List>
             ))}
@@ -172,7 +170,7 @@ const Aside = styled.aside<{ hasResult: boolean }>`
   border-radius: 12px;
   margin: 5.5rem 0 0 12px;
   padding: 1rem;
-  height: ${(props) => (props.hasResult ? '85vh' : '80px')};
+  height: ${(props) => (props.hasResult ? "85vh" : "80px")};
 
   position: absolute;
   z-index: 1000;
@@ -234,7 +232,7 @@ const Pagination = styled.div`
 
 const PageButton = styled.button<{ active: boolean }>`
   border: none;
-  background: ${({ active }) => (active ? '#eee' : 'transparent')};
+  background: ${({ active }) => (active ? "#eee" : "transparent")};
   padding: 4px 8px;
   cursor: pointer;
   border-radius: 4px;
@@ -267,18 +265,16 @@ const List = styled.li`
   }
 `;
 
-const TitleWrapper = styled.div`
+const BuildingName = styled.h5`
   display: flex;
   gap: 8px;
   align-items: end;
-
-  span {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: rgb(var(--text-primary));
-  }
+  font-size: 18px;
+  font-weight: 500;
+  color: rgb(var(--text-primary));
 `;
 
 const Address = styled.span`
   color: rgb(var(--color-darkgray));
+  font-size: 14px;
 `;
