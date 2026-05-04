@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuthStore } from '../../stores/auth';
@@ -6,21 +6,21 @@ import BaseButton from '../common/BaseButton';
 import { NavLink } from 'react-router-dom';
 import Alarm from './Alarm';
 
+type NavItem = {
+  name: string;
+  path: string;
+};
+
+const navItems: NavItem[] = [
+  { name: '건물 정보', path: '/building' },
+  { name: '집보장 리포트', path: '/report' },
+  { name: '등기변동알림', path: '/notify' },
+  { name: '전문가 상담', path: '/consult' },
+  { name: '커뮤니티', path: '/community' },
+];
+
 const Header: React.FC = () => {
   const isLogin = useAuthStore((state) => state.isLogin);
-
-  type NavItems = {
-    name: string;
-    path: string;
-  };
-
-  const [navItems] = useState<NavItems[]>([
-    { name: '건물 정보', path: '/building' },
-    { name: '집보장 리포트', path: '/report' },
-    { name: '등기변동알림', path: '/notify' },
-    { name: '전문가 상담', path: '/consult' },
-    { name: '커뮤니티', path: '/community' },
-  ]);
 
   const navigate = useNavigate();
 
@@ -69,7 +69,7 @@ const Header: React.FC = () => {
   );
 };
 
-export default Header;
+export default React.memo(Header);
 
 const HeaderContainer = styled.header`
   position: fixed;
