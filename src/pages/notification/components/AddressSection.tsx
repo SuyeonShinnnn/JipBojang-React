@@ -31,8 +31,6 @@ const AddressSection: React.FC<AddressSectionProps> = ({ onSelectedAddr }) => {
 
   const handleSearch = () => {
     setSearched(true);
-    const data = searchAddress(keyword);
-    setSearchResult(data);
     refetch();
   };
 
