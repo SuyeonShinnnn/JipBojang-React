@@ -8,24 +8,26 @@ import { useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import type { PropertyDetail } from "../../types/notification";
 import SkeletonCard from "../../components/common/skeleton/SkeletonCard";
+import ErrorState from "../../components/common/ErrorState";
 
 const NotiPage: React.FC = () => {
   const location = useLocation();
   const targetId = location.state?.targetPropertyId;
   const userId = useAuthStore((state) => state.user.userId);
 
-  const { data, isPending, isError } = useQuery<PropertyDetail[]>({
+  const { data, isPending, isError, refetch } = useQuery<PropertyDetail[]>({
     queryKey: ["propertyInfo", userId],
     queryFn: async () =>
       await getRegistedPropertyInfo(Number(userId)).then((res) => res.data),
     enabled: !!userId,
+    staleTime: 5 * 1000 * 60,
   });
 
   const totalCards = 3;
 
   const renderContent = () => {
     if (isError) {
-      return <span>데이터를 불러오지 못했어요</span>;
+      return <ErrorState onRetry={refetch} />;
     }
 
     if (isPending) {
@@ -81,7 +83,7 @@ const PropertyCardWrapper = styled.section`
   display: flex;
   justify-content: space-between;
   gap: 2rem;
-  height: 156px;
+  min-height: 156px;
 
   @media (max-width: 1024px) {
     gap: 8px;
