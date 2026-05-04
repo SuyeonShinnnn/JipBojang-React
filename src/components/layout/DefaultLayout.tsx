@@ -12,6 +12,11 @@ import ReportProgressPage from '../../pages/report/ReportProgressPage';
 import ReportResultPage from '../../pages/report/ReportResultPage';
 import SignupPage from '../../pages/auth/SignupPage';
 import InfoInputPage from '../../pages/auth/InfoInputPage';
+import LoadingSpinner from '../common/LoadingSpanner';
+
+const ReportPage = lazy(() => import('../../pages/report/ReportPage'));
+const NotiPage = lazy(() => import('../../pages/notification/NotiPage'));
+const BuildingPage = lazy(() => import('../../pages/building/BuildingPage'));
 
 const DefaultLayout = () => {
   const location = useLocation();
@@ -19,14 +24,16 @@ const DefaultLayout = () => {
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
-  const ReportPage = lazy(() => import('../../pages/report/ReportPage'));
-  const NotiPage = lazy(() => import('../../pages/notification/NotiPage'));
-  const BuildingPage = lazy(() => import('../../pages/building/BuildingPage'));
-
   return (
     <>
       <MainContent key={location.pathname} $noPadding={isBuildingPage}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <Container>
+              <LoadingSpinner />
+            </Container>
+          }
+        >
           <Routes location={location}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
@@ -47,7 +54,7 @@ const DefaultLayout = () => {
         onClick={() => setIsChatOpen(!isChatOpen)}
         $isFocused={isChatOpen}
       >
-        <Image src={chatbotIcon} />
+        <Image src={chatbotIcon} alt="chatbot" />
         <span>챗봇</span>
       </ChatbotButton>
 
@@ -67,6 +74,13 @@ const fadeSlideIn = keyframes`
     opacity: 1;
     transform: translateY(0);
   }
+`;
+const Container = styled.main`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80vh;
 `;
 
 const MainContent = styled.main<{ $noPadding?: boolean }>`
