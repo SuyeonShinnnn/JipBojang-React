@@ -1,10 +1,10 @@
-import { HiMagnifyingGlassPlus } from 'react-icons/hi2';
-import { GoTrash } from 'react-icons/go';
-import { GoPencil } from 'react-icons/go';
-import { BsPlusLg } from 'react-icons/bs';
 import { useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import type { PropertyDetail } from '../../../types/notification';
+import { MagnifyingGlassPlusIcon } from '../../../assets/icon/MagnifyingGlassPlusIcon';
+import { EditPencilIcon } from '../../../assets/icon/EditPencilIcon';
+import { TrashIcon } from '../../../assets/icon/TrashIcon';
+import { PlusIcon } from '../../../assets/icon/PlusIcon';
 
 interface PropertyCardProps {
   propertyInfo?: PropertyDetail;
@@ -23,9 +23,13 @@ const PropertyCard = ({
   const iconList = useMemo(
     () =>
       [
-        { icon: <GoTrash />, label: '삭제', type: 'delete' },
-        { icon: <GoPencil />, label: '수정', type: 'modify' },
-        { icon: <HiMagnifyingGlassPlus />, label: '상세보기', type: 'detail' },
+        { icon: <TrashIcon />, label: '삭제', type: 'delete' },
+        { icon: <EditPencilIcon />, label: '수정', type: 'modify' },
+        {
+          icon: <MagnifyingGlassPlusIcon />,
+          label: '상세보기',
+          type: 'detail',
+        },
       ] as const,
     [],
   );
@@ -34,7 +38,7 @@ const PropertyCard = ({
     <>
       {isEmpty ? (
         <Container $isEmpty={isEmpty} onClick={() => onOpenModal('register')}>
-          <BsPlusLg />
+          <PlusIcon />
         </Container>
       ) : (
         <Container $isEmpty={isEmpty}>
@@ -126,9 +130,13 @@ const IconBox = styled.div`
   position: relative;
   cursor: pointer;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   svg {
     transition: all 0.1s ease;
-
+    width: 20px;
     &:hover {
       color: rgb(var(--color-accent));
       transform: scale(1.1);
