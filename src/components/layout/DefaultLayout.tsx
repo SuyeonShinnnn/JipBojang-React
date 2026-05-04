@@ -1,11 +1,9 @@
+import { lazy, Suspense } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import HomePage from '../../pages/home/HomePage';
-import ReportPage from '../../pages/report/ReportPage';
-import NotiPage from '../../pages/notification/NotiPage';
 import NotFoundPage from '../../pages/NotFoundPage';
 import LoginPage from '../../pages/auth/LoginPage';
 import styled, { keyframes } from 'styled-components';
-import BuildingPage from '../../pages/building/BuildingPage';
 import chatbotIcon from '../../assets/chatbot/chatbot.png';
 import ChatbotBox from '../../pages/chatbot/ChatbotBox';
 import { useState } from 'react';
@@ -21,22 +19,28 @@ const DefaultLayout = () => {
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+  const ReportPage = lazy(() => import('../../pages/report/ReportPage'));
+  const NotiPage = lazy(() => import('../../pages/notification/NotiPage'));
+  const BuildingPage = lazy(() => import('../../pages/building/BuildingPage'));
+
   return (
     <>
       <MainContent key={location.pathname} $noPadding={isBuildingPage}>
-        <Routes location={location}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/signup/info" element={<InfoInputPage />} />
-          <Route path="/" element={<HomePage />} />
-          <Route path="/report" element={<ReportPage />} />
-          <Route path="/report/form" element={<ReportFormPage />} />
-          <Route path="/report/progress" element={<ReportProgressPage />} />
-          <Route path="/report/result" element={<ReportResultPage />} />
-          <Route path="/notify" element={<NotiPage />} />
-          <Route path="/building" element={<BuildingPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes location={location}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/signup/info" element={<InfoInputPage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/report" element={<ReportPage />} />
+            <Route path="/report/form" element={<ReportFormPage />} />
+            <Route path="/report/progress" element={<ReportProgressPage />} />
+            <Route path="/report/result" element={<ReportResultPage />} />
+            <Route path="/notify" element={<NotiPage />} />
+            <Route path="/building" element={<BuildingPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
       </MainContent>
 
       <ChatbotButton
