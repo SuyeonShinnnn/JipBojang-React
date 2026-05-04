@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { useAuthStore } from '../../stores/auth';
-import BaseButton from '../common/BaseButton';
-import { BsBell } from 'react-icons/bs';
-import { useNotificationStore } from '../../stores/notification';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { useAuthStore } from "../../stores/auth";
+import BaseButton from "../common/BaseButton";
+import { BsBell } from "react-icons/bs";
+import { useNotificationStore } from "../../stores/notiStore";
+import { NavLink } from "react-router-dom";
 
 const Header: React.FC = () => {
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -16,21 +16,21 @@ const Header: React.FC = () => {
   };
 
   const [navItems] = useState<NavItems[]>([
-    { name: '건물 정보', path: '/building' },
-    { name: '집보장 리포트', path: '/report' },
-    { name: '등기변동알림', path: '/notify' },
-    { name: '전문가 상담', path: '/consult' },
-    { name: '커뮤니티', path: '/community' },
+    { name: "건물 정보", path: "/building" },
+    { name: "집보장 리포트", path: "/report" },
+    { name: "등기변동알림", path: "/notify" },
+    { name: "전문가 상담", path: "/consult" },
+    { name: "커뮤니티", path: "/community" },
   ]);
 
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
-    navigate('/');
+    navigate("/");
   };
 
   const handleLoginButtonClick = () => {
-    navigate('/login');
+    navigate("/login");
   };
 
   const [isAlarmCicked, setIsAlarmClicked] = useState(false);
@@ -38,7 +38,7 @@ const Header: React.FC = () => {
   const notifications = useNotificationStore((state) => state.notifications);
 
   const handleAlarmItemClick = (id: number) => [
-    navigate('/notify', { state: { targetPropertyId: id } }),
+    navigate("/notify", { state: { targetPropertyId: id } }),
     setIsAlarmClicked(false),
   ];
 
@@ -49,10 +49,10 @@ const Header: React.FC = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -109,7 +109,7 @@ const Header: React.FC = () => {
             >
               로그인
             </BaseButton>
-            <BaseButton size="size2" onClick={() => navigate('/signup')}>
+            <BaseButton size="size2" onClick={() => navigate("/signup")}>
               회원가입
             </BaseButton>
           </ButtonWrapper>
@@ -239,8 +239,8 @@ const AlarmBox = styled.div<{ $open: boolean }>`
   z-index: 1200;
 
   opacity: ${({ $open }) => ($open ? 1 : 0)};
-  transform: ${({ $open }) => ($open ? 'translateY(0)' : 'translateY(-12px)')};
-  visibility: ${({ $open }) => ($open ? 'visible' : 'hidden')};
+  transform: ${({ $open }) => ($open ? "translateY(0)" : "translateY(-12px)")};
+  visibility: ${({ $open }) => ($open ? "visible" : "hidden")};
 
   transition:
     opacity 0.25s ease,
