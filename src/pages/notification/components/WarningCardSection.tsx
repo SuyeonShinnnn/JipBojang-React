@@ -9,7 +9,7 @@ const WarningCardSection: React.FC = () => {
   return (
     <Container>
       <Card>
-        <Icon src={docIcon} width={40} />
+        <Icon src={docIcon} width={40} alt="docIcon" />
         <TextBox>
           <WarningTitle>등록한도</WarningTitle>
           <WarningText>
@@ -19,7 +19,7 @@ const WarningCardSection: React.FC = () => {
       </Card>
 
       <Card>
-        <Icon src={sirenIcon} width={40} />
+        <Icon src={sirenIcon} width={40} alt="sirenIcon" />
         <TextBox>
           <WarningTitle>주의사항</WarningTitle>
           <WarningText>
@@ -30,7 +30,7 @@ const WarningCardSection: React.FC = () => {
       </Card>
 
       <Card>
-        <Icon src={bellIcon} width={40} />
+        <Icon src={bellIcon} width={40} alt="bellIcon" />
         <TextBox>
           <WarningTitle>실시간 알림</WarningTitle>
           <WarningText>
@@ -41,7 +41,7 @@ const WarningCardSection: React.FC = () => {
       </Card>
 
       <Card>
-        <Icon src={magnifyIcon} width={40} />
+        <Icon src={magnifyIcon} width={40} alt="magnifyIcon" />
         <TextBox>
           <WarningTitle>상세확인</WarningTitle>
           <WarningText>
@@ -53,6 +53,8 @@ const WarningCardSection: React.FC = () => {
     </Container>
   );
 };
+
+export default React.memo(WarningCardSection);
 
 const Container = styled.section`
   display: grid;
@@ -117,5 +119,3 @@ const WarningTitle = styled.span`
 const WarningText = styled.span`
   color: rgb(var(--color-darkgray));
 `;
-
-export default React.memo(WarningCardSection);
