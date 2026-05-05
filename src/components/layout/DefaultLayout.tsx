@@ -2,13 +2,14 @@ import { lazy, Suspense } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import HomePage from '../../pages/home/HomePage';
 import NotFoundPage from '../../pages/NotFoundPage';
-import LoginPage from '../../pages/auth/LoginPage';
 import styled, { keyframes } from 'styled-components';
 import chatbotIcon from '../../assets/chatbot/chatbot.png';
 import { useState } from 'react';
-import SignupPage from '../../pages/auth/SignupPage';
-import InfoInputPage from '../../pages/auth/InfoInputPage';
 import LoadingSpinner from '../common/LoadingSpanner';
+
+const LoginPage = lazy(() => import('../../pages/auth/LoginPage'));
+const SignupPage = lazy(() => import('../../pages/auth/SignupPage'));
+const InfoInputPage = lazy(() => import('../../pages/auth/InfoInputPage'));
 
 const NotiPage = lazy(() => import('../../pages/notification/NotiPage'));
 const BuildingPage = lazy(() => import('../../pages/building/BuildingPage'));
@@ -26,13 +27,12 @@ const ChatbotBox = lazy(() => import('../../pages/chatbot/ChatbotBox'));
 
 const DefaultLayout = () => {
   const location = useLocation();
-  const isBuildingPage = location.pathname === '/building';
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   return (
     <>
-      <MainContent key={location.pathname} $noPadding={isBuildingPage}>
+      <MainContent key={location.pathname}>
         <Suspense
           fallback={
             <Container>
@@ -93,8 +93,7 @@ const Container = styled.main`
   height: 80vh;
 `;
 
-const MainContent = styled.main<{ $noPadding?: boolean }>`
-  padding-top: ${({ $noPadding }) => ($noPadding ? '0' : '4.5rem')};
+const MainContent = styled.main`
   animation: ${fadeSlideIn} 0.35s ease-out both;
 `;
 
