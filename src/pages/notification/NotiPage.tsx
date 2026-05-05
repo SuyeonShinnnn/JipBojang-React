@@ -126,6 +126,7 @@ const SubTitle = styled.span`
 `;
 
 const PropertyCardWrapper = styled.section`
+  min-height: 150px;
   margin-top: 12px;
   display: flex;
   justify-content: space-between;
