@@ -97,7 +97,7 @@ const Container = styled.div`
 
 const MainContent = styled.main<{ $noPadding?: boolean }>`
   position: relative;
-  padding-top: ${({ $noPadding }) => ($noPadding ? '0' : '4.5rem')};
+  padding-top: ${({ $noPadding }) => ($noPadding ? '0' : '4rem')};
   animation: ${fadeSlideIn} 0.35s ease-out both;
 `;
 
