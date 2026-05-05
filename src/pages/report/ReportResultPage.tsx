@@ -62,7 +62,7 @@ const ReportResultPage = () => {
 
 export default ReportResultPage;
 
-const Main = styled.main`
+const Main = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;

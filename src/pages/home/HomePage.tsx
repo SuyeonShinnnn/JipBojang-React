@@ -32,7 +32,7 @@ const HomePage: React.FC = () => {
 
   return (
     <>
-      <Main>
+      <Container>
         <TextWrapper>
           <h1>
             안전한 부동산 거래를 위한 <br />
@@ -65,7 +65,7 @@ const HomePage: React.FC = () => {
             alt="jipbojang-character-logo"
           />
         </ImageWrapper>
-      </Main>
+      </Container>
 
       {isAlertOpen && (
         <BaseModal
@@ -82,7 +82,7 @@ const HomePage: React.FC = () => {
 
 export default HomePage;
 
-const Main = styled.main`
+const Container = styled.div`
   background:
     radial-gradient(
       1200px 600px at 20% -10%,

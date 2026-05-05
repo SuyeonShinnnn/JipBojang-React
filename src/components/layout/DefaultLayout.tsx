@@ -27,12 +27,13 @@ const ChatbotBox = lazy(() => import('../../pages/chatbot/ChatbotBox'));
 
 const DefaultLayout = () => {
   const location = useLocation();
+  const isBuildingPage = location.pathname === '/building';
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   return (
     <>
-      <MainContent key={location.pathname}>
+      <MainContent key={location.pathname} $noPadding={isBuildingPage}>
         <Suspense
           fallback={
             <Container>
@@ -85,7 +86,8 @@ const fadeSlideIn = keyframes`
     transform: translateY(0);
   }
 `;
-const Container = styled.main`
+
+const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -93,7 +95,9 @@ const Container = styled.main`
   height: 80vh;
 `;
 
-const MainContent = styled.main`
+const MainContent = styled.main<{ $noPadding?: boolean }>`
+  position: relative;
+  padding-top: ${({ $noPadding }) => ($noPadding ? '0' : '4.5rem')};
   animation: ${fadeSlideIn} 0.35s ease-out both;
 `;
 

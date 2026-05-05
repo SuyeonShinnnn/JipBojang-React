@@ -151,7 +151,7 @@ const ReportFormPage = () => {
 
 export default ReportFormPage;
 
-const Wrapper = styled.main`
+const Wrapper = styled.div`
   min-height: 100vh;
   padding: 3rem 0;
   display: flex;
