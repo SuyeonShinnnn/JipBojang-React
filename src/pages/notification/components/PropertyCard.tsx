@@ -1,64 +1,44 @@
-import { HiMagnifyingGlassPlus } from 'react-icons/hi2';
-import { GoTrash } from 'react-icons/go';
-import { GoPencil } from 'react-icons/go';
-import { BsPlusLg } from 'react-icons/bs';
-import React, { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import styled, { css } from 'styled-components';
-import PropertyRegistModal from './PropertyRegistModal';
-import DeleteModal from './DeleteModal';
-import ModifyModal from './ModifyModal';
-import DetailModal from './DetailModal';
 import type { PropertyDetail } from '../../../types/notification';
+import { MagnifyingGlassPlusIcon } from '../../../assets/icon/MagnifyingGlassPlusIcon';
+import { EditPencilIcon } from '../../../assets/icon/EditPencilIcon';
+import { TrashIcon } from '../../../assets/icon/TrashIcon';
+import { PlusIcon } from '../../../assets/icon/PlusIcon';
 
 interface PropertyCardProps {
   propertyInfo?: PropertyDetail;
   isEmpty?: boolean;
-  autoOpenDetailModal: boolean;
+  onOpenModal: (
+    type: 'register' | 'delete' | 'modify' | 'detail',
+    item?: PropertyDetail,
+  ) => void;
 }
 
-const PropertyCard: React.FC<PropertyCardProps> = ({
+const PropertyCard = ({
   propertyInfo,
   isEmpty = false,
-  autoOpenDetailModal = false,
-}) => {
-  const [openPropertyRegisterModal, setOpenPropertyRegisterModal] =
-    useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [openModifyModal, setOpenModifyModal] = useState(false);
-  const [openDetailModal, setOpenDetailModal] = useState(false);
-
-  const iconList = [
-    { icon: <GoTrash />, label: '삭제' },
-    { icon: <GoPencil />, label: '수정' },
-    { icon: <HiMagnifyingGlassPlus />, label: '상세보기' },
-  ];
-
-  const openModal = (key: number) => {
-    if (key == 0) {
-      setOpenDeleteModal(!openDeleteModal);
-    } else if (key == 1) {
-      setOpenModifyModal(!openModifyModal);
-    } else if (key == 2) {
-      setOpenDetailModal(!openDetailModal);
-    }
-  };
-
-  useEffect(() => {
-    if (autoOpenDetailModal && propertyInfo) {
-      setOpenDetailModal(true);
-    }
-  }, [autoOpenDetailModal, propertyInfo]);
+  onOpenModal,
+}: PropertyCardProps) => {
+  const iconList = useMemo(
+    () =>
+      [
+        { icon: <TrashIcon />, label: '삭제', type: 'delete' },
+        { icon: <EditPencilIcon />, label: '수정', type: 'modify' },
+        {
+          icon: <MagnifyingGlassPlusIcon />,
+          label: '상세보기',
+          type: 'detail',
+        },
+      ] as const,
+    [],
+  );
 
   return (
     <>
       {isEmpty ? (
-        <Container
-          $isEmpty={isEmpty}
-          onClick={() =>
-            setOpenPropertyRegisterModal(!openPropertyRegisterModal)
-          }
-        >
-          <BsPlusLg />
+        <Container $isEmpty={isEmpty} onClick={() => onOpenModal('register')}>
+          <PlusIcon />
         </Container>
       ) : (
         <Container $isEmpty={isEmpty}>
@@ -66,7 +46,10 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           <span>{propertyInfo?.commAddrLotNumber}</span>
           <IconWrapper>
             {iconList.map((item, key) => (
-              <IconBox key={key} onClick={() => openModal(key)}>
+              <IconBox
+                key={key}
+                onClick={() => onOpenModal(item.type, propertyInfo)}
+              >
                 {item.icon}
                 <Tooltip>{item.label}</Tooltip>
               </IconBox>
@@ -74,25 +57,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           </IconWrapper>
         </Container>
       )}
-
-      <PropertyRegistModal
-        isOpen={openPropertyRegisterModal}
-        onClose={() => setOpenPropertyRegisterModal(false)}
-      />
-
-      <DeleteModal
-        isOpen={openDeleteModal}
-        onClose={() => setOpenDeleteModal(false)}
-      />
-      <ModifyModal
-        isOpen={openModifyModal}
-        onClose={() => setOpenModifyModal(false)}
-      />
-      <DetailModal
-        isOpen={openDetailModal}
-        propertyDetail={propertyInfo}
-        onClose={() => setOpenDetailModal(false)}
-      />
     </>
   );
 };
@@ -166,9 +130,13 @@ const IconBox = styled.div`
   position: relative;
   cursor: pointer;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   svg {
     transition: all 0.1s ease;
-
+    width: 20px;
     &:hover {
       color: rgb(var(--color-accent));
       transform: scale(1.1);

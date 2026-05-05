@@ -1,19 +1,29 @@
+import { lazy, Suspense } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import HomePage from '../../pages/home/HomePage';
-import ReportPage from '../../pages/report/ReportPage';
-import NotiPage from '../../pages/notification/NotiPage';
 import NotFoundPage from '../../pages/NotFoundPage';
-import LoginPage from '../../pages/auth/LoginPage';
 import styled, { keyframes } from 'styled-components';
-import BuildingPage from '../../pages/building/BuildingPage';
 import chatbotIcon from '../../assets/chatbot/chatbot.png';
-import ChatbotBox from '../../pages/chatbot/ChatbotBox';
 import { useState } from 'react';
-import ReportFormPage from '../../pages/report/ReportFormPage';
-import ReportProgressPage from '../../pages/report/ReportProgressPage';
-import ReportResultPage from '../../pages/report/ReportResultPage';
-import SignupPage from '../../pages/auth/SignupPage';
-import InfoInputPage from '../../pages/auth/InfoInputPage';
+import LoadingSpinner from '../common/LoadingSpanner';
+
+const LoginPage = lazy(() => import('../../pages/auth/LoginPage'));
+const SignupPage = lazy(() => import('../../pages/auth/SignupPage'));
+const InfoInputPage = lazy(() => import('../../pages/auth/InfoInputPage'));
+
+const NotiPage = lazy(() => import('../../pages/notification/NotiPage'));
+const BuildingPage = lazy(() => import('../../pages/building/BuildingPage'));
+
+const ReportPage = lazy(() => import('../../pages/report/ReportPage'));
+const ReportFormPage = lazy(() => import('../../pages/report/ReportFormPage'));
+const ReportProgressPage = lazy(
+  () => import('../../pages/report/ReportProgressPage'),
+);
+const ReportResultPage = lazy(
+  () => import('../../pages/report/ReportResultPage'),
+);
+
+const ChatbotBox = lazy(() => import('../../pages/chatbot/ChatbotBox'));
 
 const DefaultLayout = () => {
   const location = useLocation();
@@ -24,30 +34,42 @@ const DefaultLayout = () => {
   return (
     <>
       <MainContent key={location.pathname} $noPadding={isBuildingPage}>
-        <Routes location={location}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/signup/info" element={<InfoInputPage />} />
-          <Route path="/" element={<HomePage />} />
-          <Route path="/report" element={<ReportPage />} />
-          <Route path="/report/form" element={<ReportFormPage />} />
-          <Route path="/report/progress" element={<ReportProgressPage />} />
-          <Route path="/report/result" element={<ReportResultPage />} />
-          <Route path="/notify" element={<NotiPage />} />
-          <Route path="/building" element={<BuildingPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <Suspense
+          fallback={
+            <Container>
+              <LoadingSpinner />
+            </Container>
+          }
+        >
+          <Routes location={location}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/signup/info" element={<InfoInputPage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/report" element={<ReportPage />} />
+            <Route path="/report/form" element={<ReportFormPage />} />
+            <Route path="/report/progress" element={<ReportProgressPage />} />
+            <Route path="/report/result" element={<ReportResultPage />} />
+            <Route path="/notify" element={<NotiPage />} />
+            <Route path="/building" element={<BuildingPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
       </MainContent>
 
       <ChatbotButton
         onClick={() => setIsChatOpen(!isChatOpen)}
         $isFocused={isChatOpen}
       >
-        <Image src={chatbotIcon} />
+        <Image src={chatbotIcon} alt="chatbot" />
         <span>챗봇</span>
       </ChatbotButton>
 
-      {isChatOpen && <ChatbotBox />}
+      {isChatOpen && (
+        <Suspense fallback={<div>로딩중...</div>}>
+          <ChatbotBox />
+        </Suspense>
+      )}
     </>
   );
 };
@@ -65,8 +87,17 @@ const fadeSlideIn = keyframes`
   }
 `;
 
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80vh;
+`;
+
 const MainContent = styled.main<{ $noPadding?: boolean }>`
-  padding-top: ${({ $noPadding }) => ($noPadding ? '0' : '4.5rem')};
+  position: relative;
+  padding-top: ${({ $noPadding }) => ($noPadding ? '0' : '4rem')};
   animation: ${fadeSlideIn} 0.35s ease-out both;
 `;
 
@@ -103,4 +134,6 @@ const ChatbotButton = styled.button<{ $isFocused: boolean }>`
 
 const Image = styled.img`
   width: 48px;
+  height: 48px;
+  object-fit: contain;
 `;

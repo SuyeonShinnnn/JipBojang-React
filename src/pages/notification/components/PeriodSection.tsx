@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { FaLocationDot } from 'react-icons/fa6';
 import { useMemo, useState } from 'react';
 import BaseButton from '../../../components/common/BaseButton';
+import { LocationDotIcon } from '../../../assets/icon/LocationDotIcon';
 
 interface PeriodSectionProps {
   address: string | undefined;
@@ -41,7 +41,7 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({
   return (
     <>
       <AddressBox>
-        <FaLocationDot />
+        <LocationDotIcon />
         <span>{address}</span>
       </AddressBox>
       <h3>알림 종료일</h3>
@@ -80,8 +80,8 @@ const AddressBox = styled.div`
   border-radius: 8px;
 
   svg {
+    width: 32px;
     color: rgb(var(--color-primary));
-    font-size: 2.5rem;
   }
 `;
 

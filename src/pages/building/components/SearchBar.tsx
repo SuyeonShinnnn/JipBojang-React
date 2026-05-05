@@ -7,9 +7,9 @@ import {
   removeRecentSearch,
   saveRecentSearch,
 } from '../../../utils/BuildingUtils';
-import { RiCloseLargeFill } from 'react-icons/ri';
-import { IoIosArrowBack } from 'react-icons/io';
-import { IoIosArrowForward } from 'react-icons/io';
+import { AngleLeftIcon } from '../../../assets/icon/AngleLeftIcon';
+import { AngleRightIcon } from '../../../assets/icon/AngleRightIcon';
+import { CloseOutlineIcon } from '../../../assets/icon/CloseOutlineIcon';
 
 interface SearchBarProps {
   places: Place[];
@@ -65,7 +65,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
 
   return (
     <>
-      <Aside hasResult={places.length > 0}>
+      <Aside $hasResult={places.length > 0}>
         <form onSubmit={handleSubmit}>
           <BaseInput
             showButton={true}
@@ -92,7 +92,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
           {totalPages > 1 && (
             <Pagination>
               {startPage > 1 && (
-                <IoIosArrowBack
+                <AngleLeftIcon
                   onMouseDown={(e) => {
                     e.preventDefault();
                     setPage(startPage - 1);
@@ -114,7 +114,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
               ))}
 
               {endPage < totalPages && (
-                <IoIosArrowForward
+                <AngleRightIcon
                   onMouseDown={(e) => {
                     e.preventDefault();
                     setPage(endPage + 1);
@@ -141,7 +141,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
               >
                 {item}
 
-                <RiCloseLargeFill
+                <CloseOutlineIcon
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -165,14 +165,14 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
 
 export default SearchBar;
 
-const Aside = styled.aside<{ hasResult: boolean }>`
+const Aside = styled.aside<{ $hasResult: boolean }>`
   background-color: white;
   box-shadow: 5px 5px 20px rgb(var(--color-darkgray));
   width: 360px;
   border-radius: 12px;
   margin: 5.5rem 0 0 12px;
   padding: 1rem;
-  height: ${(props) => (props.hasResult ? '85vh' : '80px')};
+  height: ${(props) => (props.$hasResult ? '85vh' : '80px')};
 
   position: absolute;
   z-index: 1000;
@@ -207,7 +207,9 @@ const RecentSearchBox = styled.ul`
     padding: 12px;
 
     svg {
-      color: rgb(var(--color-darkgray));
+      width: 20px;
+      height: auto;
+      color: rgb(var(--color-mediumgray)) !important;
     }
 
     &:hover {

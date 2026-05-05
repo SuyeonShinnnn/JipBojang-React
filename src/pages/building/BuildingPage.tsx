@@ -5,8 +5,11 @@ import { useEffect, useState } from 'react';
 import type { Place } from '../../types/building';
 import BuildingInfoBar from './components/BuildingInfoBar';
 import { useLocation } from 'react-router-dom';
+import { loadKakaoScript } from '../../utils/loadKakao';
 
 const BuildingPage = () => {
+  const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
+
   const [selected, setSelected] = useState<Place | null>(null);
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
   const location = useLocation();
@@ -54,6 +57,14 @@ const BuildingPage = () => {
     handleSearch(address);
   }, [map, address]);
 
+  useEffect(() => {
+    const loadMap = async () => {
+      await loadKakaoScript();
+      setIsKakaoLoaded(true);
+    };
+    loadMap();
+  }, []);
+
   return (
     <>
       <SearchBar
@@ -70,20 +81,22 @@ const BuildingPage = () => {
       )}
 
       <Container>
-        <Map
-          center={{ lat: 33.450701, lng: 126.570667 }}
-          className="map"
-          level={3}
-          onCreate={setMap}
-        >
-          {places.map((place, idx) => (
-            <MapMarker
-              key={idx}
-              position={{ lat: place.lat, lng: place.lng }}
-              title={place.name}
-            />
-          ))}
-        </Map>
+        {isKakaoLoaded && (
+          <Map
+            center={{ lat: 33.450701, lng: 126.570667 }}
+            className="map"
+            level={3}
+            onCreate={setMap}
+          >
+            {places.map((place, idx) => (
+              <MapMarker
+                key={idx}
+                position={{ lat: place.lat, lng: place.lng }}
+                title={place.name}
+              />
+            ))}
+          </Map>
+        )}
       </Container>
     </>
   );

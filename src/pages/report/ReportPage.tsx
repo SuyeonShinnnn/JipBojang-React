@@ -40,14 +40,14 @@ const ReportPage: React.FC = () => {
   const navigator = useNavigate();
 
   return (
-    <main>
-      <MainSection>
+    <div>
+      <Container>
         <h1>집포트</h1>
         <p>복잡한 부동산 서류를 쉽고 명확하게 분석해드립니다.</p>
         <BaseButton onClick={() => navigator('/report/form')}>
           집포트 생성하기
         </BaseButton>
-      </MainSection>
+      </Container>
       <ExplanationSection>
         <h2>집포트 서비스</h2>
         <p>정확하고 직관적인 맞춤형 분석 서비스</p>
@@ -61,13 +61,13 @@ const ReportPage: React.FC = () => {
           ))}
         </ExplanationUL>
       </ExplanationSection>
-    </main>
+    </div>
   );
 };
 
 export default ReportPage;
 
-const MainSection = styled.section`
+const Container = styled.section`
   position: relative;
   height: 45vh;
   display: flex;

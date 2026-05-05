@@ -1,12 +1,11 @@
 import React, { forwardRef, type ReactNode } from 'react';
 import styled, { css } from 'styled-components';
-import { IoSearch } from 'react-icons/io5';
+import { SearchIcon } from '../../assets/icon/SearchIcon';
 
 interface BaseInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   padding?: string;
-  icon?: string;
   showButton?: boolean;
   buttonContent?: ReactNode;
   buttonIconColor?: string;
@@ -19,7 +18,6 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       label,
       error,
       padding = '1rem 1rem',
-      icon,
       disabled,
       showButton = false,
       buttonContent,
@@ -44,15 +42,9 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
             {...rest}
           />
 
-          {icon && (
-            <Icon>
-              <i className={`bi bi-${icon}`} />
-            </Icon>
-          )}
-
           {showButton && (
             <InputButton type="button" onClick={onButtonClick}>
-              {buttonContent ?? <SearchIcon $color={buttonIconColor} />}
+              {buttonContent ?? <CustomIcon $color={buttonIconColor} />}
             </InputButton>
           )}
         </InputWrapper>
@@ -101,8 +93,9 @@ const InputButton = styled.button`
   }
 `;
 
-const SearchIcon = styled(IoSearch)<{ $color?: string }>`
-  font-size: 20px;
+const CustomIcon = styled(SearchIcon)<{ $color?: string }>`
+  width: 20px;
+  height: auto;
   color: ${({ $color }) => $color || '#fff'};
 `;
 
@@ -136,16 +129,6 @@ const StyledInput = styled.input<{
     cursor: not-allowed;
     color: #999;
   }
-`;
-
-const Icon = styled.span`
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #999;
-  font-size: 1.2rem;
-  pointer-events: none;
 `;
 
 const ErrorText = styled.span`

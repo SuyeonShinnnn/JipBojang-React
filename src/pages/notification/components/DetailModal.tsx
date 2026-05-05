@@ -33,7 +33,6 @@ const DetailModal: React.FC<DetailModalProps> = ({
 
     const fetchData = async () => {
       const data = await getRegistedPropertyDetail(
-        Number(propertyDetail?.userId),
         Number(propertyDetail?.commUniqueNo),
       );
       setChangedInfo(data);

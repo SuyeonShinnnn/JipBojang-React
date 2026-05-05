@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import { useReportStore } from '../../../stores/reportStore';
 import { formatMoney } from '../../../utils/format';
 import { SubTitle, Title } from '../../../style/reportCommon';
-import { FaRegCircleCheck } from 'react-icons/fa6';
-import { FiXCircle } from 'react-icons/fi';
 import { useAuthStore } from '../../../stores/auth';
 import { useEffect, useMemo } from 'react';
+import { CheckCircleIcon } from '../../../assets/icon/CheckCircleIcon';
+import { CloseCircleIcon } from '../../../assets/icon/CloseCircleIcon';
 
 const FraudAnalysisSection = () => {
   const store = useReportStore();
@@ -161,12 +161,12 @@ const FraudAnalysisSection = () => {
                 <ConditionResult $valid={item.valid}>
                   {item.valid ? (
                     <>
-                      <FaRegCircleCheck />
+                      <CheckCircleIcon />
                       적합
                     </>
                   ) : (
                     <>
-                      <FiXCircle />
+                      <CloseCircleIcon />
                       부적합
                     </>
                   )}
@@ -181,7 +181,7 @@ const FraudAnalysisSection = () => {
           <ChipWrap>
             {riskItems.map((item) => (
               <Chip key={item.label} $danger={!!item.value}>
-                {item.value ? <FaRegCircleCheck /> : <FiXCircle />}
+                {item.value ? <CheckCircleIcon /> : <CloseCircleIcon />}
                 {item.label}
               </Chip>
             ))}
