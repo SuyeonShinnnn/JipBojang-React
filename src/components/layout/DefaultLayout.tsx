@@ -5,18 +5,24 @@ import NotFoundPage from '../../pages/NotFoundPage';
 import LoginPage from '../../pages/auth/LoginPage';
 import styled, { keyframes } from 'styled-components';
 import chatbotIcon from '../../assets/chatbot/chatbot.png';
-import ChatbotBox from '../../pages/chatbot/ChatbotBox';
 import { useState } from 'react';
-import ReportFormPage from '../../pages/report/ReportFormPage';
-import ReportProgressPage from '../../pages/report/ReportProgressPage';
-import ReportResultPage from '../../pages/report/ReportResultPage';
 import SignupPage from '../../pages/auth/SignupPage';
 import InfoInputPage from '../../pages/auth/InfoInputPage';
 import LoadingSpinner from '../common/LoadingSpanner';
 
-const ReportPage = lazy(() => import('../../pages/report/ReportPage'));
 const NotiPage = lazy(() => import('../../pages/notification/NotiPage'));
 const BuildingPage = lazy(() => import('../../pages/building/BuildingPage'));
+
+const ReportPage = lazy(() => import('../../pages/report/ReportPage'));
+const ReportFormPage = lazy(() => import('../../pages/report/ReportFormPage'));
+const ReportProgressPage = lazy(
+  () => import('../../pages/report/ReportProgressPage'),
+);
+const ReportResultPage = lazy(
+  () => import('../../pages/report/ReportResultPage'),
+);
+
+const ChatbotBox = lazy(() => import('../../pages/chatbot/ChatbotBox'));
 
 const DefaultLayout = () => {
   const location = useLocation();
