@@ -94,7 +94,8 @@ const InputButton = styled.button`
 `;
 
 const CustomIcon = styled(SearchIcon)<{ $color?: string }>`
-  font-size: 20px;
+  width: 20px;
+  height: auto;
   color: ${({ $color }) => $color || '#fff'};
 `;
 
