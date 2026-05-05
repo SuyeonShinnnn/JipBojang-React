@@ -64,7 +64,11 @@ const DefaultLayout = () => {
         <span>챗봇</span>
       </ChatbotButton>
 
-      {isChatOpen && <ChatbotBox />}
+      {isChatOpen && (
+        <Suspense fallback={<div>로딩중...</div>}>
+          <ChatbotBox />
+        </Suspense>
+      )}
     </>
   );
 };
@@ -127,4 +131,6 @@ const ChatbotButton = styled.button<{ $isFocused: boolean }>`
 
 const Image = styled.img`
   width: 48px;
+  height: 48px;
+  object-fit: contain;
 `;

@@ -101,6 +101,8 @@ const ItemWrapper = styled.div`
 
 const LogoImage = styled.img`
   width: 80px;
+  height: 50px;
+  object-fit: contain;
 
   &:hover {
     cursor: pointer;

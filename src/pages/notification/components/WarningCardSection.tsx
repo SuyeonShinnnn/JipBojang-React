@@ -95,9 +95,12 @@ const Card = styled.div`
 
 const Icon = styled.img`
   width: 44px;
+  height: 44px;
+  object-fit: contain;
 
   @media (max-width: 768px) {
     width: 36px;
+    height: 36px;
   }
 `;
 
