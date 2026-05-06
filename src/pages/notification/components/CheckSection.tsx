@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import type { AddressInfo } from '../../../types/notification';
-import { BsInfoCircle } from 'react-icons/bs';
-import { HiOutlineBuildingOffice2 } from 'react-icons/hi2';
-import { MdNumbers } from 'react-icons/md';
-import { IoLocationOutline } from 'react-icons/io5';
-import { BsCalendar2Date } from 'react-icons/bs';
 import { useState } from 'react';
+import { InformationCircleOutlineIcon } from '../../../assets/icon/InformationCircleOutlineIcon';
+import { BuildingOffice2Icon } from '../../../assets/icon/BuildingOffice2Icon';
+import { HashIcon } from '../../../assets/icon/HashIcon';
+import { LocationOutlineIcon } from '../../../assets/icon/LocationOutlineIcon';
+import { Calendar2DateIcon } from '../../../assets/icon/Calendar2DateIcon';
 
 interface CheckSectionProps {
   address: AddressInfo | undefined;
@@ -42,35 +42,35 @@ const CheckSection: React.FC<CheckSectionProps> = ({ address, period }) => {
           등록 목록에 표시될 이름을 입력하세요. (미입력 시 기본 입력)
         </InputLabel>
         <InputSpan>
-          <BsInfoCircle />
+          <InformationCircleOutlineIcon />
           <span>예: 관심 부동산1</span>
         </InputSpan>
       </InputWrapper>
 
       <Item>
         <SubTitle>
-          <HiOutlineBuildingOffice2 />
+          <BuildingOffice2Icon />
           <span>구분</span>
         </SubTitle>
         <span>{address?.type}</span>
       </Item>
       <Item>
         <SubTitle>
-          <MdNumbers />
+          <HashIcon />
           <span>고유번호</span>
         </SubTitle>
         <span>{address?.uniqueNo}</span>
       </Item>
       <Item>
         <SubTitle>
-          <IoLocationOutline />
+          <LocationOutlineIcon />
           <span>상세주소</span>
         </SubTitle>
         <span>{address?.address}</span>
       </Item>
       <Item>
         <SubTitle>
-          <BsCalendar2Date />
+          <Calendar2DateIcon />
           <span>알람 수신 만료일</span>
         </SubTitle>
         <span>{period}</span>
@@ -117,7 +117,9 @@ const InputSpan = styled.span`
   margin-bottom: 1.5rem;
 
   svg {
-    color: rgb(var(--color-primary)) !important ;
+    width: 20px;
+    height: auto;
+    color: rgb(var(--color-primary-dark)) !important ;
   }
 `;
 
@@ -135,7 +137,8 @@ const SubTitle = styled.h5`
   gap: 0.5rem;
 
   svg {
-    color: rgb(var(--color-primary)) !important ;
-    font-size: 20px;
+    color: rgb(var(--color-primary-dark)) !important ;
+    width: 20px;
+    height: auto;
   }
 `;

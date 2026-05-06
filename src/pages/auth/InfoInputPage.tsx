@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 import BaseInput from '../../components/common/BaseInput';
-import BaseButton from '../../components/common/BaseButton';
 
 const InfoInputPage = () => {
   return (
     <>
-      <Main>
+      <Container>
         <Section>
           <form>
             <h3>본인 인증</h3>
@@ -45,14 +44,14 @@ const InfoInputPage = () => {
             />
           </form>
         </Section>
-      </Main>
+      </Container>
     </>
   );
 };
 
 export default InfoInputPage;
 
-const Main = styled.main`
+const Container = styled.div`
   background-color: rgba(var(--color-accent) / 20%);
   display: flex;
   flex-direction: column;
@@ -77,8 +76,4 @@ const Section = styled.section`
     display: grid;
     gap: 12px;
   }
-`;
-
-const InputButtonWrapper = styled.div`
-  display: flex;
 `;

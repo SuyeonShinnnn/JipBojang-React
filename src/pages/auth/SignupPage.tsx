@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const SignupPage = () => {
-  const [userType, setUserType] = useState<string | null>(null);
+  const [, setUserType] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const handleTypeButton = (type: string) => {
@@ -15,7 +15,7 @@ const SignupPage = () => {
 
   return (
     <>
-      <Main>
+      <Container>
         <TypeSelectSection>
           <h2>회원가입 유형</h2>
           <p>어떤 유형의 회원으로 가입하시겠습니까?</p>
@@ -31,7 +31,7 @@ const SignupPage = () => {
             </BaseButton>
           </ButtonWrapper>
         </TypeSelectSection>
-      </Main>
+      </Container>
     </>
   );
 };
@@ -50,7 +50,7 @@ const floating = keyframes`
   }
 `;
 
-const Main = styled.main`
+const Container = styled.div`
   background-color: rgba(var(--color-accent) / 20%);
   height: 89vh;
   display: flex;

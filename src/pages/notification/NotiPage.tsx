@@ -4,58 +4,110 @@ import PropertyCard from './components/PropertyCard';
 import { getRegistedPropertyInfo } from '../../apis/notiApi';
 import WarningCardSection from './components/WarningCardSection';
 import { useAuthStore } from '../../stores/auth';
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import errorIcon from '../../assets/character/Character-Empty.png';
-import BaseButton from '../../components/common/BaseButton';
-import { RxReload } from 'react-icons/rx';
+import type { PropertyDetail } from '../../types/notification';
+import SkeletonCard from '../../components/common/skeleton/SkeletonCard';
+import ErrorState from '../../components/common/ErrorState';
+import { lazy, Suspense } from 'react';
+
+const DetailModal = lazy(() => import('./components/DetailModal'));
+const DeleteModal = lazy(() => import('./components/DeleteModal'));
+const ModifyModal = lazy(() => import('./components/ModifyModal'));
+const PropertyRegistModal = lazy(
+  () => import('./components/PropertyRegistModal'),
+);
+
+const SKELETON_LIST = Array.from({ length: 3 });
+
+type ModalType = 'register' | 'delete' | 'modify' | 'detail' | null;
 
 const NotiPage: React.FC = () => {
-  const location = useLocation();
-  const targetId = location.state?.targetPropertyId;
+  // const location = useLocation();
+  // const targetId = location.state?.targetPropertyId;
   const userId = useAuthStore((state) => state.user.userId);
 
-  const { isPending, isError, data, refetch } = useQuery({
+  const [modalType, setModalType] = React.useState<ModalType>(null);
+  const [selectedProperty, setSelectedProperty] =
+    React.useState<PropertyDetail | null>(null);
+
+  const { data, isPending, isError, refetch } = useQuery<PropertyDetail[]>({
     queryKey: ['propertyInfo', userId],
-    queryFn: () => getRegistedPropertyInfo(Number(userId)),
+    queryFn: async () =>
+      await getRegistedPropertyInfo(Number(userId)).then((res) => res.data),
     enabled: !!userId,
-    retry: false,
+    staleTime: 5 * 60 * 1000,
   });
 
-  const totalCards = 3;
+  const openModal = (type: ModalType, item?: PropertyDetail) => {
+    setModalType(type);
+    if (item) setSelectedProperty(item);
+  };
+
+  const closeModal = () => {
+    setModalType(null);
+    setSelectedProperty(null);
+  };
+
+  if (isError) {
+    return (
+      <Container>
+        <ErrorState onRetry={refetch} />
+      </Container>
+    );
+  }
 
   return (
     <Container>
       <h1>등기변동 알림 서비스</h1>
       <SubTitle>알림 설정된 부동산</SubTitle>
-      <PropertyCardWrapper>
-        {isError ? (
-          <PropertyErrorCard>
-            <img src={errorIcon} />
-            <h3>부동산 정보를 불러오는 데 실패했어요</h3>
-            <p>네트워크 상태를 확인해 주세요</p>
-            <BaseButton onClick={() => refetch()}>
-              <RxReload />
-              재시도
-            </BaseButton>
-          </PropertyErrorCard>
-        ) : (
-          Array.from({ length: totalCards }).map((_, idx) => {
-            const item = data?.[idx];
 
-            return (
-              <PropertyCard
-                key={idx}
-                propertyInfo={item}
-                isEmpty={!item}
-                isPending={isPending}
-                autoOpenDetailModal={!!item && item.id === targetId}
-              />
-            );
-          })
-        )}
+      <PropertyCardWrapper>
+        {isPending
+          ? SKELETON_LIST.map((_, idx) => <SkeletonCard key={idx} />)
+          : Array.from({ length: 3 }).map((_, idx) => {
+              const item = data?.[idx];
+
+              return (
+                <PropertyCard
+                  key={idx}
+                  propertyInfo={item}
+                  isEmpty={!item}
+                  onOpenModal={openModal}
+                />
+              );
+            })}
       </PropertyCardWrapper>
+
       <WarningCardSection />
+
+      {modalType === 'register' && (
+        <Suspense fallback={null}>
+          <PropertyRegistModal isOpen onClose={closeModal} />
+        </Suspense>
+      )}
+
+      {modalType === 'delete' && (
+        <Suspense fallback={null}>
+          <DeleteModal isOpen onClose={closeModal} />
+        </Suspense>
+      )}
+
+      {modalType === 'modify' && (
+        <Suspense fallback={null}>
+          <ModifyModal isOpen onClose={closeModal} />
+        </Suspense>
+      )}
+
+      {modalType === 'detail' && (
+        <Suspense fallback={null}>
+          <DetailModal
+            isOpen
+            propertyDetail={selectedProperty ?? undefined}
+            onClose={closeModal}
+          />
+        </Suspense>
+      )}
     </Container>
   );
 };
@@ -64,13 +116,6 @@ export default NotiPage;
 
 const Container = styled.div`
   padding: 2rem 8rem;
-
-  @media (max-width: 1024px) {
-    padding: 2rem;
-  }
-  @media (max-width: 768px) {
-    padding: 0 12px;
-  }
 `;
 
 const SubTitle = styled.span`
@@ -81,55 +126,9 @@ const SubTitle = styled.span`
 `;
 
 const PropertyCardWrapper = styled.section`
+  min-height: 150px;
   margin-top: 12px;
   display: flex;
   justify-content: space-between;
   gap: 2rem;
-  min-height: 156px;
-
-  @media (max-width: 1024px) {
-    gap: 8px;
-  }
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 8px;
-    height: auto;
-  }
-`;
-
-const PropertyErrorCard = styled.section`
-  width: 100%;
-  padding: 2rem;
-  border: 1px solid rgb(var(--color-lightgray));
-  border-radius: 12px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-
-  img {
-    width: 120px;
-  }
-
-  h3,
-  p {
-    color: rgb(var(--color-darkgray));
-  }
-
-  button {
-    margin-top: 8px;
-    padding: 8px 14px;
-    border-radius: 50px;
-    font-size: 14px;
-    transition: all 0.2s ease;
-
-    display: flex;
-    gap: 0.5rem;
-
-    &:hover {
-      transform: scale(1.03);
-    }
-  }
 `;

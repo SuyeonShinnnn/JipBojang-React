@@ -1,88 +1,114 @@
 import styled from 'styled-components';
+import GaugeChart from '../../../components/chart/GaugeChart';
+import { useReportStore } from '../../../stores/reportStore';
 
 const ScoreSection = () => {
+  const store = useReportStore();
+  const report = store.report;
+
+  const riskFields = [
+    {
+      name: '가격',
+      reasons: report?.priceComment ? [report.priceComment] : [],
+    },
+    {
+      name: '권리',
+      reasons: report?.rightsComment ? [report.rightsComment] : [],
+    },
+    {
+      name: '전세 사기',
+      reasons: report?.fraudComment ? [report.fraudComment] : [],
+    },
+  ];
+
   return (
     <>
-      <Section>
-        <h3>안심 점수</h3>
-        <Wrapper>
-          <DonutChart></DonutChart>
-          <article>
-            <strong>가격</strong>
-            <SegmentWrapper>
-              <Segmented>시세와 유사</Segmented>
-            </SegmentWrapper>
-            <strong>권리</strong>
-            <SegmentWrapper>
-              <Segmented>담보권 설정</Segmented>
-            </SegmentWrapper>
-            <strong>전세사기</strong>
-            <SegmentWrapper>
-              <Segmented>압류</Segmented>
-              <Segmented>가압류</Segmented>
-              <Segmented>가처분</Segmented>
-              <Segmented>전세권 설정</Segmented>
-              <Segmented>신탁매각 불가</Segmented>
-              <Segmented>전세보증금 + 선순위채권 추가</Segmented>
-              <Segmented>선순위채권 60% 초과</Segmented>
-            </SegmentWrapper>
-          </article>
-        </Wrapper>
-      </Section>
+      <Title>안심 점수</Title>
+
+      <Card>
+        <ChartBox>
+          <GaugeChart reportScore={52} />
+        </ChartBox>
+
+        <RiskPanel>
+          {riskFields.map((field) => (
+            <RiskBlock key={field.name}>
+              <strong>✔️ {field.name}</strong>
+
+              <SegmentWrapper>
+                {field.reasons.length > 0 ? (
+                  field.reasons.map((item) => (
+                    <Segmented key={item}>{item}</Segmented>
+                  ))
+                ) : (
+                  <EmptySegment>확인된 특이사항 없음</EmptySegment>
+                )}
+              </SegmentWrapper>
+            </RiskBlock>
+          ))}
+        </RiskPanel>
+      </Card>
     </>
   );
 };
 
 export default ScoreSection;
 
-const Section = styled.section`
-  background-color: rgb(217, 217, 217, 0.3);
-  width: 70%;
-  max-width: 600px;
-  min-width: 320px;
-  padding: 2rem 3rem;
+const Title = styled.h3`
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 14px;
 `;
 
-const Wrapper = styled.div`
-  background-color: #fff;
-  padding: 12px;
-  border: 1px solid rgb(var(--color-lightgray));
-  border-radius: 12px;
+const Card = styled.div`
+  border: 1px solid var(--color-lightgray);
+  border-radius: 20px;
+  padding: 24px;
 
   display: flex;
-  gap: 12px;
+  gap: 28px;
 
-  article {
-    width: 50%;
-    display: grid;
-    gap: 4px;
-  }
-
-  strong {
-    margin-top: 12px;
-  }
-
-  strong:first-child {
-    margin-top: 0;
+  @media (max-width: 768px) {
+    flex-direction: column;
   }
 `;
 
-const DonutChart = styled.article`
-  width: 50%;
-  height: 220px;
-  background-color: gray;
+const ChartBox = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const RiskPanel = styled.article`
+  flex: 1;
+  display: grid;
+  gap: 18px;
+`;
+
+const RiskBlock = styled.div`
+  display: grid;
+  gap: 8px;
 `;
 
 const SegmentWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 8px;
 `;
 
 const Segmented = styled.div`
-  width: fit-content;
-  padding: 4px 8px;
-  border-radius: 50px;
-  color: #fff;
-  background-color: rgb(var(--color-primary));
+  padding: 8px 14px;
+  border-radius: 999px;
+
+  background: rgba(78, 109, 255, 0.08);
+  color: var(--color-primary);
+
+  font-size: 14px;
+  font-weight: 600;
+`;
+
+const EmptySegment = styled.div`
+  color: var(--color-darkgray);
+  font-weight: 500;
 `;

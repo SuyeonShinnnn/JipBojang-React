@@ -8,7 +8,6 @@ import styled from 'styled-components';
 import { getRegistedPropertyDetail } from '../../../apis/notiApi';
 import emptyIcon from '../../../assets/character/Character-Empty.png';
 import { useQuery } from '@tanstack/react-query';
-import { IoWarningOutline } from 'react-icons/io5';
 import SkeletonTimeline from '../../../components/skeleton/SkeletonTimeline';
 import BaseButton from '../../../components/common/BaseButton';
 
@@ -68,7 +67,6 @@ const DetailModal: React.FC<DetailModalProps> = ({
           <SkeletonTimeline />
         ) : isError ? (
           <ErrorCard>
-            <IoWarningOutline />
             <h4>변동내역을 불러오지 못했어요</h4>
             <p>잠시 후에 다시 시도해주세요</p>
             <BaseButton variant="outline" onClick={() => refetch()}>

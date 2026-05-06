@@ -68,7 +68,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   // 일반 로그인
   login: async ({ id, password }) => {
     try {
-      const { data } = await axiosInstance.post('/api/users/login', {
+      const { data } = await axiosInstance.post('/users/login', {
         id,
         password,
       });
