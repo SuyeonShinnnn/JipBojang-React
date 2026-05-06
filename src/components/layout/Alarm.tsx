@@ -125,6 +125,16 @@ const IconWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
+
+  svg {
+    transition:
+      transform 0.2s ease,
+      color 0.2s ease;
+
+    &:hover {
+      color: rgb(var(--color-accent));
+    }
+  }
 `;
 
 const Dot = styled.div`
