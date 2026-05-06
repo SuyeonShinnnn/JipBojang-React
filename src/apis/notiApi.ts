@@ -4,7 +4,7 @@ export const getRegistedPropertyInfo = async (id: number) => {
   return await axiosInstance.get(`/notification/registed/${id}`);
 };
 
-export const getRegistedPropertyDetail = async (commUniqueNo?: number) => {
+export const getRegistedPropertyDetail = async (commUniqueNo?: string) => {
   try {
     const response = await axiosInstance.get(
       `/notification/regist/uniqueNo/${commUniqueNo}`,
