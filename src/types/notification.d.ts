@@ -23,3 +23,14 @@ export interface RegistryChanged {
   purpose: string;
   receiptDate: string;
 }
+
+export interface Notification {
+  id: number;
+  userId: number;
+  type: string;
+  title: string;
+  content: string;
+  targetPropertyRegistId: number;
+  targetType: string;
+  sendTime: string;
+}

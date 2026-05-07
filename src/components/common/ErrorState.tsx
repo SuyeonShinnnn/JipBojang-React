@@ -42,7 +42,7 @@ const ErrorState = ({
 
   return (
     <Container>
-      <WarningIcon />
+      <Warning />
 
       <span>{finalMessage}</span>
       <span>{finalSubMessage}</span>
@@ -81,13 +81,15 @@ const Container = styled.div`
   border: 1px dashed rgba(var(--color-primary-dark));
   border-radius: 12px;
 
-  svg {
-    color: rgba(var(--color-primary-dark));
-    font-size: 100px;
-  }
-
   span {
     color: rgba(var(--color-darkgray));
+  }
+`;
+
+const Warning = styled(WarningIcon)`
+  svg {
+    color: rgba(var(--color-primary-dark));
+    width: 100px;
   }
 `;
 
@@ -103,6 +105,6 @@ const CustomBaseButton = styled(BaseButton)`
 
   svg {
     color: #fff;
-    font-size: 16px;
+    font-size: 14px;
   }
 `;

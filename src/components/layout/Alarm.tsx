@@ -48,6 +48,45 @@ const Alarm: React.FC = React.memo(() => {
     prevLength.current = notifications.length;
   }, [notifications.length]);
 
+  const alertTimeFormat = (dateString: string) => {
+    const date = new Date(dateString.replace(' ', 'T'));
+    const now = new Date();
+
+    const diffMs = now.getTime() - date.getTime();
+
+    const minute = 1000 * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+    const month = day * 30;
+
+    if (diffMs < hour) {
+      const minutes = Math.floor(diffMs / minute);
+
+      return minutes <= 0 ? '방금 전' : `${minutes}분 전`;
+    }
+
+    if (diffMs < day) {
+      const hours = Math.floor(diffMs / hour);
+      return `${hours}시간 전`;
+    }
+
+    if (diffMs < month) {
+      const days = Math.floor(diffMs / day);
+      return `${days}일 전`;
+    }
+
+    if (diffMs < month * 12) {
+      const months = Math.floor(diffMs / month);
+      return `${months}달 전`;
+    }
+
+    const year = date.getFullYear();
+    const monthText = String(date.getMonth() + 1).padStart(2, '0');
+    const dayText = String(date.getDate()).padStart(2, '0');
+
+    return `${year}년 ${monthText}월 ${dayText}일`;
+  };
+
   return (
     <Wrapper ref={ref}>
       <IconWrapper>
@@ -68,8 +107,13 @@ const Alarm: React.FC = React.memo(() => {
         ) : (
           <AlarmList>
             {notifications.map((n) => (
-              <li key={n.id} onClick={() => handleClick(n.id)}>
-                🚨 {n.title} - {n.purpose}
+              <li
+                key={n.id}
+                onClick={() => handleClick(n.targetPropertyRegistId)}
+              >
+                <strong>{n.title}</strong>
+                <span>{n.content}</span>
+                <small>{alertTimeFormat(n.sendTime)}</small>
               </li>
             ))}
           </AlarmList>
@@ -199,17 +243,23 @@ const AlertBox = styled.div<{ $show: boolean }>`
 `;
 
 const AlarmList = styled.ul`
-  color: rgb(var(--color-darkgray));
-  h5 {
-    padding: 12px 0 8px 8px;
-    font-size: 16px;
-    font-weight: 500;
-  }
   li {
     padding: 12px 8px 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
     &:hover {
       cursor: pointer;
       background-color: rgb(var(--color-lightgray) / 30%);
     }
+  }
+
+  span {
+    font-size: 14px;
+  }
+
+  small {
+    color: rgba(var(--color-darkgray));
   }
 `;
