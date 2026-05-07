@@ -94,13 +94,17 @@ const Alarm: React.FC = React.memo(() => {
     return `${year}년 ${monthText}월 ${dayText}일`;
   };
 
-  const { data = [], isError } = useQuery<Notification[]>({
+  const { data = [] } = useQuery<Notification[]>({
     queryKey: ['notifications', userId],
     queryFn: async () => {
       const res = await getNoitificationHistory(userId);
       return res.data;
     },
   });
+
+  const mergedNotifications = [...notifications, ...data].filter(
+    (item, index, self) => index === self.findIndex((n) => n.id === item.id),
+  );
 
   return (
     <Wrapper ref={ref}>
@@ -117,11 +121,11 @@ const Alarm: React.FC = React.memo(() => {
       </IconWrapper>
 
       <Box $open={open}>
-        {notifications.length === 0 && data.length === 0 ? (
+        {mergedNotifications.length === 0 ? (
           <p>알림 없음</p>
         ) : (
           <AlarmList>
-            {data.map((item) => (
+            {mergedNotifications.map((item) => (
               <li
                 key={item.id}
                 onClick={() => handleClick(item.targetPropertyRegistId)}
@@ -129,17 +133,6 @@ const Alarm: React.FC = React.memo(() => {
                 <strong>{item.title}</strong>
                 <span>{item.content}</span>
                 <small>{alertTimeFormat(item.sendTime)}</small>
-              </li>
-            ))}
-
-            {notifications.map((n) => (
-              <li
-                key={n.id}
-                onClick={() => handleClick(n.targetPropertyRegistId)}
-              >
-                <strong>{n.title}</strong>
-                <span>{n.content}</span>
-                <small>{alertTimeFormat(n.sendTime)}</small>
               </li>
             ))}
           </AlarmList>
@@ -177,7 +170,7 @@ const Box = styled.div<{ $open: boolean }>`
   font-size: 16px;
 
   position: absolute;
-  top: 80%;
+  top: 120%;
   right: 10%;
   z-index: 1200;
 
@@ -269,6 +262,9 @@ const AlertBox = styled.div<{ $show: boolean }>`
 `;
 
 const AlarmList = styled.ul`
+  max-height: 50vh;
+  overflow-y: scroll;
+
   strong {
     color: rgba(var(--color-primary-dark));
   }
