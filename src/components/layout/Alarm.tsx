@@ -3,8 +3,15 @@ import styled, { css, keyframes } from 'styled-components';
 import { useNotificationStore } from '../../stores/notiStore';
 import { useNavigate } from 'react-router-dom';
 import { BellIcon } from '../../assets/icon/BellIcon';
+import { useQuery } from '@tanstack/react-query';
+import { useAuthStore } from '../../stores/auth';
+import { getNoitificationHistory } from '../../apis/notiApi';
+import type { Notification } from '../../types/notification';
 
 const Alarm: React.FC = React.memo(() => {
+  const auth = useAuthStore();
+  const userId = Number(auth.user.userId);
+
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -87,6 +94,14 @@ const Alarm: React.FC = React.memo(() => {
     return `${year}년 ${monthText}월 ${dayText}일`;
   };
 
+  const { data = [], isError } = useQuery<Notification[]>({
+    queryKey: ['notifications', userId],
+    queryFn: async () => {
+      const res = await getNoitificationHistory(userId);
+      return res.data;
+    },
+  });
+
   return (
     <Wrapper ref={ref}>
       <IconWrapper>
@@ -102,10 +117,21 @@ const Alarm: React.FC = React.memo(() => {
       </IconWrapper>
 
       <Box $open={open}>
-        {notifications.length === 0 ? (
+        {notifications.length === 0 && data.length === 0 ? (
           <p>알림 없음</p>
         ) : (
           <AlarmList>
+            {data.map((item) => (
+              <li
+                key={item.id}
+                onClick={() => handleClick(item.targetPropertyRegistId)}
+              >
+                <strong>{item.title}</strong>
+                <span>{item.content}</span>
+                <small>{alertTimeFormat(item.sendTime)}</small>
+              </li>
+            ))}
+
             {notifications.map((n) => (
               <li
                 key={n.id}
@@ -243,6 +269,9 @@ const AlertBox = styled.div<{ $show: boolean }>`
 `;
 
 const AlarmList = styled.ul`
+  strong {
+    color: rgba(var(--color-primary-dark));
+  }
   li {
     padding: 12px 8px 12px 8px;
     display: flex;

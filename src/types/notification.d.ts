@@ -32,5 +32,6 @@ export interface Notification {
   content: string;
   targetPropertyRegistId: number;
   targetType: string;
+  isRead: boolean;
   sendTime: string;
 }

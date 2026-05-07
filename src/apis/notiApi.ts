@@ -35,3 +35,7 @@ export const deleteProperty = async (retgistId?: number) => {
     throw e;
   }
 };
+
+export const getNoitificationHistory = async (userId: number) => {
+  return await axiosInstance.get(`notification/history/${userId}`);
+};
