@@ -61,6 +61,8 @@ const PropertyCard = ({
   );
 };
 
+export default PropertyCard;
+
 const Container = styled.div<{ $isEmpty: boolean }>`
   display: flex;
   flex-direction: column;
@@ -164,5 +166,3 @@ const Tooltip = styled.span`
 
   transition: all 0.2s ease;
 `;
-
-export default PropertyCard;

@@ -1,13 +1,13 @@
 import { create } from 'zustand';
-import type { RegistryChanged } from '../types/notification';
+import type { Notification } from '../types/notification';
 
-export interface NotificationItem extends RegistryChanged {
+export interface NotificationItem extends Notification {
   isRead: boolean;
 }
 
 interface NotificationState {
   notifications: NotificationItem[];
-  addNotification: (message: RegistryChanged) => void;
+  addNotification: (message: Notification) => void;
 }
 
 export const useNotificationStore = create<NotificationState>((set) => ({

@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import PropertyCard from './components/PropertyCard';
 import { getRegistedPropertyInfo } from '../../apis/notiApi';
 import WarningCardSection from './components/WarningCardSection';
 import { useAuthStore } from '../../stores/auth';
-// import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import type { PropertyDetail } from '../../types/notification';
 import SkeletonCard from '../../components/common/skeleton/SkeletonCard';
@@ -23,8 +23,8 @@ const SKELETON_LIST = Array.from({ length: 3 });
 type ModalType = 'register' | 'delete' | 'modify' | 'detail' | null;
 
 const NotiPage: React.FC = () => {
-  // const location = useLocation();
-  // const targetId = location.state?.targetPropertyId;
+  const location = useLocation();
+  const targetId = location.state?.targetPropertyId;
   const userId = useAuthStore((state) => state.user.userId);
 
   const [modalType, setModalType] = React.useState<ModalType>(null);
@@ -38,6 +38,17 @@ const NotiPage: React.FC = () => {
     enabled: !!userId,
     staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    if (!targetId || !data) return;
+
+    const targetProperty = data.find((item) => item.id === targetId);
+
+    if (targetProperty) {
+      setSelectedProperty(targetProperty);
+      setModalType('detail');
+    }
+  }, [targetId, data]);
 
   const openModal = (type: ModalType, item?: PropertyDetail) => {
     setModalType(type);

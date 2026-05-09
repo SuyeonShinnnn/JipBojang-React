@@ -123,6 +123,12 @@ const Footer = styled.div`
 
   button {
     width: 100%;
+
+    transition: all 0.3 ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
   }
 `;
 
