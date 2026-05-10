@@ -106,8 +106,8 @@ const ChatbotButton = styled.button<{ $isFocused: boolean }>`
   right: 1.3rem;
   bottom: 1.3rem;
 
-  width: 88px;
-  height: 88px;
+  width: 76px;
+  height: 76px;
   color: white;
   background-color: rgb(var(--color-primary));
   box-shadow: 5px 5px 20px rgb(var(--color-mediumgray));
@@ -133,7 +133,7 @@ const ChatbotButton = styled.button<{ $isFocused: boolean }>`
 `;
 
 const Image = styled.img`
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
 `;
