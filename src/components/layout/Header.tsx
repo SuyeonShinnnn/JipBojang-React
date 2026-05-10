@@ -86,9 +86,9 @@ const HeaderContainer = styled.header`
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 
-  box-shadow:
+  /* box-shadow:
     0 8px 30px rgba(0, 0, 0, 0.08),
-    inset 0 1px rgba(255, 255, 255, 0.6);
+    inset 0 1px rgba(255, 255, 255, 0.6); */
 `;
 
 const ItemWrapper = styled.div`
