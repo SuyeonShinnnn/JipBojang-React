@@ -41,13 +41,16 @@ const slideUp = keyframes`
 `;
 
 const Container = styled.div`
-  position: absolute;
+  position: fixed;
   right: 1.5rem;
-  bottom: 7.8rem;
+  bottom: 7rem;
+
   width: 320px;
-  height: 60vh;
+  height: 70vh;
   border-radius: 12px;
+  background-color: #fff;
   box-shadow: 8px 8px 20px rgb(var(--color-mediumgray));
+
   display: flex;
   flex-direction: column;
   animation: ${slideUp} 0.3s ease-out;
