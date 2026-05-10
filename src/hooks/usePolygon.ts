@@ -1,28 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getAccidentCount, getColorByAccident } from '../utils/accident';
 import geojson from '../assets/data/sig_with_centers.json';
+import accidentData from '../assets/data/accident.json';
+import { groupByCity } from '../utils/groupRegion';
 
 export const usePolygon = (map: kakao.maps.Map | null) => {
-  const [polygons, setPolygons] = useState<kakao.maps.Polygon[]>([]);
-  const [regionOverlays, setRegionOverlays] = useState<
-    kakao.maps.CustomOverlay[]
-  >([]);
+  const polygonsRef = useRef<kakao.maps.Polygon[]>([]);
+  const overlaysRef = useRef<kakao.maps.CustomOverlay[]>([]);
   const [showPolygon, setShowPolygon] = useState(false);
 
   const clearPolygon = () => {
-    polygons.forEach((p) => p.setMap(null));
-    regionOverlays.forEach((o) => o.setMap(null));
+    polygonsRef.current.forEach((p) => p.setMap(null));
+    overlaysRef.current.forEach((o) => o.setMap(null));
+
+    polygonsRef.current = [];
+    overlaysRef.current = [];
   };
 
   const drawPolygon = () => {
     if (!map) return;
 
-    polygons.forEach((polygon) => polygon.setMap(null));
-    regionOverlays.forEach((overlay) => overlay.setMap(null));
+    clearPolygon();
 
-    const newPolygons: kakao.maps.Polygon[] = [];
-    const newOverlays: kakao.maps.CustomOverlay[] = [];
+    const level = map.getLevel();
 
+    // polygon 전체 생성
     for (const feature of geojson.features) {
       const coords = feature.geometry.coordinates;
       const type = feature.geometry.type;
@@ -54,6 +56,7 @@ export const usePolygon = (map: kakao.maps.Map | null) => {
       const regionName = feature.properties.SIG_KOR_NM ?? '';
 
       const polygon = new kakao.maps.Polygon({
+        map,
         path: paths,
         strokeWeight: 2,
         strokeColor: '#ff0000',
@@ -62,52 +65,49 @@ export const usePolygon = (map: kakao.maps.Map | null) => {
         fillOpacity: 0.6,
       });
 
-      polygon.setMap(map);
+      polygonsRef.current.push(polygon);
+    }
 
-      newPolygons.push(polygon);
+    // 구단위
+    if (level >= 10) {
+      const cityGroups = groupByCity(geojson.features, accidentData);
+
+      cityGroups.forEach((city) => {
+        const overlay = createOverlay({
+          map,
+          lat: city.lat,
+          lng: city.lng,
+          name: city.name,
+          count: city.count,
+        });
+
+        overlaysRef.current.push(overlay);
+      });
+
+      return;
+    }
+
+    // 시단위
+    for (const feature of geojson.features) {
+      const regionName = feature.properties.SIG_KOR_NM ?? '';
 
       const centerLat = feature.properties.center_lat;
       const centerLng = feature.properties.center_lng;
 
       if (centerLat == null || centerLng == null) continue;
 
-      const centerLatLng = new kakao.maps.LatLng(centerLat, centerLng);
-
       const count = getAccidentCount(regionName);
 
-      const content = document.createElement('div');
-
-      content.style.width = '75px';
-      content.style.height = '75px';
-      content.style.borderRadius = '50%';
-      content.style.background = '#7774ea';
-      content.style.opacity = '0.9';
-      content.style.color = '#fff';
-      content.style.fontSize = '14px';
-      content.style.display = 'flex';
-      content.style.flexDirection = 'column';
-      content.style.alignItems = 'center';
-      content.style.justifyContent = 'center';
-
-      content.innerHTML = `
-      <div>${regionName}</div>
-      <div><strong>${count.toLocaleString()}</strong>건</div>
-    `;
-
-      const overlay = new kakao.maps.CustomOverlay({
-        position: centerLatLng,
-        content,
-        yAnchor: 0.5,
-        zIndex: 3,
+      const overlay = createOverlay({
+        map,
+        lat: centerLat,
+        lng: centerLng,
+        name: regionName,
+        count,
       });
 
-      overlay.setMap(map);
-
-      newOverlays.push(overlay);
+      overlaysRef.current.push(overlay);
     }
-
-    setPolygons(newPolygons);
-    setRegionOverlays(newOverlays);
   };
 
   const togglePolygon = () => {
@@ -120,8 +120,60 @@ export const usePolygon = (map: kakao.maps.Map | null) => {
     }
   };
 
+  useEffect(() => {
+    if (!map || !showPolygon) return;
+
+    const handleZoomChanged = () => {
+      drawPolygon();
+    };
+    kakao.maps.event.addListener(map, 'zoom_changed', handleZoomChanged);
+
+    return () => {
+      kakao.maps.event.removeListener(map, 'zoom_changed', handleZoomChanged);
+    };
+  }, [map, showPolygon]);
+
+  const createOverlay = ({
+    map,
+    lat,
+    lng,
+    name,
+    count,
+  }: {
+    map: kakao.maps.Map;
+    lat: number;
+    lng: number;
+    name: string;
+    count: number;
+  }) => {
+    const content = document.createElement('div');
+
+    content.style.width = '80px';
+    content.style.height = '80px';
+    content.style.borderRadius = '50%';
+    content.style.background = '#7774ea';
+    content.style.color = '#fff';
+    content.style.display = 'flex';
+    content.style.flexDirection = 'column';
+    content.style.justifyContent = 'center';
+    content.style.alignItems = 'center';
+
+    content.innerHTML = `
+    <div>${name}</div>
+    <div><strong>${count}</strong>건</div>
+  `;
+
+    const overlay = new kakao.maps.CustomOverlay({
+      position: new kakao.maps.LatLng(lat, lng),
+      content,
+    });
+
+    overlay.setMap(map);
+
+    return overlay;
+  };
+
   return {
-    showPolygon,
     togglePolygon,
   };
 };
