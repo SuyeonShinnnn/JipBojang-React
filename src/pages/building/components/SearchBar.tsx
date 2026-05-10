@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import BaseInput from "../../../components/common/BaseInput";
-import styled from "styled-components";
-import type { Place } from "../../../types/building";
+import { useEffect, useState } from 'react';
+import BaseInput from '../../../components/common/BaseInput';
+import styled from 'styled-components';
+import type { Place } from '../../../types/building';
 import {
   getRecentSearch,
   removeRecentSearch,
@@ -19,7 +19,7 @@ interface SearchBarProps {
 
 const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
   const [recentSearch, setRecentSearch] = useState<string[]>([]);
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [page, setPage] = useState(1);
 
@@ -52,7 +52,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
     const updated = getRecentSearch().slice(0, 5);
     setRecentSearch(updated);
 
-    (e.target as HTMLFormElement).querySelector("input")?.blur();
+    (e.target as HTMLFormElement).querySelector('input')?.blur();
   };
 
   useEffect(() => {
@@ -234,7 +234,7 @@ const Pagination = styled.div`
 
 const PageButton = styled.button<{ active: boolean }>`
   border: none;
-  background: ${({ active }) => (active ? "#eee" : "transparent")};
+  background: ${({ active }) => (active ? '#eee' : 'transparent')};
   padding: 4px 8px;
   cursor: pointer;
   border-radius: 4px;

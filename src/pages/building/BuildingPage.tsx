@@ -7,6 +7,10 @@ import BuildingInfoBar from './components/BuildingInfoBar';
 import { useLocation } from 'react-router-dom';
 import { loadKakaoScript } from '../../utils/loadKakao';
 import markerIcon from '../../assets/building/marker.png';
+import FloatingButton from '../../components/common/FloatingButton';
+import { ExclamationMarkIcon } from '../../assets/icon/ExclamationMarkIcon';
+import { CurrentLocationIcon } from '../../assets/icon/CurrentLocationIcon';
+import { usePolygon } from '../../hooks/usePolygon';
 
 const BuildingPage = () => {
   const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
@@ -15,6 +19,8 @@ const BuildingPage = () => {
   const [selected, setSelected] = useState<Place | null>(null);
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
+
+  const { togglePolygon } = usePolygon(map);
 
   const location = useLocation();
   const address = location.state?.address;
@@ -111,30 +117,33 @@ const BuildingPage = () => {
         places={places}
         onSelect={(p) => setSelected(p)}
       />
-
       {selected && (
         <BuildingInfoBar
           selectedPlace={selected}
           onClose={() => setSelected(null)}
         />
       )}
-
       <Container>
-        <Map center={center} className="map" level={3} onCreate={setMap}>
-          {places.map((place, idx) => (
-            <MapMarker
-              key={`${place.lat}-${place.lng}-${idx}`}
-              position={{ lat: place.lat, lng: place.lng }}
-              title={place.name}
-              onClick={() => setSelected(place)}
-              image={{
-                src: markerIcon,
-                size: { width: 35, height: 35 },
-              }}
-            />
-          ))}
-        </Map>
+        {isKakaoLoaded && (
+          <Map center={center} className="map" level={3} onCreate={setMap}>
+            {places.map((place, idx) => (
+              <MapMarker
+                key={`${place.lat}-${place.lng}-${idx}`}
+                position={{ lat: place.lat, lng: place.lng }}
+                title={place.name}
+                onClick={() => setSelected(place)}
+                image={{
+                  src: markerIcon,
+                  size: { width: 35, height: 35 },
+                }}
+              />
+            ))}
+          </Map>
+        )}
       </Container>
+
+      <VisualizeButton icon={<ExclamationMarkIcon />} onClick={togglePolygon} />
+      <MyLocationButton icon={<CurrentLocationIcon />} />
     </>
   );
 };
@@ -145,5 +154,18 @@ const Container = styled.div`
   .map {
     width: 100%;
     height: 100vh;
+  }
+`;
+
+const VisualizeButton = styled(FloatingButton)`
+  background: #dc3545;
+`;
+
+const MyLocationButton = styled(FloatingButton)`
+  bottom: 110px;
+  background: #fff;
+
+  svg {
+    color: #000;
   }
 `;
