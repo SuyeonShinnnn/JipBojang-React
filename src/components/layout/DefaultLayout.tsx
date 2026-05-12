@@ -57,13 +57,15 @@ const DefaultLayout = () => {
         </Suspense>
       </MainContent>
 
-      <ChatbotButton
-        onClick={() => setIsChatOpen(!isChatOpen)}
-        $isFocused={isChatOpen}
-      >
-        <Image src={chatbotIcon} alt="chatbot" />
-        <span>챗봇</span>
-      </ChatbotButton>
+      {!isBuildingPage && (
+        <ChatbotButton
+          onClick={() => setIsChatOpen(!isChatOpen)}
+          $isFocused={isChatOpen}
+        >
+          <Image src={chatbotIcon} alt="chatbot" />
+          <span>챗봇</span>
+        </ChatbotButton>
+      )}
 
       {isChatOpen && (
         <Suspense fallback={<div>로딩중...</div>}>

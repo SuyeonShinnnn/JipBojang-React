@@ -1,30 +1,66 @@
 import styled from 'styled-components';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import SearchBar from './components/SearchBar';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Place } from '../../types/building';
 import BuildingInfoBar from './components/BuildingInfoBar';
 import { useLocation } from 'react-router-dom';
 import { loadKakaoScript } from '../../utils/loadKakao';
+import markerIcon from '../../assets/building/marker.png';
+import FloatingButton from '../../components/common/FloatingButton';
+import { ExclamationMarkIcon } from '../../assets/icon/ExclamationMarkIcon';
+import { CurrentLocationIcon } from '../../assets/icon/CurrentLocationIcon';
+import { usePolygon } from '../../hooks/usePolygon';
 
 const BuildingPage = () => {
   const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
 
+  const [center, setCenter] = useState({ lat: 37.579617, lng: 126.977041 });
   const [selected, setSelected] = useState<Place | null>(null);
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
+  const [places, setPlaces] = useState<Place[]>([]);
+
+  const { togglePolygon } = usePolygon(map);
+
   const location = useLocation();
   const address = location.state?.address;
 
-  const [places, setPlaces] = useState<
-    {
-      lat: number;
-      lng: number;
-      name: string;
-      address: string;
-      roadAddress: string;
-      category: string;
-    }[]
-  >([]);
+  const searchNearbyBuildings = useCallback((currentMap: kakao.maps.Map) => {
+    const ps = new kakao.maps.services.Places();
+    const keywords = ['아파트', '오피스텔', '빌라'];
+    let combinedResults: Place[] = [];
+    let completedQueries = 0;
+
+    keywords.forEach((kw) => {
+      ps.keywordSearch(
+        kw,
+        (data, status) => {
+          if (status === kakao.maps.services.Status.OK) {
+            const results = data.map((place) => ({
+              lat: Number(place.y),
+              lng: Number(place.x),
+              name: place.place_name,
+              address: place.address_name,
+              roadAddress: place.road_address_name,
+              category: place.category_name,
+            }));
+            combinedResults = [...combinedResults, ...results];
+          }
+
+          completedQueries++;
+
+          if (completedQueries === keywords.length) {
+            setPlaces(combinedResults);
+          }
+        },
+        {
+          location: currentMap.getCenter(),
+          radius: 1000,
+          sort: kakao.maps.services.SortBy.DISTANCE,
+        },
+      );
+    });
+  }, []);
 
   const handleSearch = (keyword: string) => {
     if (!map) return;
@@ -43,18 +79,27 @@ const BuildingPage = () => {
       }));
 
       setPlaces(results);
-      map.panTo(new kakao.maps.LatLng(results[0].lat, results[0].lng));
+      const firstResult = new kakao.maps.LatLng(results[0].lat, results[0].lng);
+      map.panTo(firstResult);
     });
   };
 
-  const handleSelected = (value: Place) => {
-    setSelected(value);
-  };
-
   useEffect(() => {
-    if (!map || !address) return;
+    if (!map) return;
 
-    handleSearch(address);
+    if (address) {
+      handleSearch(address);
+    } else if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const loc = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setCenter(loc);
+        map.setCenter(new kakao.maps.LatLng(loc.lat, loc.lng));
+        searchNearbyBuildings(map);
+      });
+    }
   }, [map, address]);
 
   useEffect(() => {
@@ -70,34 +115,35 @@ const BuildingPage = () => {
       <SearchBar
         onSearch={handleSearch}
         places={places}
-        onSelect={handleSelected}
+        onSelect={(p) => setSelected(p)}
       />
-
       {selected && (
         <BuildingInfoBar
           selectedPlace={selected}
           onClose={() => setSelected(null)}
         />
       )}
-
       <Container>
         {isKakaoLoaded && (
-          <Map
-            center={{ lat: 33.450701, lng: 126.570667 }}
-            className="map"
-            level={3}
-            onCreate={setMap}
-          >
+          <Map center={center} className="map" level={3} onCreate={setMap}>
             {places.map((place, idx) => (
               <MapMarker
-                key={idx}
+                key={`${place.lat}-${place.lng}-${idx}`}
                 position={{ lat: place.lat, lng: place.lng }}
                 title={place.name}
+                onClick={() => setSelected(place)}
+                image={{
+                  src: markerIcon,
+                  size: { width: 35, height: 35 },
+                }}
               />
             ))}
           </Map>
         )}
       </Container>
+
+      <VisualizeButton icon={<ExclamationMarkIcon />} onClick={togglePolygon} />
+      <MyLocationButton icon={<CurrentLocationIcon />} />
     </>
   );
 };
@@ -108,5 +154,18 @@ const Container = styled.div`
   .map {
     width: 100%;
     height: 100vh;
+  }
+`;
+
+const VisualizeButton = styled(FloatingButton)`
+  background: #dc3545;
+`;
+
+const MyLocationButton = styled(FloatingButton)`
+  bottom: 110px;
+  background: #fff;
+
+  svg {
+    color: #000;
   }
 `;
