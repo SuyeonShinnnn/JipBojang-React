@@ -81,9 +81,7 @@ const SearchBar = ({ onSearch, onSelect, places }: SearchBarProps) => {
           <ul>
             {currentPlaces.map((item, key) => (
               <List key={key} onClick={() => onSelect(item)}>
-                <TitleWrapper>
-                  <span>{item.name}</span>
-                </TitleWrapper>
+                <BuildingName>{item.name}</BuildingName>
                 <Address>{item.address}</Address>
               </List>
             ))}
@@ -269,18 +267,16 @@ const List = styled.li`
   }
 `;
 
-const TitleWrapper = styled.div`
+const BuildingName = styled.h5`
   display: flex;
   gap: 8px;
   align-items: end;
-
-  span {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: rgb(var(--text-primary));
-  }
+  font-size: 18px;
+  font-weight: 500;
+  color: rgb(var(--text-primary));
 `;
 
 const Address = styled.span`
   color: rgb(var(--color-darkgray));
+  font-size: 14px;
 `;
