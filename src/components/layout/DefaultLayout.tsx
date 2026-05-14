@@ -25,6 +25,10 @@ const ReportResultPage = lazy(
 
 const ChatbotBox = lazy(() => import('../../pages/chatbot/ChatbotBox'));
 
+const ConsultingUserPage = lazy(
+  () => import('../../pages/consultant/ConsultingUserPage'),
+);
+
 const DefaultLayout = () => {
   const location = useLocation();
   const isBuildingPage = location.pathname === '/building';
@@ -52,6 +56,7 @@ const DefaultLayout = () => {
             <Route path="/report/result" element={<ReportResultPage />} />
             <Route path="/notify" element={<NotiPage />} />
             <Route path="/building" element={<BuildingPage />} />
+            <Route path="/consult" element={<ConsultingUserPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
