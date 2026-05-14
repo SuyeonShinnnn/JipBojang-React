@@ -1,24 +1,20 @@
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import ChattingSideBar from './components/ChattingSideBar';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-type Agent = {
-  id: number;
-  name: string;
-  company: string;
-  profileImage?: string;
-  rating?: number;
-  description?: string;
-  is_favorite?: boolean;
-};
+import {
+  addFavorites,
+  deleteFavorites,
+  getAgent,
+  getFavoriteAgent,
+} from '../../apis/consultAPI';
 
-type FavoriteAgent = {
-  id: number;
-  name: string;
-  company: string;
-  profileImage?: string;
-};
+import type { AgentInfo } from '../../types/consult';
+
+import basicProfile from '../../assets/consult/basic-profile.png';
+import BaseButton from '../../components/common/BaseButton';
+import { useAuthStore } from '../../stores/auth';
 
 type Chat = {
   channelUrl: string;
@@ -30,110 +26,16 @@ type Chat = {
 };
 
 const ConsultingUserPage = () => {
+  const auth = useAuthStore();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const [agents, setAgents] = useState<Agent[]>([]);
-  const [favoriteAgents, setFavoriteAgents] = useState<FavoriteAgent[]>([]);
-  const [ongoingChats, setOngoingChats] = useState<Chat[]>([]);
-  const [isFavOpen, setIsFavOpen] = useState(true);
-  const [isChatOpen, setIsChatOpen] = useState(true);
+  const userId = Number(auth.user.userId);
 
-  useEffect(() => {
-    loadDummyData();
-  }, []);
+  const ongoingChats: Chat[] = [];
 
-  // 임시
-  const loadDummyData = () => {
-    const dummyAgents: Agent[] = [
-      {
-        id: 1,
-        name: '김민수',
-        company: '한빛 공인중개사',
-        profileImage: 'https://randomuser.me/api/portraits/men/32.jpg',
-        rating: 4.8,
-        description: '전세사기 예방 및 청년 전세 상담 전문 중개사입니다.',
-        is_favorite: true,
-      },
-      {
-        id: 2,
-        name: '이지은',
-        company: '행복부동산',
-        profileImage: 'https://randomuser.me/api/portraits/women/44.jpg',
-        rating: 4.9,
-        description: '신축 오피스텔 및 아파트 매물 상담 경험이 풍부합니다.',
-        is_favorite: false,
-      },
-      {
-        id: 3,
-        name: '박준호',
-        company: '우리부동산',
-        profileImage: 'https://randomuser.me/api/portraits/men/11.jpg',
-        rating: 4.6,
-        description: '사회초년생 대상 안전한 계약 상담을 진행합니다.',
-        is_favorite: true,
-      },
-      {
-        id: 4,
-        name: '최서연',
-        company: '스마트 공인중개사',
-        profileImage: 'https://randomuser.me/api/portraits/women/65.jpg',
-        rating: 5.0,
-        description: '등기부등본 및 건축물대장 기반 분석 상담 제공.',
-        is_favorite: false,
-      },
-    ];
-
-    const dummyFavorites: FavoriteAgent[] = dummyAgents
-      .filter((a) => a.is_favorite)
-      .map((a) => ({
-        id: a.id,
-        name: a.name,
-        company: a.company,
-        profileImage: a.profileImage,
-      }));
-
-    const dummyChats: Chat[] = [
-      {
-        channelUrl: 'channel-1',
-        opponentName: '김민수',
-        opponentProfileUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
-        opponentUserId: 'agent-1',
-        lastMessage: '계약 전 등기부등본 꼭 확인하세요!',
-        unreadCount: 2,
-      },
-      {
-        channelUrl: 'channel-2',
-        opponentName: '최서연',
-        opponentProfileUrl: 'https://randomuser.me/api/portraits/women/65.jpg',
-        opponentUserId: 'agent-4',
-        lastMessage: '보증보험 가입 가능 여부 확인해드릴게요.',
-        unreadCount: 0,
-      },
-    ];
-
-    setAgents(dummyAgents);
-    setFavoriteAgents(dummyFavorites);
-    setOngoingChats(dummyChats);
-  };
-
-  const toggleFavorite = (agent: Agent) => {
-    const updatedAgents = agents.map((a) =>
-      a.id === agent.id ? { ...a, is_favorite: !a.is_favorite } : a,
-    );
-
-    setAgents(updatedAgents);
-
-    const updatedFavorites = updatedAgents
-      .filter((a) => a.is_favorite)
-      .map((a) => ({
-        id: a.id,
-        name: a.name,
-        company: a.company,
-        profileImage: a.profileImage,
-      }));
-
-    setFavoriteAgents(updatedFavorites);
-  };
+  const isFavOpen = true;
+  const isChatOpen = true;
 
   const goDetail = (id: number) => {
     navigate(`/agent/${id}`);
@@ -143,6 +45,47 @@ const ConsultingUserPage = () => {
     navigate(`/chat/${userId}`);
   };
 
+  const { data: agents = [] } = useQuery<AgentInfo[]>({
+    queryKey: ['agents'],
+    queryFn: async () => {
+      const res = await getAgent();
+      return res.data;
+    },
+  });
+
+  const { data: favoriteAgents = [] } = useQuery<AgentInfo[]>({
+    queryKey: ['favoriteAgents', userId],
+    queryFn: async () => {
+      const res = await getFavoriteAgent(userId);
+      return res.data;
+    },
+    enabled: !!userId,
+  });
+
+  const favoriteMutation = useMutation({
+    mutationFn: async (agent: AgentInfo) => {
+      if (agent.isFavorite) {
+        await deleteFavorites(userId, agent.id);
+      } else {
+        await addFavorites(userId, agent.id);
+      }
+    },
+
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['favoriteAgents', userId],
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ['agents'],
+      });
+    },
+  });
+
+  const isFavorite = (agentId: number) => {
+    return favoriteAgents.some((fav) => fav.id === agentId);
+  };
+
   return (
     <Layout>
       <ChattingSideBar
@@ -150,51 +93,70 @@ const ConsultingUserPage = () => {
         ongoingChats={ongoingChats}
         isFavOpen={isFavOpen}
         isChatOpen={isChatOpen}
-        setIsFavOpen={setIsFavOpen}
-        setIsChatOpen={setIsChatOpen}
+        setIsFavOpen={() => {}}
+        setIsChatOpen={() => {}}
         goDetail={goDetail}
         goChat={goChat}
       />
 
       <Main>
         <PageTitle>나에게 맞는 전문가 찾기</PageTitle>
+
         <Subtitle>안전한 전세계약을 위한 전문가 상담 서비스</Subtitle>
 
         <Grid>
-          {agents.map((agent) => (
-            <Card key={agent.id}>
-              <Header>
-                <FavBtn
-                  active={agent.is_favorite}
-                  onClick={() => toggleFavorite(agent)}
-                >
-                  ♥
-                </FavBtn>
-              </Header>
+          {agents.map((agent) => {
+            const favorite = isFavorite(agent.id);
 
-              <Body>
-                <ProfileImage src={agent.profileImage} alt={agent.name} />
+            return (
+              <Card key={agent.id}>
+                <Header>
+                  <FavBtn
+                    active={favorite}
+                    onClick={() =>
+                      favoriteMutation.mutate({
+                        ...agent,
+                        isFavorite: favorite,
+                      })
+                    }
+                  >
+                    ♥
+                  </FavBtn>
+                </Header>
 
-                <h3>{agent.name}</h3>
+                <Body>
+                  <ImageWrapper>
+                    <ProfileImage
+                      src={agent.profileImage}
+                      alt={agent.name}
+                      onError={(e) => (e.currentTarget.src = basicProfile)}
+                    />
+                  </ImageWrapper>
 
-                <Company>{agent.company}</Company>
+                  <h3>{agent.name}</h3>
 
-                <Rating>⭐ {agent.rating?.toFixed(1)}</Rating>
+                  <Company>{agent.company}</Company>
 
-                <Description>{agent.description}</Description>
-              </Body>
+                  <Rating>⭐ {agent.rating?.toFixed(1)}</Rating>
 
-              <Footer>
-                <DetailButton onClick={() => goDetail(agent.id)}>
-                  상세보기
-                </DetailButton>
+                  <Description>{agent.description}</Description>
+                </Body>
 
-                <ConsultButton onClick={() => goChat(String(agent.id))}>
-                  상담하기
-                </ConsultButton>
-              </Footer>
-            </Card>
-          ))}
+                <Footer>
+                  <BaseButton
+                    onClick={() => goDetail(agent.id)}
+                    variant="outline"
+                  >
+                    상세보기
+                  </BaseButton>
+
+                  <BaseButton onClick={() => goChat(String(agent.id))}>
+                    상담하기
+                  </BaseButton>
+                </Footer>
+              </Card>
+            );
+          })}
         </Grid>
       </Main>
     </Layout>
@@ -207,68 +169,6 @@ const Layout = styled.div`
   display: flex;
   min-height: 100vh;
   background: rgba(var(--color-accent) / 20%);
-`;
-
-const FavCard = styled.div`
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 10px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: 0.2s;
-
-  &:hover {
-    background: rgba(var(--color-lightgray) / 30%);
-  }
-
-  img {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-  }
-`;
-
-const ChatCard = styled(FavCard)`
-  justify-content: flex-start;
-`;
-
-const AvatarWrapper = styled.div`
-  position: relative;
-`;
-
-const Badge = styled.div`
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: #ff4757;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  font-size: 12px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Info = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  span,
-  p {
-    color: rgba(var(--color-darkgray));
-    font-size: 14px;
-    margin-top: 4px;
-  }
-
-  p {
-    max-width: 160px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
 `;
 
 const Main = styled.main`
@@ -334,19 +234,28 @@ const FavBtn = styled.button<{ active?: boolean }>`
 
 const Body = styled.div`
   padding: 0 24px 24px;
-  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ImageWrapper = styled.div`
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 5px solid white;
+  transform: translateY(-50px);
+
+  background: white;
 `;
 
 const ProfileImage = styled.img`
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  border: 5px solid white;
   object-fit: cover;
-
-  transform: translateY(-50px);
-
-  background: white;
 `;
 
 const Company = styled.p`
@@ -369,24 +278,9 @@ const Footer = styled.div`
   display: flex;
   gap: 12px;
   padding: 20px;
-`;
 
-const DetailButton = styled.button`
-  flex: 1;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #6a67ea;
-  background: white;
-  color: #6a67ea;
-  cursor: pointer;
-`;
-
-const ConsultButton = styled.button`
-  flex: 1;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background: #6a67ea;
-  color: white;
-  cursor: pointer;
+  button {
+    flex: 1;
+    padding: 12px;
+  }
 `;
