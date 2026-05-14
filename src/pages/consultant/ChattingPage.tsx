@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+
 import ChattingSideBar from './components/ChattingSideBar';
 import BaseInput from '../../components/common/BaseInput';
+
+import { useChat } from '../../hooks/useChat';
+import type { ChatMessage } from '../../types/consult';
 
 type FavoriteAgent = {
   id: number;
@@ -19,14 +23,11 @@ type Chat = {
   unreadCount: number;
 };
 
-type Message = {
-  id: number;
-  sender: 'me' | 'agent';
-  text: string;
-  time: string;
-};
-
 const ChattingPage = () => {
+  const { messages, sendMessage } = useChat();
+
+  const [text, setText] = useState('');
+
   const [isFavOpen, setIsFavOpen] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(true);
 
@@ -64,27 +65,6 @@ const ChattingPage = () => {
     },
   ];
 
-  const [messages] = useState<Message[]>([
-    {
-      id: 1,
-      sender: 'agent',
-      text: '안녕하세요 😊 어떤 매물 상담 원하시나요?',
-      time: '오후 1:20',
-    },
-    {
-      id: 2,
-      sender: 'me',
-      text: '전세사기 위험 없는 매물인지 확인받고 싶어요.',
-      time: '오후 1:21',
-    },
-    {
-      id: 3,
-      sender: 'agent',
-      text: '네! 주소 보내주시면 건축물대장과 등기부등본 기준으로 확인 도와드릴게요.',
-      time: '오후 1:22',
-    },
-  ]);
-
   const goDetail = (id: number) => {
     console.log('detail', id);
   };
@@ -93,9 +73,16 @@ const ChattingPage = () => {
     console.log('chat', userId);
   };
 
+  const handleSendMessage = () => {
+    if (!text.trim()) return;
+
+    sendMessage('me', text);
+
+    setText('');
+  };
+
   return (
     <Layout>
-      {/* ===== SIDEBAR ===== */}
       <ChattingSideBar
         favoriteAgents={favoriteAgents}
         ongoingChats={ongoingChats}
@@ -107,7 +94,6 @@ const ChattingPage = () => {
         goChat={goChat}
       />
 
-      {/* ===== CHAT AREA ===== */}
       <ChatContainer>
         <ChatHeader>
           <ProfileWrapper>
@@ -124,21 +110,32 @@ const ChattingPage = () => {
         </ChatHeader>
 
         <MessageContainer>
-          {messages.map((message) => (
-            <MessageRow key={message.id} isMe={message.sender === 'me'}>
-              <MessageBubble isMe={message.sender === 'me'}>
-                <p>{message.text}</p>
-                <small>{message.time}</small>
-              </MessageBubble>
-            </MessageRow>
-          ))}
+          {messages.map((message: ChatMessage, idx: number) => {
+            const isMe = message.sender === 'me';
+
+            return (
+              <MessageRow key={idx} isMe={isMe}>
+                <MessageBubble isMe={isMe}>
+                  <p>{message.content}</p>
+                </MessageBubble>
+              </MessageRow>
+            );
+          })}
         </MessageContainer>
 
         <InputArea>
           <BaseInput
+            value={text}
+            onChange={(e) => setText(e.target.value)}
             placeholder="메시지를 입력하세요"
             showButton={true}
             buttonContent={<span>전송</span>}
+            onButtonClick={handleSendMessage}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSendMessage();
+              }
+            }}
           />
         </InputArea>
       </ChatContainer>
@@ -151,6 +148,8 @@ export default ChattingPage;
 const Layout = styled.div`
   display: flex;
   height: 90vh;
+  overflow: hidden;
+
   background: #f5f7fb;
 `;
 
@@ -162,7 +161,6 @@ const ChatContainer = styled.div`
 `;
 
 const ChatHeader = styled.div`
-  height: 60px;
   padding: 0 32px;
 
   display: flex;
@@ -179,14 +177,15 @@ const ProfileWrapper = styled.div`
   gap: 14px;
 
   img {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     object-fit: cover;
   }
 
   h3 {
     font-size: 16px;
+    margin-bottom: 4px;
   }
 
   small {
@@ -218,45 +217,40 @@ const MessageBubble = styled.div<{ isMe: boolean }>`
   max-width: 420px;
 
   padding: 14px 16px;
-  border-radius: 12px;
+
+  border-radius: 16px;
 
   background: ${(props) => (props.isMe ? '#6a67ea' : 'white')};
+
   color: ${(props) => (props.isMe ? 'white' : '#222')};
 
-  border-bottom-left-radius: ${(props) => (props.isMe ? '12px' : '4px')};
-  border-bottom-right-radius: ${(props) => (props.isMe ? '4px' : '12px')};
+  border-bottom-right-radius: ${(props) => (props.isMe ? '4px' : '16px')};
+
+  border-bottom-left-radius: ${(props) => (props.isMe ? '16px' : '4px')};
 
   p {
     line-height: 1.5;
-    margin-bottom: 8px;
-  }
-
-  small {
-    font-size: 12px;
-    opacity: 0.7;
+    word-break: break-word;
   }
 `;
 
 const InputArea = styled.div`
-  padding: 20px 24px;
-
-  display: flex;
-  gap: 16px;
+  padding: 16px;
 
   border-top: 1px solid #ececec;
 
   background: white;
 
   div {
-    flex: 1;
+    width: 100%;
   }
 
   input {
-    border-radius: 50px;
+    border-radius: 999px;
   }
 
   button {
-    background-color: transparent;
+    background: transparent;
     color: rgba(var(--color-darkgray));
   }
 `;

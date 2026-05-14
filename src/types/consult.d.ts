@@ -16,3 +16,11 @@ export interface AgentInfo {
   updatedAt: string;
   isFavorite: boolean;
 }
+
+export interface ChatMessage {
+  type: string;
+  content: string;
+  sender: string;
+  roomId: string;
+  timestamp: string;
+}
