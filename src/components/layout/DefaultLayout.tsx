@@ -28,10 +28,12 @@ const ChatbotBox = lazy(() => import('../../pages/chatbot/ChatbotBox'));
 const ConsultingUserPage = lazy(
   () => import('../../pages/consultant/ConsultingUserPage'),
 );
+const ChattingPage = lazy(() => import('../../pages/consultant/ChattingPage'));
 
 const DefaultLayout = () => {
   const location = useLocation();
   const isBuildingPage = location.pathname === '/building';
+  const isChattingPage = location.pathname === '/chat/:id';
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -57,20 +59,22 @@ const DefaultLayout = () => {
             <Route path="/notify" element={<NotiPage />} />
             <Route path="/building" element={<BuildingPage />} />
             <Route path="/consult" element={<ConsultingUserPage />} />
+            <Route path="/chat/:id" element={<ChattingPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
       </MainContent>
 
-      {!isBuildingPage && (
-        <ChatbotButton
-          onClick={() => setIsChatOpen(!isChatOpen)}
-          $isFocused={isChatOpen}
-        >
-          <Image src={chatbotIcon} alt="chatbot" />
-          <span>챗봇</span>
-        </ChatbotButton>
-      )}
+      {!isBuildingPage ||
+        (!isChattingPage && (
+          <ChatbotButton
+            onClick={() => setIsChatOpen(!isChatOpen)}
+            $isFocused={isChatOpen}
+          >
+            <Image src={chatbotIcon} alt="chatbot" />
+            <span>챗봇</span>
+          </ChatbotButton>
+        ))}
 
       {isChatOpen && (
         <Suspense fallback={<div>로딩중...</div>}>

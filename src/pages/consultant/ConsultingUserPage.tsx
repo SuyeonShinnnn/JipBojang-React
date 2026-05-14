@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import ChattingSideBar from './components/ChattingSideBar';
 
 type Agent = {
   id: number;
@@ -144,60 +145,16 @@ const ConsultingUserPage = () => {
 
   return (
     <Layout>
-      <Sidebar>
-        <SidebarTitle>상담 관리</SidebarTitle>
-
-        <Section>
-          <Title onClick={() => setIsFavOpen(!isFavOpen)}>⭐ 찜한 전문가</Title>
-
-          {isFavOpen &&
-            (favoriteAgents.length === 0 ? (
-              <Empty>찜한 전문가 없음</Empty>
-            ) : (
-              favoriteAgents.map((f) => (
-                <FavCard key={f.id} onClick={() => goDetail(f.id)}>
-                  <img src={f.profileImage} alt={f.name} />
-
-                  <Info>
-                    <b>{f.name}</b>
-                    <span>{f.company}</span>
-                  </Info>
-                </FavCard>
-              ))
-            ))}
-        </Section>
-
-        <Section>
-          <Title onClick={() => setIsChatOpen(!isChatOpen)}>
-            💬 진행중 상담
-          </Title>
-
-          {isChatOpen &&
-            (ongoingChats.length === 0 ? (
-              <Empty>상담 없음</Empty>
-            ) : (
-              ongoingChats.map((c) => (
-                <ChatCard
-                  key={c.channelUrl}
-                  onClick={() => goChat(c.opponentUserId)}
-                >
-                  <AvatarWrapper>
-                    <img src={c.opponentProfileUrl} alt={c.opponentName} />
-
-                    {c.unreadCount > 0 && (
-                      <Badge>{c.unreadCount > 9 ? '9+' : c.unreadCount}</Badge>
-                    )}
-                  </AvatarWrapper>
-
-                  <Info>
-                    <b>{c.opponentName}</b>
-                    <p>{c.lastMessage}</p>
-                  </Info>
-                </ChatCard>
-              ))
-            ))}
-        </Section>
-      </Sidebar>
+      <ChattingSideBar
+        favoriteAgents={favoriteAgents}
+        ongoingChats={ongoingChats}
+        isFavOpen={isFavOpen}
+        isChatOpen={isChatOpen}
+        setIsFavOpen={setIsFavOpen}
+        setIsChatOpen={setIsChatOpen}
+        goDetail={goDetail}
+        goChat={goChat}
+      />
 
       <Main>
         <PageTitle>나에게 맞는 전문가 찾기</PageTitle>
@@ -250,31 +207,6 @@ const Layout = styled.div`
   display: flex;
   min-height: 100vh;
   background: rgba(var(--color-accent) / 20%);
-`;
-
-const Sidebar = styled.aside`
-  width: 300px;
-  padding: 24px;
-`;
-
-const SidebarTitle = styled.h1`
-  font-size: 22px;
-  margin-bottom: 32px;
-`;
-
-const Section = styled.div`
-  margin-bottom: 32px;
-`;
-
-const Title = styled.h2`
-  font-size: 18px;
-  margin-bottom: 16px;
-  cursor: pointer;
-`;
-
-const Empty = styled.div`
-  color: rgba(var(--color-darkgray));
-  padding: 12px;
 `;
 
 const FavCard = styled.div`
