@@ -59,7 +59,7 @@ const DefaultLayout = () => {
             <Route path="/notify" element={<NotiPage />} />
             <Route path="/building" element={<BuildingPage />} />
             <Route path="/consult" element={<ConsultingUserPage />} />
-            <Route path="/chat/:id" element={<ChattingPage />} />
+            <Route path="/chat/:roomId" element={<ChattingPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
