@@ -28,6 +28,9 @@ const ChatbotBox = lazy(() => import("../../pages/chatbot/ChatbotBox"));
 const CommunityMainPage = lazy(
   () => import("../../pages/community/CommunityMainPage"),
 );
+const CommunityDetailPage = lazy(
+  () => import("../../pages/community/CommunityDetailPage"),
+);
 
 const DefaultLayout = () => {
   const location = useLocation();
@@ -57,6 +60,7 @@ const DefaultLayout = () => {
             <Route path="/notify" element={<NotiPage />} />
             <Route path="/building" element={<BuildingPage />} />
             <Route path="/community" element={<CommunityMainPage />} />
+            <Route path="/board" element={<CommunityDetailPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
