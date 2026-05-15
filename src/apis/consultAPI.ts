@@ -27,3 +27,6 @@ export const findOrCreateChatRoom = async (
   return await axiosInstance.post('/chat/room', { userId, expertId });
 };
 
+export const getMessageHistory = async (roomId: number) => {
+  return await axiosInstance.get(`/chat/room/${roomId}/messages`);
+};

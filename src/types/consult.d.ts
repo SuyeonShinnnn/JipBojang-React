@@ -1,5 +1,6 @@
-export interface AgentInfo {
+export interface ExpertInfo {
   id: number;
+  userId: number;
   name: string;
   licenseNumber: string;
   company: string;
@@ -18,9 +19,9 @@ export interface AgentInfo {
 }
 
 export interface ChatMessage {
-  type: string;
+  messageId: number;
+  roomId: number;
+  senderId: number;
   content: string;
-  sender: string;
-  roomId: string;
-  timestamp: string;
+  createdAt: string;
 }

@@ -32,7 +32,9 @@ const ConsultingUserPage = () => {
     console.log(expert);
     const res = await findOrCreateChatRoom(userId, expert.userId);
     const roomId = res.data.roomId;
-    navigate(`/chat/${roomId}`, { state: { chatRoomData: res.data } });
+    navigate(`/chat/${roomId}`, {
+      state: { chatRoomData: res.data, expertInfo: expert },
+    });
   };
 
   const { data: experts = [] } = useQuery<ExpertInfo[]>({
