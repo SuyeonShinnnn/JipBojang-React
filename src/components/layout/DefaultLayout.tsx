@@ -1,33 +1,37 @@
-import { lazy, Suspense } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
-import HomePage from '../../pages/home/HomePage';
-import NotFoundPage from '../../pages/NotFoundPage';
-import styled, { keyframes } from 'styled-components';
-import chatbotIcon from '../../assets/chatbot/chatbot.png';
-import { useState } from 'react';
-import LoadingSpinner from '../common/LoadingSpanner';
+import { lazy, Suspense } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import HomePage from "../../pages/home/HomePage";
+import NotFoundPage from "../../pages/NotFoundPage";
+import styled, { keyframes } from "styled-components";
+import chatbotIcon from "../../assets/chatbot/chatbot.png";
+import { useState } from "react";
+import LoadingSpinner from "../common/LoadingSpanner";
 
-const LoginPage = lazy(() => import('../../pages/auth/LoginPage'));
-const SignupPage = lazy(() => import('../../pages/auth/SignupPage'));
-const InfoInputPage = lazy(() => import('../../pages/auth/InfoInputPage'));
+const LoginPage = lazy(() => import("../../pages/auth/LoginPage"));
+const SignupPage = lazy(() => import("../../pages/auth/SignupPage"));
+const InfoInputPage = lazy(() => import("../../pages/auth/InfoInputPage"));
 
-const NotiPage = lazy(() => import('../../pages/notification/NotiPage'));
-const BuildingPage = lazy(() => import('../../pages/building/BuildingPage'));
+const NotiPage = lazy(() => import("../../pages/notification/NotiPage"));
+const BuildingPage = lazy(() => import("../../pages/building/BuildingPage"));
 
-const ReportPage = lazy(() => import('../../pages/report/ReportPage'));
-const ReportFormPage = lazy(() => import('../../pages/report/ReportFormPage'));
+const ReportPage = lazy(() => import("../../pages/report/ReportPage"));
+const ReportFormPage = lazy(() => import("../../pages/report/ReportFormPage"));
 const ReportProgressPage = lazy(
-  () => import('../../pages/report/ReportProgressPage'),
+  () => import("../../pages/report/ReportProgressPage"),
 );
 const ReportResultPage = lazy(
-  () => import('../../pages/report/ReportResultPage'),
+  () => import("../../pages/report/ReportResultPage"),
 );
 
-const ChatbotBox = lazy(() => import('../../pages/chatbot/ChatbotBox'));
+const ChatbotBox = lazy(() => import("../../pages/chatbot/ChatbotBox"));
+
+const CommunityMainPage = lazy(
+  () => import("../../pages/community/CommunityMainPage"),
+);
 
 const DefaultLayout = () => {
   const location = useLocation();
-  const isBuildingPage = location.pathname === '/building';
+  const isBuildingPage = location.pathname === "/building";
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -52,6 +56,7 @@ const DefaultLayout = () => {
             <Route path="/report/result" element={<ReportResultPage />} />
             <Route path="/notify" element={<NotiPage />} />
             <Route path="/building" element={<BuildingPage />} />
+            <Route path="/community" element={<CommunityMainPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
@@ -99,7 +104,7 @@ const Container = styled.div`
 
 const MainContent = styled.main<{ $noPadding?: boolean }>`
   position: relative;
-  padding-top: ${({ $noPadding }) => ($noPadding ? '0' : '4rem')};
+  padding-top: ${({ $noPadding }) => ($noPadding ? "0" : "4rem")};
   animation: ${fadeSlideIn} 0.35s ease-out both;
 `;
 
