@@ -6,24 +6,16 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   addFavorites,
   deleteFavorites,
-  getAgent,
-  getFavoriteAgent,
+  findOrCreateChatRoom,
+  getExpert,
+  getFavoriteExpert,
 } from '../../apis/consultAPI';
 
-import type { AgentInfo } from '../../types/consult';
+import type { ExpertInfo } from '../../types/consult';
 
 import basicProfile from '../../assets/consult/basic-profile.png';
 import BaseButton from '../../components/common/BaseButton';
 import { useAuthStore } from '../../stores/auth';
-
-type Chat = {
-  channelUrl: string;
-  opponentName: string;
-  opponentProfileUrl?: string;
-  opponentUserId: string;
-  lastMessage?: string;
-  unreadCount: number;
-};
 
 const ConsultingUserPage = () => {
   const auth = useAuthStore();
@@ -32,90 +24,77 @@ const ConsultingUserPage = () => {
 
   const userId = Number(auth.user.userId);
 
-  const ongoingChats: Chat[] = [];
-
-  const isFavOpen = true;
-  const isChatOpen = true;
-
   const goDetail = (id: number) => {
-    navigate(`/agent/${id}`);
+    navigate(`/expert/${id}`);
   };
 
-  const goChat = (userId: string) => {
-    navigate(`/chat/${userId}`);
+  const goChat = async (expert: ExpertInfo) => {
+    console.log(expert);
+    const res = await findOrCreateChatRoom(userId, expert.userId);
+    const roomId = res.data.roomId;
+    navigate(`/chat/${roomId}`, { state: { chatRoomData: res.data } });
   };
 
-  const { data: agents = [] } = useQuery<AgentInfo[]>({
-    queryKey: ['agents'],
+  const { data: experts = [] } = useQuery<ExpertInfo[]>({
+    queryKey: ['experts'],
     queryFn: async () => {
-      const res = await getAgent();
+      const res = await getExpert();
       return res.data;
     },
   });
 
-  const { data: favoriteAgents = [] } = useQuery<AgentInfo[]>({
-    queryKey: ['favoriteAgents', userId],
+  const { data: favoriteExperts = [] } = useQuery<ExpertInfo[]>({
+    queryKey: ['favoriteExperts', userId],
     queryFn: async () => {
-      const res = await getFavoriteAgent(userId);
+      const res = await getFavoriteExpert(userId);
       return res.data;
     },
     enabled: !!userId,
   });
 
   const favoriteMutation = useMutation({
-    mutationFn: async (agent: AgentInfo) => {
-      if (agent.isFavorite) {
-        await deleteFavorites(userId, agent.id);
+    mutationFn: async (expert: ExpertInfo) => {
+      if (expert.isFavorite) {
+        await deleteFavorites(userId, expert.id);
       } else {
-        await addFavorites(userId, agent.id);
+        await addFavorites(userId, expert.id);
       }
     },
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['favoriteAgents', userId],
+        queryKey: ['favoriteExperts', userId],
       });
 
       await queryClient.invalidateQueries({
-        queryKey: ['agents'],
+        queryKey: ['experts'],
       });
     },
   });
 
-  const isFavorite = (agentId: number) => {
-    return favoriteAgents.some((fav) => fav.id === agentId);
+  const isFavorite = (expertId: number) => {
+    return favoriteExperts.some((fav) => fav.id === expertId);
   };
 
   return (
     <Layout>
-      <ChattingSideBar
-        favoriteAgents={favoriteAgents}
-        ongoingChats={ongoingChats}
-        isFavOpen={isFavOpen}
-        isChatOpen={isChatOpen}
-        setIsFavOpen={() => {}}
-        setIsChatOpen={() => {}}
-        goDetail={goDetail}
-        goChat={goChat}
-      />
-
       <Main>
         <PageTitle>나에게 맞는 전문가 찾기</PageTitle>
 
         <Subtitle>안전한 전세계약을 위한 전문가 상담 서비스</Subtitle>
 
         <Grid>
-          {agents.map((agent) => {
-            const favorite = isFavorite(agent.id);
+          {experts.map((expert) => {
+            const favorite = isFavorite(expert.id);
 
             return (
-              <Card key={agent.id}>
+              <Card key={expert.id}>
                 <Header>
                   <FavBtn
                     active={favorite}
                     onClick={() =>
                       favoriteMutation.mutate({
-                        ...agent,
+                        ...expert,
                         isFavorite: favorite,
                       })
                     }
@@ -127,30 +106,30 @@ const ConsultingUserPage = () => {
                 <Body>
                   <ImageWrapper>
                     <ProfileImage
-                      src={agent.profileImage}
-                      alt={agent.name}
+                      src={expert.profileImage}
+                      alt={expert.name}
                       onError={(e) => (e.currentTarget.src = basicProfile)}
                     />
                   </ImageWrapper>
 
-                  <h3>{agent.name}</h3>
+                  <h3>{expert.name}</h3>
 
-                  <Company>{agent.company}</Company>
+                  <Company>{expert.company}</Company>
 
-                  <Rating>⭐ {agent.rating?.toFixed(1)}</Rating>
+                  <Rating>⭐ {expert.rating?.toFixed(1)}</Rating>
 
-                  <Description>{agent.description}</Description>
+                  <Description>{expert.description}</Description>
                 </Body>
 
                 <Footer>
                   <BaseButton
-                    onClick={() => goDetail(agent.id)}
+                    onClick={() => goDetail(expert.id)}
                     variant="outline"
                   >
                     상세보기
                   </BaseButton>
 
-                  <BaseButton onClick={() => goChat(String(agent.id))}>
+                  <BaseButton onClick={() => goChat(expert)}>
                     상담하기
                   </BaseButton>
                 </Footer>
