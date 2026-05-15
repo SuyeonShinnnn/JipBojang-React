@@ -19,9 +19,10 @@ export interface ExpertInfo {
 }
 
 export interface ChatMessage {
-  messageId: number;
+  messageId?: number;
   roomId: number;
   senderId: number;
   content: string;
+  type: string;
   createdAt: string;
 }

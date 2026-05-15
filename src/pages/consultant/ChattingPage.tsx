@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-
-import ChattingSideBar from './components/ChattingSideBar';
 import BaseInput from '../../components/common/BaseInput';
 
 import { useChat } from '../../hooks/useChat';
@@ -12,29 +10,16 @@ import { useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getMessageHistory } from '../../apis/consultAPI';
 
-type FavoriteExpert = {
-  id: number;
-  name: string;
-  company: string;
-  profileImage?: string;
-};
-
-type Chat = {
-  roomId: number;
-  opponentName: string;
-  opponentProfileUrl?: string;
-  opponentUserId: number;
-  lastMessage?: string;
-  unreadCount: number;
-};
-
 const ChattingPage = () => {
   const auth = useAuthStore();
   const { roomId } = useParams();
   const location = useLocation();
+  const { messages: realtimeMessages, sendMessage } = useChat({
+    roomId: Number(roomId),
+    myUserId: Number(auth.user.userId),
+  });
 
   const userId = Number(auth.user.userId);
-  const chatRoomData = location.state?.chatRoomData;
   const expertInfo: ExpertInfo = location.state?.expertInfo;
 
   const [text, setText] = useState('');
@@ -42,11 +27,13 @@ const ChattingPage = () => {
   const handleSendMessage = () => {
     if (!text.trim()) return;
 
+    sendMessage(text);
+
     setText('');
   };
 
   const {
-    data: messages = [],
+    data: historyMessages = [],
     isPending,
     isError,
   } = useQuery<ChatMessage[]>({
@@ -56,6 +43,8 @@ const ChattingPage = () => {
       return res.data;
     },
   });
+
+  const allMessages = [...historyMessages, ...realtimeMessages];
 
   return (
     <Layout>
@@ -77,7 +66,7 @@ const ChattingPage = () => {
         </ChatHeader>
 
         <MessageContainer>
-          {messages.map((message) => (
+          {allMessages.map((message) => (
             <MessageRow
               key={message.messageId}
               isMe={userId === message.senderId}

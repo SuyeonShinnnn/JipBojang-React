@@ -1,20 +1,22 @@
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useEffect, useRef, useState } from 'react';
+
 import type { ChatMessage } from '../types/consult';
 
-export const useChat = () => {
+interface UseChatProps {
+  roomId: number | null;
+  myUserId: number;
+}
+
+export const useChat = ({ roomId, myUserId }: UseChatProps) => {
   const client = useRef<Client | null>(null);
 
-  const connected = useRef(false);
+  const subscription = useRef<any>(null);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
-    if (connected.current) return;
-
-    connected.current = true;
-
     const stompClient = new Client({
       webSocketFactory: () => new SockJS('/ws'),
 
@@ -23,28 +25,26 @@ export const useChat = () => {
       onConnect: () => {
         console.log('WebSocket Connected');
 
-        stompClient.subscribe('/topic/public', (message) => {
-          const receivedMessage: ChatMessage = JSON.parse(message.body);
+        if (!roomId) return;
 
-          setMessages((prev) => [...prev, receivedMessage]);
-        });
+        subscription.current = stompClient.subscribe(
+          `/topic/chatroom/${roomId}`,
+          (message) => {
+            const receivedMessage: ChatMessage = JSON.parse(message.body);
+
+            setMessages((prev) => [...prev, receivedMessage]);
+          },
+        );
 
         stompClient.publish({
           destination: '/app/chat.addUser',
 
           body: JSON.stringify({
-            sender: 'me',
+            senderId: myUserId,
+            roomId,
             type: 'JOIN',
           }),
         });
-      },
-
-      onStompError: (frame) => {
-        console.error(frame);
-      },
-
-      onWebSocketError: (error) => {
-        console.error(error);
       },
     });
 
@@ -53,23 +53,27 @@ export const useChat = () => {
     client.current = stompClient;
 
     return () => {
+      subscription.current?.unsubscribe();
+
       stompClient.deactivate();
     };
-  }, []);
+  }, [roomId]);
 
-  const sendMessage = (sender: string, content: string) => {
-    if (!client.current?.connected) return;
+  const sendMessage = (content: string) => {
+    if (!client.current?.connected || !roomId) return;
 
     const chatMessage: ChatMessage = {
-      sender,
+      senderId: myUserId,
       content,
-      type: 'CHAT',
-      roomId: 'room-1',
-      timestamp: '',
+      type: 'USER',
+      roomId,
+      createdAt: '',
     };
 
+    console.log(chatMessage);
     client.current.publish({
       destination: '/app/chat.sendMessage',
+
       body: JSON.stringify(chatMessage),
     });
   };
@@ -77,5 +81,6 @@ export const useChat = () => {
   return {
     messages,
     sendMessage,
+    setMessages,
   };
 };
