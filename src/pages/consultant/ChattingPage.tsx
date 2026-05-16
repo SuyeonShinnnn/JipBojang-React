@@ -9,6 +9,7 @@ import { useAuthStore } from '../../stores/auth';
 import { useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getMessageHistory } from '../../apis/consultAPI';
+import { buildChatGroups } from '../../utils/chatMessageGroup';
 
 const ChattingPage = () => {
   const auth = useAuthStore();
@@ -77,29 +78,10 @@ const ChattingPage = () => {
     });
   };
 
-  const isSameDate = (a: string, b: string) => {
-    const dateA = new Date(a);
-    const dateB = new Date(b);
-
-    return (
-      dateA.getFullYear() === dateB.getFullYear() &&
-      dateA.getMonth() === dateB.getMonth() &&
-      dateA.getDate() === dateB.getDate()
-    );
-  };
-
-  const isSameMinute = (a: string, b: string) => {
-    const dateA = new Date(a);
-    const dateB = new Date(b);
-
-    return (
-      dateA.getFullYear() === dateB.getFullYear() &&
-      dateA.getMonth() === dateB.getMonth() &&
-      dateA.getDate() === dateB.getDate() &&
-      dateA.getHours() === dateB.getHours() &&
-      dateA.getMinutes() === dateB.getMinutes()
-    );
-  };
+  const groupedMessages = useMemo(
+    () => buildChatGroups(allMessages, userId),
+    [allMessages, userId],
+  );
 
   if (isPending) {
     return <div>로딩중...</div>;
@@ -129,50 +111,40 @@ const ChattingPage = () => {
         </ChatHeader>
 
         <MessageContainer>
-          {allMessages.map((message, index) => {
-            const previousMessage = allMessages[index - 1];
-            const nextMessage = allMessages[index + 1];
-
-            const isMe = userId === message.senderId;
-
-            const showDateDivider =
-              !previousMessage ||
-              !isSameDate(previousMessage.createdAt, message.createdAt);
-
-            const showProfile =
-              !previousMessage || previousMessage.senderId !== message.senderId;
-
-            const showTime =
-              !nextMessage ||
-              nextMessage.senderId !== message.senderId ||
-              !isSameMinute(nextMessage.createdAt, message.createdAt);
-
+          {groupedMessages.map((message) => {
             return (
               <div key={message.messageId}>
-                {showDateDivider && (
+                {message.showDateDivider && (
                   <DateDivider>
                     <span>{formatDate(message.createdAt)}</span>
                   </DateDivider>
                 )}
 
-                <MessageBubbleWrapper $isMe={isMe}>
-                  <MessageRow $isMe={isMe}>
-                    {!isMe &&
-                      (showProfile ? <ProfileImage /> : <EmptyProfileSpace />)}
+                <MessageBubbleWrapper $isMe={message.isMe}>
+                  <MessageRow $isMe={message.isMe}>
+                    {!message.isMe &&
+                      (message.showProfile ? (
+                        <ProfileImage />
+                      ) : (
+                        <EmptyProfileSpace />
+                      ))}
 
                     <MessageColumn>
-                      {!isMe && showProfile && (
+                      {!message.isMe && message.showProfile && (
                         <SenderName>{expertInfo?.name || '상대방'}</SenderName>
                       )}
 
-                      <BubbleRow $isMe={isMe} $timeDiff={showTime}>
-                        {!isMe && (
+                      <BubbleRow
+                        $isMe={message.isMe}
+                        $timeDiff={message.showTime}
+                      >
+                        {!message.isMe && (
                           <>
-                            <MessageBubble $isMe={isMe}>
+                            <MessageBubble $isMe={message.isMe}>
                               {message.content}
                             </MessageBubble>
 
-                            {showTime && (
+                            {message.showTime && (
                               <TimeText>
                                 {formatTime(message.createdAt)}
                               </TimeText>
@@ -180,15 +152,15 @@ const ChattingPage = () => {
                           </>
                         )}
 
-                        {isMe && (
+                        {message.isMe && (
                           <>
-                            {showTime && (
+                            {message.showTime && (
                               <TimeText>
                                 {formatTime(message.createdAt)}
                               </TimeText>
                             )}
 
-                            <MessageBubble $isMe={isMe}>
+                            <MessageBubble $isMe={message.isMe}>
                               {message.content}
                             </MessageBubble>
                           </>
