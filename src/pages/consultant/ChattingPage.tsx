@@ -10,6 +10,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getMessageHistory } from '../../apis/consultAPI';
 import { buildChatGroups } from '../../utils/chatMessageGroup';
+import MessageList from './components/MessagEList';
 
 const ChattingPage = () => {
   const auth = useAuthStore();
@@ -37,11 +38,8 @@ const ChattingPage = () => {
     isError,
   } = useQuery<ChatMessage[]>({
     queryKey: ['messages', roomId],
-    queryFn: async () => {
-      const res = await getMessageHistory(Number(roomId));
-      console.log(res.data);
-      return res.data;
-    },
+    queryFn: async () =>
+      await getMessageHistory(Number(roomId)).then((res) => res.data),
   });
 
   const allMessages = useMemo(() => {
@@ -60,22 +58,6 @@ const ChattingPage = () => {
     sendMessage(text);
 
     setText('');
-  };
-
-  const formatDate = (date: string) => {
-    const d = new Date(date);
-
-    return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
-  };
-
-  const formatTime = (date: string) => {
-    const d = new Date(date);
-
-    return d.toLocaleTimeString('ko-KR', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
   };
 
   const groupedMessages = useMemo(
@@ -112,65 +94,7 @@ const ChattingPage = () => {
 
         <MessageContainer>
           {groupedMessages.map((message) => {
-            return (
-              <div key={message.messageId}>
-                {message.showDateDivider && (
-                  <DateDivider>
-                    <span>{formatDate(message.createdAt)}</span>
-                  </DateDivider>
-                )}
-
-                <MessageBubbleWrapper $isMe={message.isMe}>
-                  <MessageRow $isMe={message.isMe}>
-                    {!message.isMe &&
-                      (message.showProfile ? (
-                        <ProfileImage />
-                      ) : (
-                        <EmptyProfileSpace />
-                      ))}
-
-                    <MessageColumn>
-                      {!message.isMe && message.showProfile && (
-                        <SenderName>{expertInfo?.name || '상대방'}</SenderName>
-                      )}
-
-                      <BubbleRow
-                        $isMe={message.isMe}
-                        $timeDiff={message.showTime}
-                      >
-                        {!message.isMe && (
-                          <>
-                            <MessageBubble $isMe={message.isMe}>
-                              {message.content}
-                            </MessageBubble>
-
-                            {message.showTime && (
-                              <TimeText>
-                                {formatTime(message.createdAt)}
-                              </TimeText>
-                            )}
-                          </>
-                        )}
-
-                        {message.isMe && (
-                          <>
-                            {message.showTime && (
-                              <TimeText>
-                                {formatTime(message.createdAt)}
-                              </TimeText>
-                            )}
-
-                            <MessageBubble $isMe={message.isMe}>
-                              {message.content}
-                            </MessageBubble>
-                          </>
-                        )}
-                      </BubbleRow>
-                    </MessageColumn>
-                  </MessageRow>
-                </MessageBubbleWrapper>
-              </div>
-            );
+            return <MessageList message={message} />;
           })}
 
           <div ref={bottomRef} />
@@ -217,10 +141,10 @@ const ChatHeader = styled.div`
   display: flex;
   align-items: center;
 
-  border-top: 1px solid #ececec;
-  border-bottom: 1px solid #ececec;
+  border-top: 1px solid rgba(var(--color-lightgray));
+  border-bottom: 1px solid rgba(var(--color-lightgray));
 
-  background: white;
+  background: #fff;
 `;
 
 const MessageContainer = styled.div`
@@ -235,96 +159,6 @@ const MessageContainer = styled.div`
   padding-bottom: 0;
 
   background: #f5f7fb;
-`;
-
-const DateDivider = styled.div`
-  display: flex;
-  justify-content: center;
-
-  margin: 20px 0 14px;
-
-  span {
-    padding: 6px 12px;
-    border-radius: 50px;
-    font-size: 12px;
-    background: rgba(var(--color-lightgray) / 30%);
-    color: #666;
-  }
-`;
-
-const MessageBubbleWrapper = styled.div<{ $isMe: boolean }>`
-  display: flex;
-  justify-content: ${({ $isMe }) => ($isMe ? 'flex-end' : 'flex-start')};
-  margin-top: 2px;
-`;
-
-const MessageRow = styled.div<{ $isMe: boolean }>`
-  display: flex;
-  align-items: start;
-  justify-content: center;
-  gap: 8px;
-
-  flex-direction: ${({ $isMe }) => ($isMe ? 'row-reverse' : 'row')};
-`;
-
-const MessageColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const BubbleRow = styled.div<{ $isMe: boolean; $timeDiff: boolean }>`
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
-
-  flex-direction: ${({ $isMe }) => ($isMe ? 'row' : 'row')};
-  margin-bottom: ${({ $timeDiff }) => ($timeDiff ? '12px' : '')};
-`;
-
-const SenderName = styled.span`
-  font-size: 12px;
-
-  color: #666;
-
-  margin-bottom: 4px;
-  margin-left: 4px;
-`;
-
-const TimeText = styled.small`
-  font-size: 11px;
-
-  color: rgba(var(--color-darkgray));
-
-  margin-bottom: 4px;
-`;
-
-const ProfileImage = styled.div`
-  width: 40px;
-  height: 40px;
-
-  border-radius: 50%;
-
-  background-color: rgba(var(--color-lightgray));
-`;
-
-const EmptyProfileSpace = styled.div`
-  width: 40px;
-`;
-
-const MessageBubble = styled.div<{ $isMe: boolean }>`
-  max-width: 340px;
-  padding: 12px;
-  border-radius: 12px;
-
-  line-height: 1.4;
-  word-break: break-word;
-
-  background-color: ${({ $isMe }) =>
-    $isMe ? 'rgba(var(--color-primary))' : '#f2f2f2'};
-  color: ${({ $isMe }) => ($isMe ? '#fff' : '#000')};
-
-  border-bottom-left-radius: ${({ $isMe }) => ($isMe ? '12px' : '4px')};
-  border-bottom-right-radius: ${({ $isMe }) => ($isMe ? '4px' : '12px')};
 `;
 
 const ProfileWrapper = styled.div`
@@ -345,7 +179,7 @@ const ProfileWrapper = styled.div`
   }
 
   small {
-    color: #777;
+    color: rgba(var(--color-darkgray));
   }
 `;
 
@@ -356,9 +190,9 @@ const EmptyText = styled.p`
 const InputArea = styled.div`
   padding: 12px;
 
-  border-top: 1px solid #ececec;
+  border-top: 1px solid rgba(var(--color-lightgray));
 
-  background: white;
+  background: #fff;
 
   div {
     width: 100%;
