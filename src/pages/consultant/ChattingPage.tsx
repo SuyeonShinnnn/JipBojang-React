@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import BaseInput from '../../components/common/BaseInput';
 
@@ -12,25 +12,23 @@ import { getMessageHistory } from '../../apis/consultAPI';
 
 const ChattingPage = () => {
   const auth = useAuthStore();
+
   const { roomId } = useParams();
+
   const location = useLocation();
+
   const { messages: realtimeMessages, sendMessage } = useChat({
     roomId: Number(roomId),
     myUserId: Number(auth.user.userId),
   });
 
   const userId = Number(auth.user.userId);
+
   const expertInfo: ExpertInfo = location.state?.expertInfo;
 
   const [text, setText] = useState('');
 
-  const handleSendMessage = () => {
-    if (!text.trim()) return;
-
-    sendMessage(text);
-
-    setText('');
-  };
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const {
     data: historyMessages = [],
@@ -40,11 +38,76 @@ const ChattingPage = () => {
     queryKey: ['messages', roomId],
     queryFn: async () => {
       const res = await getMessageHistory(Number(roomId));
+      console.log(res.data);
       return res.data;
     },
   });
 
-  const allMessages = [...historyMessages, ...realtimeMessages];
+  const allMessages = useMemo(() => {
+    return [...historyMessages, ...realtimeMessages];
+  }, [historyMessages, realtimeMessages]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({
+      behavior: 'smooth',
+    });
+  }, [allMessages]);
+
+  const handleSendMessage = () => {
+    if (!text.trim()) return;
+
+    sendMessage(text);
+
+    setText('');
+  };
+
+  const formatDate = (date: string) => {
+    const d = new Date(date);
+
+    return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
+  };
+
+  const formatTime = (date: string) => {
+    const d = new Date(date);
+
+    return d.toLocaleTimeString('ko-KR', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
+
+  const isSameDate = (a: string, b: string) => {
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+
+    return (
+      dateA.getFullYear() === dateB.getFullYear() &&
+      dateA.getMonth() === dateB.getMonth() &&
+      dateA.getDate() === dateB.getDate()
+    );
+  };
+
+  const isSameMinute = (a: string, b: string) => {
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+
+    return (
+      dateA.getFullYear() === dateB.getFullYear() &&
+      dateA.getMonth() === dateB.getMonth() &&
+      dateA.getDate() === dateB.getDate() &&
+      dateA.getHours() === dateB.getHours() &&
+      dateA.getMinutes() === dateB.getMinutes()
+    );
+  };
+
+  if (isPending) {
+    return <div>로딩중...</div>;
+  }
+
+  if (isError) {
+    return <div>메시지를 불러오지 못했습니다.</div>;
+  }
 
   return (
     <Layout>
@@ -66,22 +129,79 @@ const ChattingPage = () => {
         </ChatHeader>
 
         <MessageContainer>
-          {allMessages.map((message) => (
-            <MessageRow
-              key={message.messageId}
-              isMe={userId === message.senderId}
-            >
-              <MessageBubble isMe={userId === message.senderId}>
-                {userId !== message.senderId && (
-                  <SenderName>{expertInfo.name}</SenderName>
+          {allMessages.map((message, index) => {
+            const previousMessage = allMessages[index - 1];
+            const nextMessage = allMessages[index + 1];
+
+            const isMe = userId === message.senderId;
+
+            const showDateDivider =
+              !previousMessage ||
+              !isSameDate(previousMessage.createdAt, message.createdAt);
+
+            const showProfile =
+              !previousMessage || previousMessage.senderId !== message.senderId;
+
+            const showTime =
+              !nextMessage ||
+              nextMessage.senderId !== message.senderId ||
+              !isSameMinute(nextMessage.createdAt, message.createdAt);
+
+            return (
+              <div key={message.messageId}>
+                {showDateDivider && (
+                  <DateDivider>
+                    <span>{formatDate(message.createdAt)}</span>
+                  </DateDivider>
                 )}
 
-                <p>{message.content}</p>
+                <MessageBubbleWrapper $isMe={isMe}>
+                  <MessageRow $isMe={isMe}>
+                    {!isMe &&
+                      (showProfile ? <ProfileImage /> : <EmptyProfileSpace />)}
 
-                <TimeText>{message.createdAt}</TimeText>
-              </MessageBubble>
-            </MessageRow>
-          ))}
+                    <MessageColumn>
+                      {!isMe && showProfile && (
+                        <SenderName>{expertInfo?.name || '상대방'}</SenderName>
+                      )}
+
+                      <BubbleRow $isMe={isMe} $timeDiff={showTime}>
+                        {!isMe && (
+                          <>
+                            <MessageBubble $isMe={isMe}>
+                              {message.content}
+                            </MessageBubble>
+
+                            {showTime && (
+                              <TimeText>
+                                {formatTime(message.createdAt)}
+                              </TimeText>
+                            )}
+                          </>
+                        )}
+
+                        {isMe && (
+                          <>
+                            {showTime && (
+                              <TimeText>
+                                {formatTime(message.createdAt)}
+                              </TimeText>
+                            )}
+
+                            <MessageBubble $isMe={isMe}>
+                              {message.content}
+                            </MessageBubble>
+                          </>
+                        )}
+                      </BubbleRow>
+                    </MessageColumn>
+                  </MessageRow>
+                </MessageBubbleWrapper>
+              </div>
+            );
+          })}
+
+          <div ref={bottomRef} />
         </MessageContainer>
 
         <InputArea>
@@ -89,7 +209,7 @@ const ChattingPage = () => {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="메시지를 입력하세요"
-            showButton={true}
+            showButton
             buttonContent={<span>전송</span>}
             onButtonClick={handleSendMessage}
             onKeyDown={(e) => {
@@ -108,19 +228,14 @@ export default ChattingPage;
 
 const Layout = styled.div`
   display: flex;
-
   height: 90vh;
-
   overflow: hidden;
-
   background: #f5f7fb;
 `;
 
 const ChatContainer = styled.div`
   flex: 1;
-
   display: flex;
-
   flex-direction: column;
 `;
 
@@ -136,6 +251,110 @@ const ChatHeader = styled.div`
   background: white;
 `;
 
+const MessageContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  overflow-y: auto;
+
+  padding: 20px;
+  padding-bottom: 0;
+
+  background: #f5f7fb;
+`;
+
+const DateDivider = styled.div`
+  display: flex;
+  justify-content: center;
+
+  margin: 20px 0 14px;
+
+  span {
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    background: rgba(var(--color-lightgray) / 30%);
+    color: #666;
+  }
+`;
+
+const MessageBubbleWrapper = styled.div<{ $isMe: boolean }>`
+  display: flex;
+  justify-content: ${({ $isMe }) => ($isMe ? 'flex-end' : 'flex-start')};
+  margin-top: 2px;
+`;
+
+const MessageRow = styled.div<{ $isMe: boolean }>`
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  gap: 8px;
+
+  flex-direction: ${({ $isMe }) => ($isMe ? 'row-reverse' : 'row')};
+`;
+
+const MessageColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const BubbleRow = styled.div<{ $isMe: boolean; $timeDiff: boolean }>`
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+
+  flex-direction: ${({ $isMe }) => ($isMe ? 'row' : 'row')};
+  margin-bottom: ${({ $timeDiff }) => ($timeDiff ? '12px' : '')};
+`;
+
+const SenderName = styled.span`
+  font-size: 12px;
+
+  color: #666;
+
+  margin-bottom: 4px;
+  margin-left: 4px;
+`;
+
+const TimeText = styled.small`
+  font-size: 11px;
+
+  color: rgba(var(--color-darkgray));
+
+  margin-bottom: 4px;
+`;
+
+const ProfileImage = styled.div`
+  width: 40px;
+  height: 40px;
+
+  border-radius: 50%;
+
+  background-color: rgba(var(--color-lightgray));
+`;
+
+const EmptyProfileSpace = styled.div`
+  width: 40px;
+`;
+
+const MessageBubble = styled.div<{ $isMe: boolean }>`
+  max-width: 340px;
+  padding: 12px;
+  border-radius: 12px;
+
+  line-height: 1.4;
+  word-break: break-word;
+
+  background-color: ${({ $isMe }) =>
+    $isMe ? 'rgba(var(--color-primary))' : '#f2f2f2'};
+  color: ${({ $isMe }) => ($isMe ? '#fff' : '#000')};
+
+  border-bottom-left-radius: ${({ $isMe }) => ($isMe ? '12px' : '4px')};
+  border-bottom-right-radius: ${({ $isMe }) => ($isMe ? '4px' : '12px')};
+`;
+
 const ProfileWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -144,7 +363,7 @@ const ProfileWrapper = styled.div`
   img {
     width: 44px;
     height: 44px;
-    border-radius: 50%;
+    border-radius: 50px;
     object-fit: cover;
   }
 
@@ -162,71 +381,8 @@ const EmptyText = styled.p`
   color: #888;
 `;
 
-const MessageContainer = styled.div`
-  flex: 1;
-
-  padding: 32px;
-
-  overflow-y: auto;
-
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 18px;
-
-  background: #f8f9fc;
-`;
-
-const MessageRow = styled.div<{ isMe: boolean }>`
-  display: flex;
-
-  justify-content: ${(props) => (props.isMe ? 'flex-end' : 'flex-start')};
-`;
-
-const MessageBubble = styled.div<{ isMe: boolean }>`
-  max-width: 420px;
-
-  padding: 14px 16px;
-
-  border-radius: 16px;
-
-  background: ${(props) => (props.isMe ? '#6a67ea' : 'white')};
-
-  color: ${(props) => (props.isMe ? 'white' : '#222')};
-
-  border-bottom-right-radius: ${(props) => (props.isMe ? '4px' : '16px')};
-  border-bottom-left-radius: ${(props) => (props.isMe ? '16px' : '4px')};
-
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-
-  p {
-    line-height: 1.5;
-
-    word-break: break-word;
-  }
-`;
-
-const SenderName = styled.div`
-  font-size: 12px;
-
-  margin-bottom: 6px;
-
-  color: #777;
-`;
-
-const TimeText = styled.div`
-  margin-top: 8px;
-
-  font-size: 11px;
-
-  opacity: 0.7;
-
-  text-align: right;
-`;
-
 const InputArea = styled.div`
-  padding: 16px;
+  padding: 12px;
 
   border-top: 1px solid #ececec;
 
@@ -242,7 +398,6 @@ const InputArea = styled.div`
 
   button {
     background: transparent;
-
     color: rgba(var(--color-darkgray));
   }
 `;

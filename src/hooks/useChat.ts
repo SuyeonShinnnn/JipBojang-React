@@ -32,7 +32,14 @@ export const useChat = ({ roomId, myUserId }: UseChatProps) => {
           (message) => {
             const receivedMessage: ChatMessage = JSON.parse(message.body);
 
-            setMessages((prev) => [...prev, receivedMessage]);
+            setMessages((prev) => [
+              ...prev,
+              {
+                ...receivedMessage,
+                createdAt:
+                  receivedMessage.createdAt || new Date().toISOString(),
+              },
+            ]);
           },
         );
 
@@ -62,14 +69,12 @@ export const useChat = ({ roomId, myUserId }: UseChatProps) => {
   const sendMessage = (content: string) => {
     if (!client.current?.connected || !roomId) return;
 
-    const chatMessage: ChatMessage = {
+    const chatMessage = {
       senderId: myUserId,
       content,
       type: 'USER',
       roomId,
-      createdAt: '',
     };
-
     console.log(chatMessage);
     client.current.publish({
       destination: '/app/chat.sendMessage',
