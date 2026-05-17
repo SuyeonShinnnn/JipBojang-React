@@ -7,11 +7,12 @@ import {
   addFavorites,
   deleteFavorites,
   findOrCreateChatRoom,
+  getChatRooms,
   getExpert,
   getFavoriteExpert,
 } from '../../apis/consultAPI';
 
-import type { ExpertInfo } from '../../types/consult';
+import type { ChatRoom, ExpertInfo } from '../../types/consult';
 
 import { useAuthStore } from '../../stores/auth';
 import ExpertCard from './components/ExpertCard';
@@ -27,29 +28,23 @@ const ConsultingUserPage = () => {
     navigate(`/expert/${id}`);
   };
 
-  const goChat = async (expert: ExpertInfo) => {
-    console.log(expert);
-    const res = await findOrCreateChatRoom(userId, expert.userId);
+  const goChat = async (expertId: number) => {
+    const res = await findOrCreateChatRoom(userId, expertId);
     const roomId = res.data.roomId;
     navigate(`/chat/${roomId}`, {
-      state: { chatRoomData: res.data, expertInfo: expert },
+      state: { chatRoomData: res.data },
     });
   };
 
   const { data: experts = [] } = useQuery<ExpertInfo[]>({
     queryKey: ['experts'],
-    queryFn: async () => {
-      const res = await getExpert();
-      return res.data;
-    },
+    queryFn: async () => await getExpert().then((res) => res.data),
   });
 
   const { data: favoriteExperts = [] } = useQuery<ExpertInfo[]>({
     queryKey: ['favoriteExperts', userId],
-    queryFn: async () => {
-      const res = await getFavoriteExpert(userId);
-      return res.data;
-    },
+    queryFn: async () =>
+      await getFavoriteExpert(userId).then((res) => res.data),
     enabled: !!userId,
   });
 
@@ -81,8 +76,19 @@ const ConsultingUserPage = () => {
     favoriteMutation.mutate(expert);
   };
 
+  const { data: chatRooms = [] } = useQuery<ChatRoom[]>({
+    queryKey: ['chatRoom', userId],
+    queryFn: async () => await getChatRooms(userId).then((res) => res.data),
+    enabled: !!userId,
+  });
+
   return (
     <Layout>
+      <ChattingSideBar
+        favoriteExperts={favoriteExperts}
+        chatRooms={chatRooms}
+        goChat={goChat}
+      />
       <Main>
         <PageTitle>나에게 맞는 전문가 찾기</PageTitle>
 

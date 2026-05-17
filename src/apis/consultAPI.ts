@@ -20,10 +20,16 @@ export const addFavorites = async (userId: number, expertId: number) => {
   });
 };
 
+export const getChatRooms = async (userId: number) => {
+  return axiosInstance.get(`/chat/room-list/${userId}`);
+};
+
 export const findOrCreateChatRoom = async (
   userId: number,
   expertId: number,
 ) => {
+  console.log(userId);
+  console.log(expertId);
   return await axiosInstance.post('/chat/room', { userId, expertId });
 };
 

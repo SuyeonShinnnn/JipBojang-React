@@ -7,7 +7,7 @@ interface Props {
   expert: ExpertInfo;
   favorite: boolean;
   onToggleFavorite: () => void;
-  onChat: (expert: ExpertInfo) => void;
+  onChat: (expertId: number) => void;
   onDetail: () => void;
 }
 
@@ -46,7 +46,9 @@ const ExpertCard = ({
           상세보기
         </BaseButton>
 
-        <BaseButton onClick={() => onChat(expert)}>상담하기</BaseButton>
+        <BaseButton onClick={() => onChat(Number(expert.userId))}>
+          상담하기
+        </BaseButton>
       </Footer>
     </Card>
   );
