@@ -10,7 +10,8 @@ import { useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getMessageHistory } from '../../apis/consultAPI';
 import { buildChatGroups } from '../../utils/chatMessageGroup';
-import MessageList from './components/MessagEList';
+import MessageList from './components/MessageList';
+import ChattingStartCard from './components/ChattingStartCard';
 
 const ChattingPage = () => {
   const auth = useAuthStore();
@@ -52,10 +53,12 @@ const ChattingPage = () => {
     });
   }, [allMessages]);
 
-  const handleSendMessage = () => {
-    if (!text.trim()) return;
+  const handleSendMessage = (message?: string) => {
+    const finalMessage = message ?? text;
 
-    sendMessage(text);
+    if (!finalMessage.trim()) return;
+
+    sendMessage(finalMessage);
 
     setText('');
   };
@@ -92,10 +95,18 @@ const ChattingPage = () => {
           )}
         </ChatHeader>
 
-        <MessageContainer>
-          {groupedMessages.map((message) => {
-            return <MessageList message={message} />;
-          })}
+        <MessageContainer $isEmpty={groupedMessages.length === 0}>
+          {groupedMessages.length === 0 ? (
+            <>
+              <ChattingStartCard firstChat={handleSendMessage} />
+            </>
+          ) : (
+            <>
+              {groupedMessages.map((message) => (
+                <MessageList key={message.messageId} message={message} />
+              ))}
+            </>
+          )}
 
           <div ref={bottomRef} />
         </MessageContainer>
@@ -147,10 +158,12 @@ const ChatHeader = styled.div`
   background: #fff;
 `;
 
-const MessageContainer = styled.div`
+const MessageContainer = styled.div<{ $isEmpty: boolean }>`
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: ${({ $isEmpty }) => ($isEmpty ? 'center' : '')};
+  align-items: ${({ $isEmpty }) => ($isEmpty ? 'center' : '')};
   gap: 2px;
 
   overflow-y: auto;
