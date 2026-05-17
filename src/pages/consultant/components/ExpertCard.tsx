@@ -27,13 +27,11 @@ const ExpertCard = ({
       </Header>
 
       <Body>
-        <ImageWrapper>
-          <ProfileImage
-            src={expert.profileImage}
-            alt={expert.name}
-            onError={(e) => (e.currentTarget.src = basicProfile)}
-          />
-        </ImageWrapper>
+        <ProfileImage
+          src={expert.profileImage}
+          alt={expert.name}
+          onError={(e) => (e.currentTarget.src = basicProfile)}
+        />
 
         <h3>{expert.name}</h3>
         <Company>{expert.company}</Company>
@@ -105,21 +103,12 @@ const Body = styled.div`
   align-items: center;
 `;
 
-const ImageWrapper = styled.div`
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  border: 5px solid white;
-  transform: translateY(-50px);
-
-  background: white;
-`;
-
 const ProfileImage = styled.img`
   width: 96px;
   height: 96px;
   border-radius: 50%;
   object-fit: cover;
+  transform: translateY(-50px);
 `;
 
 const Company = styled.p`
