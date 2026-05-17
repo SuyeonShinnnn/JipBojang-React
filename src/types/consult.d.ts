@@ -26,3 +26,19 @@ export interface ChatMessage {
   type: string;
   createdAt: string;
 }
+
+export interface ChatRoom {
+  roomId: number;
+
+  userId: number;
+  userProfile: string;
+  userNickname: string;
+
+  expertId: number;
+  expertProfile: string;
+  expertNickname: string;
+
+  messageId: number;
+  content: string;
+  createdAt: string;
+}

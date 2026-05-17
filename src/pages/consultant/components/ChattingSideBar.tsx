@@ -1,40 +1,16 @@
 import styled from 'styled-components';
-
-type FavoriteAgent = {
-  id: number;
-  name: string;
-  company: string;
-  profileImage?: string;
-};
-
-type Chat = {
-  channelUrl: string;
-  opponentName: string;
-  opponentProfileUrl?: string;
-  opponentUserId: string;
-  lastMessage?: string;
-  unreadCount: number;
-};
+import type { ChatRoom, ExpertInfo } from '../../../types/consult';
+import alterImage from '../../../assets/consult/basic-profile.png';
 
 interface ChattingSideBarProps {
-  favoriteAgents: FavoriteAgent[];
-  ongoingChats: Chat[];
-  isFavOpen: boolean;
-  isChatOpen: boolean;
-  setIsFavOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  goDetail: (id: number) => void;
-  goChat: (userId: string) => void;
+  favoriteExperts: ExpertInfo[];
+  chatRooms: ChatRoom[];
+  goChat: (expertId: number) => void;
 }
 
 const ChattingSideBar = ({
-  favoriteAgents,
-  ongoingChats,
-  isFavOpen,
-  isChatOpen,
-  setIsFavOpen,
-  setIsChatOpen,
-  goDetail,
+  favoriteExperts,
+  chatRooms,
   goChat,
 }: ChattingSideBarProps) => {
   return (
@@ -43,53 +19,65 @@ const ChattingSideBar = ({
 
       {/* 찜한 전문가 */}
       <Section>
-        <Title onClick={() => setIsFavOpen(!isFavOpen)}>⭐ 찜한 전문가</Title>
+        <Title>⭐ 찜한 전문가</Title>
+        {favoriteExperts.length === 0 ? (
+          <Empty>찜한 전문가 없음</Empty>
+        ) : (
+          favoriteExperts.map((f) => (
+            <FavCard key={f.id}>
+              <img
+                src={f.profileImage}
+                alt={f.name}
+                onError={(e) => {
+                  const target = e.currentTarget;
 
-        {isFavOpen &&
-          (favoriteAgents.length === 0 ? (
-            <Empty>찜한 전문가 없음</Empty>
-          ) : (
-            favoriteAgents.map((f) => (
-              <FavCard key={f.id} onClick={() => goDetail(f.id)}>
-                <img src={f.profileImage} alt={f.name} />
+                  target.src = `${alterImage}`;
+                  target.onerror = null;
+                }}
+              />
 
-                <Info>
-                  <b>{f.name}</b>
-                  <span>{f.company}</span>
-                </Info>
-              </FavCard>
-            ))
-          ))}
+              <Info>
+                <b>{f.name}</b>
+                <span>{f.company}</span>
+              </Info>
+            </FavCard>
+          ))
+        )}
       </Section>
 
       {/* 진행중 상담 */}
       <Section>
-        <Title onClick={() => setIsChatOpen(!isChatOpen)}>💬 진행중 상담</Title>
+        <Title>💬 진행중 상담</Title>
 
-        {isChatOpen &&
-          (ongoingChats.length === 0 ? (
-            <Empty>상담 없음</Empty>
-          ) : (
-            ongoingChats.map((c) => (
-              <ChatCard
-                key={c.channelUrl}
-                onClick={() => goChat(c.opponentUserId)}
-              >
-                <AvatarWrapper>
-                  <img src={c.opponentProfileUrl} alt={c.opponentName} />
+        {chatRooms.length === 0 ? (
+          <Empty>상담 없음</Empty>
+        ) : (
+          chatRooms.map((c) => (
+            <ChatCard key={c.roomId} onClick={() => goChat(c.expertId)}>
+              <AvatarWrapper>
+                <img
+                  src={c.expertProfile}
+                  alt={c.expertNickname}
+                  onError={(e) => {
+                    const target = e.currentTarget;
 
-                  {c.unreadCount > 0 && (
-                    <Badge>{c.unreadCount > 9 ? '9+' : c.unreadCount}</Badge>
-                  )}
-                </AvatarWrapper>
+                    target.src = `${alterImage}`;
+                    target.onerror = null;
+                  }}
+                />
 
-                <Info>
-                  <b>{c.opponentName}</b>
-                  <p>{c.lastMessage}</p>
-                </Info>
-              </ChatCard>
-            ))
-          ))}
+                {/* {c.unreadCount > 0 && (
+                  <Badge>{c.unreadCount > 9 ? '9+' : c.unreadCount}</Badge>
+                )} */}
+              </AvatarWrapper>
+
+              <Info>
+                <b>{c.expertNickname}</b>
+                <p>{c.content}</p>
+              </Info>
+            </ChatCard>
+          ))
+        )}
       </Section>
     </Sidebar>
   );
@@ -107,14 +95,15 @@ const SidebarTitle = styled.h1`
   margin-bottom: 32px;
 `;
 
-const Section = styled.div`
+const Section = styled.section`
   margin-bottom: 32px;
+  max-height: 30vh;
+  overflow-y: auto;
 `;
 
 const Title = styled.h2`
   font-size: 18px;
   margin-bottom: 16px;
-  cursor: pointer;
 `;
 
 const Empty = styled.div`
@@ -148,6 +137,12 @@ const ChatCard = styled(FavCard)`
 
 const AvatarWrapper = styled.div`
   position: relative;
+
+  img {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 50%;
+  }
 `;
 
 const Badge = styled.div`
