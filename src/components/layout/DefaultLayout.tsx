@@ -39,7 +39,7 @@ const DefaultLayout = () => {
 
   return (
     <>
-      <MainContent key={location.pathname} $noPadding={isBuildingPage}>
+      <MainContent key={location.pathname}>
         <Suspense
           fallback={
             <Container>
@@ -106,9 +106,7 @@ const Container = styled.div`
   height: 80vh;
 `;
 
-const MainContent = styled.main<{ $noPadding?: boolean }>`
-  position: relative;
-  padding-top: ${({ $noPadding }) => ($noPadding ? '0' : '4rem')};
+const MainContent = styled.div`
   animation: ${fadeSlideIn} 0.35s ease-out both;
 `;
 
