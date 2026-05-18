@@ -28,8 +28,6 @@ export const findOrCreateChatRoom = async (
   userId: number,
   expertId: number,
 ) => {
-  console.log(userId);
-  console.log(expertId);
   return await axiosInstance.post('/chat/room', { userId, expertId });
 };
 
