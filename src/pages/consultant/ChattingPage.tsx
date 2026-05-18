@@ -12,7 +12,6 @@ import { getMessageHistory } from '../../apis/consultAPI';
 import { buildChatGroups } from '../../utils/chatMessageGroup';
 import MessageList from './components/MessageList';
 import ChattingStartCard from './components/ChattingStartCard';
-import { Main } from '../../style/common';
 
 const ChattingPage = () => {
   const auth = useAuthStore();
@@ -134,17 +133,17 @@ const ChattingPage = () => {
 
 export default ChattingPage;
 
-const Layout = styled(Main)`
+const Layout = styled.div`
   display: flex;
   height: 90vh;
   overflow: hidden;
-  background: #f5f7fb;
 `;
 
 const ChatContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  border: 1px solid rgba(var(--color-lightgray));
 `;
 
 const ChatHeader = styled.div`
@@ -153,10 +152,7 @@ const ChatHeader = styled.div`
   display: flex;
   align-items: center;
 
-  border-top: 1px solid rgba(var(--color-lightgray));
   border-bottom: 1px solid rgba(var(--color-lightgray));
-
-  background: #fff;
 `;
 
 const MessageContainer = styled.div<{ $isEmpty: boolean }>`
@@ -171,8 +167,6 @@ const MessageContainer = styled.div<{ $isEmpty: boolean }>`
 
   padding: 20px;
   padding-bottom: 0;
-
-  background: #f5f7fb;
 `;
 
 const ProfileWrapper = styled.div`

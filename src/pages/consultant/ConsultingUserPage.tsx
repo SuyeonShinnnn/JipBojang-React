@@ -1,22 +1,19 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import ChattingSideBar from './components/ChattingSideBar';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import {
   addFavorites,
   deleteFavorites,
   findOrCreateChatRoom,
-  getChatRooms,
   getExpert,
   getFavoriteExpert,
 } from '../../apis/consultAPI';
 
-import type { ChatRoom, ExpertInfo } from '../../types/consult';
+import type { ExpertInfo } from '../../types/consult';
 
 import { useAuthStore } from '../../stores/auth';
 import ExpertCard from './components/ExpertCard';
-import { Main } from '../../style/common';
 
 const ConsultingUserPage = () => {
   const auth = useAuthStore();
@@ -77,19 +74,8 @@ const ConsultingUserPage = () => {
     favoriteMutation.mutate(expert);
   };
 
-  const { data: chatRooms = [] } = useQuery<ChatRoom[]>({
-    queryKey: ['chatRoom', userId],
-    queryFn: async () => await getChatRooms(userId).then((res) => res.data),
-    enabled: !!userId,
-  });
-
   return (
-    <Layout>
-      <ChattingSideBar
-        favoriteExperts={favoriteExperts}
-        chatRooms={chatRooms}
-        goChat={goChat}
-      />
+    <>
       <Container>
         <PageTitle>나에게 맞는 전문가 찾기</PageTitle>
 
@@ -108,15 +94,11 @@ const ConsultingUserPage = () => {
           ))}
         </Grid>
       </Container>
-    </Layout>
+    </>
   );
 };
 
 export default ConsultingUserPage;
-
-const Layout = styled(Main)`
-  display: flex;
-`;
 
 const Container = styled.div`
   flex: 1;

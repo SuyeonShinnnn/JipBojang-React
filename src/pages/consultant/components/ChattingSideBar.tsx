@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import type { ChatRoom, ExpertInfo } from '../../../types/consult';
 import alterImage from '../../../assets/consult/basic-profile.png';
+import React from 'react';
 
 interface ChattingSideBarProps {
   favoriteExperts: ExpertInfo[];
@@ -83,7 +84,7 @@ const ChattingSideBar = ({
   );
 };
 
-export default ChattingSideBar;
+export default React.memo(ChattingSideBar);
 
 const Sidebar = styled.aside`
   width: 300px;

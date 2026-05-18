@@ -1,15 +1,16 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import HomePage from '../../pages/home/HomePage';
-import NotFoundPage from '../../pages/NotFoundPage';
 import styled, { keyframes } from 'styled-components';
 import chatbotIcon from '../../assets/chatbot/chatbot.png';
-import { useState } from 'react';
 import LoadingSpinner from '../common/LoadingSpanner';
+import ConsultLayout from './ConsultLayout';
 
 const LoginPage = lazy(() => import('../../pages/auth/LoginPage'));
 const SignupPage = lazy(() => import('../../pages/auth/SignupPage'));
 const InfoInputPage = lazy(() => import('../../pages/auth/InfoInputPage'));
+
+const HomePage = lazy(() => import('../../pages/home/HomePage'));
+const NotFoundPage = lazy(() => import('../../pages/NotFoundPage'));
 
 const NotiPage = lazy(() => import('../../pages/notification/NotiPage'));
 const BuildingPage = lazy(() => import('../../pages/building/BuildingPage'));
@@ -33,7 +34,6 @@ const ChattingPage = lazy(() => import('../../pages/consultant/ChattingPage'));
 const DefaultLayout = () => {
   const location = useLocation();
   const isBuildingPage = location.pathname === '/building';
-  const isChattingPage = location.pathname === '/chat/:id';
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -48,33 +48,38 @@ const DefaultLayout = () => {
           }
         >
           <Routes location={location}>
+            <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/signup/info" element={<InfoInputPage />} />
-            <Route path="/" element={<HomePage />} />
+
             <Route path="/report" element={<ReportPage />} />
             <Route path="/report/form" element={<ReportFormPage />} />
             <Route path="/report/progress" element={<ReportProgressPage />} />
             <Route path="/report/result" element={<ReportResultPage />} />
+
             <Route path="/notify" element={<NotiPage />} />
             <Route path="/building" element={<BuildingPage />} />
-            <Route path="/consult" element={<ConsultingUserPage />} />
-            <Route path="/chat/:roomId" element={<ChattingPage />} />
+
+            <Route element={<ConsultLayout />}>
+              <Route path="/consult" element={<ConsultingUserPage />} />
+              <Route path="/chat/:roomId" element={<ChattingPage />} />
+            </Route>
+
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
       </MainContent>
 
-      {!isBuildingPage ||
-        (!isChattingPage && (
-          <ChatbotButton
-            onClick={() => setIsChatOpen(!isChatOpen)}
-            $isFocused={isChatOpen}
-          >
-            <Image src={chatbotIcon} alt="chatbot" />
-            <span>챗봇</span>
-          </ChatbotButton>
-        ))}
+      {!isBuildingPage && (
+        <ChatbotButton
+          onClick={() => setIsChatOpen(!isChatOpen)}
+          $isFocused={isChatOpen}
+        >
+          <Image src={chatbotIcon} alt="chatbot" />
+          <span>챗봇</span>
+        </ChatbotButton>
+      )}
 
       {isChatOpen && (
         <Suspense fallback={<div>로딩중...</div>}>
