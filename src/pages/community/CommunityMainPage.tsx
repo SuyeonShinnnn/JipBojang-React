@@ -6,9 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getBoards } from '../../apis/communityApi';
 import { useAuthStore } from '../../stores/auth';
 import type { BoardInfo } from '../../types/community';
-import alterImage from '../../assets/consult/basic-profile.png';
-import { formatDate } from '../../utils/format';
-import ErrorState from '../../components/common/ErrorState';
+import BoardList from './components/BoardList';
 
 const CommunityMainPage = () => {
   const navigate = useNavigate();
@@ -36,38 +34,12 @@ const CommunityMainPage = () => {
         <SideBar />
         <Section>
           <BaseInput showButton={true} placeholder="검색어를 입력하세요" />
-          <ul>
-            {isPending && <>pending...</>}
-            {isError && <ErrorState />}
-            {!isPending &&
-              !isError &&
-              data.map((item) => (
-                <>
-                  <Board key={item.postId} onClick={() => handleBoardClick()}>
-                    <BoardMain>
-                      <Profile>
-                        <img
-                          src={item.profileImage}
-                          onError={(e) => {
-                            const target = e.currentTarget;
-
-                            target.src = `${alterImage}`;
-                            target.onerror = null;
-                          }}
-                        />
-                        <span>{item.writerNickname}</span>
-                      </Profile>
-                      <ContentWrapper>
-                        <h4>{item.title}</h4>
-                        <p>{item.content}</p>
-                      </ContentWrapper>
-                    </BoardMain>
-
-                    <small>{formatDate(item.createdAt)}</small>
-                  </Board>
-                </>
-              ))}
-          </ul>
+          <BoardList
+            data={data}
+            isPending={isPending}
+            isError={isError}
+            goToDetail={handleBoardClick}
+          />
         </Section>
       </Container>
     </Main>
@@ -92,46 +64,5 @@ const Section = styled.section`
 
   ul {
     margin-top: 20px;
-  }
-`;
-
-const Board = styled.li`
-  padding: 12px;
-  border-radius: 12px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  &:hover {
-    cursor: pointer;
-    background-color: rgba(var(--color-lightgray) / 30%);
-  }
-`;
-
-const BoardMain = styled.div`
-  display: flex;
-  gap: 20px;
-`;
-
-const Profile = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  img {
-    width: 20px;
-    height: 20px;
-    border-radius: 50px;
-    border: 1px solid rgba(var(--color-lightgray));
-  }
-`;
-
-const ContentWrapper = styled.div`
-  display: flex;
-  gap: 8px;
-
-  p {
-    color: rgba(var(--color-darkgray));
   }
 `;
