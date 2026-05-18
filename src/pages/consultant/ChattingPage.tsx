@@ -12,6 +12,7 @@ import { getMessageHistory } from '../../apis/consultAPI';
 import { buildChatGroups } from '../../utils/chatMessageGroup';
 import MessageList from './components/MessageList';
 import ChattingStartCard from './components/ChattingStartCard';
+import { Main } from '../../style/common';
 
 const ChattingPage = () => {
   const auth = useAuthStore();
@@ -133,7 +134,7 @@ const ChattingPage = () => {
 
 export default ChattingPage;
 
-const Layout = styled.div`
+const Layout = styled(Main)`
   display: flex;
   height: 90vh;
   overflow: hidden;

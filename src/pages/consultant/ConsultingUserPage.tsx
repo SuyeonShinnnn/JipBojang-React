@@ -16,6 +16,7 @@ import type { ChatRoom, ExpertInfo } from '../../types/consult';
 
 import { useAuthStore } from '../../stores/auth';
 import ExpertCard from './components/ExpertCard';
+import { Main } from '../../style/common';
 
 const ConsultingUserPage = () => {
   const auth = useAuthStore();
@@ -89,7 +90,7 @@ const ConsultingUserPage = () => {
         chatRooms={chatRooms}
         goChat={goChat}
       />
-      <Main>
+      <Container>
         <PageTitle>나에게 맞는 전문가 찾기</PageTitle>
 
         <Subtitle>안전한 전세계약을 위한 전문가 상담 서비스</Subtitle>
@@ -106,20 +107,18 @@ const ConsultingUserPage = () => {
             />
           ))}
         </Grid>
-      </Main>
+      </Container>
     </Layout>
   );
 };
 
 export default ConsultingUserPage;
 
-const Layout = styled.div`
+const Layout = styled(Main)`
   display: flex;
-  min-height: 100vh;
-  background: rgba(var(--color-accent) / 20%);
 `;
 
-const Main = styled.main`
+const Container = styled.div`
   flex: 1;
   padding: 48px;
 `;

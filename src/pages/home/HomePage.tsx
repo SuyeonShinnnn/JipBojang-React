@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTyping } from '../../hooks/useTyping';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { Main } from '../../style/common';
 
 const HomePage: React.FC = () => {
   const fullText = '주소를 입력하고 적정보증금과 건축물대장을 확인해 보세요!';
@@ -152,7 +153,7 @@ const HomePage: React.FC = () => {
 
 export default HomePage;
 
-const Container = styled.div`
+const Container = styled(Main)`
   background:
     radial-gradient(
       1400px 1200px at 50% 70%,
