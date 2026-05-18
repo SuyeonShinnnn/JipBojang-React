@@ -10,6 +10,7 @@ import type { PropertyDetail } from '../../types/notification';
 import SkeletonCard from '../../components/common/skeleton/SkeletonCard';
 import ErrorState from '../../components/common/ErrorState';
 import { lazy, Suspense } from 'react';
+import { Main } from '../../style/common';
 
 const DetailModal = lazy(() => import('./components/DetailModal'));
 const DeleteModal = lazy(() => import('./components/DeleteModal'));
@@ -69,57 +70,59 @@ const NotiPage: React.FC = () => {
   }
 
   return (
-    <Container>
-      <h1>등기변동 알림 서비스</h1>
-      <SubTitle>알림 설정된 부동산</SubTitle>
+    <Main>
+      <Container>
+        <h1>등기변동 알림 서비스</h1>
+        <SubTitle>알림 설정된 부동산</SubTitle>
 
-      <PropertyCardWrapper>
-        {isPending
-          ? SKELETON_LIST.map((_, idx) => <SkeletonCard key={idx} />)
-          : Array.from({ length: 3 }).map((_, idx) => {
-              const item = data?.[idx];
+        <PropertyCardWrapper>
+          {isPending
+            ? SKELETON_LIST.map((_, idx) => <SkeletonCard key={idx} />)
+            : Array.from({ length: 3 }).map((_, idx) => {
+                const item = data?.[idx];
 
-              return (
-                <PropertyCard
-                  key={idx}
-                  propertyInfo={item}
-                  isEmpty={!item}
-                  onOpenModal={openModal}
-                />
-              );
-            })}
-      </PropertyCardWrapper>
+                return (
+                  <PropertyCard
+                    key={idx}
+                    propertyInfo={item}
+                    isEmpty={!item}
+                    onOpenModal={openModal}
+                  />
+                );
+              })}
+        </PropertyCardWrapper>
 
-      <WarningCardSection />
+        <WarningCardSection />
 
-      {modalType === 'register' && (
-        <Suspense fallback={null}>
-          <PropertyRegistModal isOpen onClose={closeModal} />
-        </Suspense>
-      )}
+        {modalType === 'register' && (
+          <Suspense fallback={null}>
+            <PropertyRegistModal isOpen onClose={closeModal} />
+          </Suspense>
+        )}
 
-      {modalType === 'delete' && (
-        <Suspense fallback={null}>
-          <DeleteModal isOpen onClose={closeModal} />
-        </Suspense>
-      )}
+        {modalType === 'delete' && (
+          <Suspense fallback={null}>
+            <DeleteModal isOpen onClose={closeModal} />
+          </Suspense>
+        )}
 
-      {modalType === 'modify' && (
-        <Suspense fallback={null}>
-          <ModifyModal isOpen onClose={closeModal} />
-        </Suspense>
-      )}
+        {modalType === 'modify' && (
+          <Suspense fallback={null}>
+            <ModifyModal isOpen onClose={closeModal} />
+          </Suspense>
+        )}
 
-      {modalType === 'detail' && (
-        <Suspense fallback={null}>
-          <DetailModal
-            isOpen
-            propertyDetail={selectedProperty ?? undefined}
-            onClose={closeModal}
-          />
-        </Suspense>
-      )}
-    </Container>
+        {modalType === 'detail' && (
+          <Suspense fallback={null}>
+            <DetailModal
+              isOpen
+              propertyDetail={selectedProperty ?? undefined}
+              onClose={closeModal}
+            />
+          </Suspense>
+        )}
+      </Container>
+    </Main>
   );
 };
 

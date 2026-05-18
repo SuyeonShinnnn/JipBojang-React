@@ -86,9 +86,9 @@ const HeaderContainer = styled.header`
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 
-  box-shadow:
+  /* box-shadow:
     0 8px 30px rgba(0, 0, 0, 0.08),
-    inset 0 1px rgba(255, 255, 255, 0.6);
+    inset 0 1px rgba(255, 255, 255, 0.6); */
 `;
 
 const ItemWrapper = styled.div`
@@ -100,8 +100,8 @@ const ItemWrapper = styled.div`
 `;
 
 const LogoImage = styled.img`
-  width: 80px;
-  height: 50px;
+  width: 120px;
+  height: 40px;
   object-fit: contain;
 
   &:hover {
@@ -117,9 +117,13 @@ const LogoImage = styled.img`
 `;
 
 const NavItemsWrapper = styled.nav`
-  display: flex;
-  gap: 2rem;
-  font-size: 18px;
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  gap: 20px;
+
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
 
   @media (max-width: 1024px) {
     display: none;
@@ -128,12 +132,13 @@ const NavItemsWrapper = styled.nav`
 
 const StyledNavLink = styled(NavLink)`
   color: rgb(var(--color-darkgray));
+  padding: 12px 8px;
   transition: all 0.2s ease;
 
   &:hover {
-    color: rgba(var(--color-primary-dark));
-    font-weight: 600;
-    transform: translateY(-1px);
+    background-color: rgba(var(--color-lightgray) / 70%);
+    padding: 12px 8px;
+    border-radius: 8px;
   }
 
   &.active {
