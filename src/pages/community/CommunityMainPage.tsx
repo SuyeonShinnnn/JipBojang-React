@@ -4,6 +4,7 @@ import BaseInput from "../../components/common/BaseInput";
 import { Heart3LineIcon } from "../../assets/icon/Heart3LineIcon";
 import { Heart3FillIcon } from "../../assets/icon/Heart3FillIcon";
 import { StarFatIcon } from "../../assets/icon/StarFatIcon";
+import { useNavigate } from "react-router-dom";
 
 const CommunityMainPage = () => {
   const dummy = [
@@ -57,7 +58,11 @@ const CommunityMainPage = () => {
     },
   ];
 
-  const handleBoardClick = () => {};
+  const navigate = useNavigate();
+
+  const handleBoardClick = () => {
+    navigate("/board");
+  };
 
   return (
     <Main>
