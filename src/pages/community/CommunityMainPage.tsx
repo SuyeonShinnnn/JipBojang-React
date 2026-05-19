@@ -14,8 +14,8 @@ const CommunityMainPage = () => {
 
   const userId = Number(auth.user.userId);
 
-  const handleBoardClick = () => {
-    navigate('/board');
+  const handleBoardClick = (postId: number) => {
+    navigate(`/board/${postId}`);
   };
 
   const {

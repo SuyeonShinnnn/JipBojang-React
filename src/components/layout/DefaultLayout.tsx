@@ -74,7 +74,7 @@ const DefaultLayout = () => {
             </Route>
 
             <Route path="/community" element={<CommunityMainPage />} />
-            <Route path="/board" element={<CommunityDetailPage />} />
+            <Route path="/board/:postId" element={<CommunityDetailPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
