@@ -15,6 +15,9 @@ interface BoardIconWrapperProps {
 
   scrapped: boolean;
   liked: boolean;
+
+  customColor?: string;
+  showFlag?: boolean;
 }
 
 const BoardIconWrapper = ({
@@ -22,30 +25,34 @@ const BoardIconWrapper = ({
   likes,
   scrapped,
   liked,
+  customColor,
+  showFlag = true,
 }: BoardIconWrapperProps) => {
   return (
     <Container>
       <IconWrapper>
-        <Icon color={'#ff4d4f'}>
+        <Icon color={customColor ? customColor : '#ff4d4f'}>
           <FontAwesomeIcon icon={liked ? faHeart : faHeartRegular} />
           <small>{likes}</small>
         </Icon>
 
-        <Icon color={'#e7cb13'}>
-          <FontAwesomeIcon icon={liked ? faStar : faStarRegular} />
+        <Icon color={customColor ? customColor : '#e7cb13'}>
+          <FontAwesomeIcon icon={scrapped ? faStar : faStarRegular} />
           <small>{scraps}</small>
         </Icon>
 
-        <Icon color="#4dabf7">
+        <Icon color={customColor ? customColor : '#4dabf7'}>
           <FontAwesomeIcon icon={faCommentRegular} />
           <small>0</small>
         </Icon>
       </IconWrapper>
 
-      <Icon color="#595959">
-        <FontAwesomeIcon icon={faFlag} />
-        <small>신고하기</small>
-      </Icon>
+      {showFlag && (
+        <Icon color="#595959">
+          <FontAwesomeIcon icon={faFlag} />
+          <small>신고하기</small>
+        </Icon>
+      )}
     </Container>
   );
 };
@@ -70,8 +77,8 @@ const Icon = styled.div<{ color: string }>`
   gap: 4px;
 
   svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     color: ${({ color }) => color};
   }
 
