@@ -5,9 +5,9 @@ import chatbotIcon from '../../assets/chatbot/chatbot.png';
 import LoadingSpinner from '../common/LoadingSpanner';
 import ConsultLayout from './ConsultLayout';
 
-const LoginPage = lazy(() => import('../../pages/auth/LoginPage'));
-const SignupPage = lazy(() => import('../../pages/auth/SignupPage'));
-const InfoInputPage = lazy(() => import('../../pages/auth/InfoInputPage'));
+const LoginPage = lazy(() => import("../../pages/auth/LoginPage"));
+const SignupPage = lazy(() => import("../../pages/auth/SignupPage"));
+const InfoInputPage = lazy(() => import("../../pages/auth/InfoInputPage"));
 
 const HomePage = lazy(() => import('../../pages/home/HomePage'));
 const NotFoundPage = lazy(() => import('../../pages/NotFoundPage'));
@@ -15,16 +15,23 @@ const NotFoundPage = lazy(() => import('../../pages/NotFoundPage'));
 const NotiPage = lazy(() => import('../../pages/notification/NotiPage'));
 const BuildingPage = lazy(() => import('../../pages/building/BuildingPage'));
 
-const ReportPage = lazy(() => import('../../pages/report/ReportPage'));
-const ReportFormPage = lazy(() => import('../../pages/report/ReportFormPage'));
+const ReportPage = lazy(() => import("../../pages/report/ReportPage"));
+const ReportFormPage = lazy(() => import("../../pages/report/ReportFormPage"));
 const ReportProgressPage = lazy(
-  () => import('../../pages/report/ReportProgressPage'),
+  () => import("../../pages/report/ReportProgressPage"),
 );
 const ReportResultPage = lazy(
-  () => import('../../pages/report/ReportResultPage'),
+  () => import("../../pages/report/ReportResultPage"),
 );
 
-const ChatbotBox = lazy(() => import('../../pages/chatbot/ChatbotBox'));
+const ChatbotBox = lazy(() => import("../../pages/chatbot/ChatbotBox"));
+
+const CommunityMainPage = lazy(
+  () => import("../../pages/community/CommunityMainPage"),
+);
+const CommunityDetailPage = lazy(
+  () => import("../../pages/community/CommunityDetailPage"),
+);
 
 const ConsultingUserPage = lazy(
   () => import('../../pages/consultant/ConsultingUserPage'),
@@ -33,7 +40,7 @@ const ChattingPage = lazy(() => import('../../pages/consultant/ChattingPage'));
 
 const DefaultLayout = () => {
   const location = useLocation();
-  const isBuildingPage = location.pathname === '/building';
+  const isBuildingPage = location.pathname === "/building";
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -66,6 +73,8 @@ const DefaultLayout = () => {
               <Route path="/chat/:roomId" element={<ChattingPage />} />
             </Route>
 
+            <Route path="/community" element={<CommunityMainPage />} />
+            <Route path="/board/:postId" element={<CommunityDetailPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>

@@ -18,3 +18,19 @@ export const formatMoney = (val?: number) => {
 
   return result.trim() || '0만원';
 };
+
+export const formatDate = (date: string) => {
+  const d = new Date(date);
+
+  return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
+};
+
+export const formatTime = (date: string) => {
+  const d = new Date(date);
+
+  return d.toLocaleTimeString('ko-KR', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+};

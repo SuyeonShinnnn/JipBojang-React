@@ -97,8 +97,8 @@ const StyledButton = styled.button<{
       case 'outline':
         return css`
           background-color: white;
-          border: 1px solid rgb(var(--color-primary));
-          color: rgb(var(--color-primary));
+          border: 1px solid rgb(var(--color-lightgray));
+          color: rgb(var(--color-dakrgray));
         `;
       case 'gray':
         return css`

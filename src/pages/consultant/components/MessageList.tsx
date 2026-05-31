@@ -1,25 +1,12 @@
 import styled from 'styled-components';
+import { formatDate, formatTime } from '../../../utils/format';
 
 interface MessageListProps {
   message: any;
 }
 
 const MessageList = ({ message }: MessageListProps) => {
-  const formatDate = (date: string) => {
-    const d = new Date(date);
-
-    return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
-  };
-
-  const formatTime = (date: string) => {
-    const d = new Date(date);
-
-    return d.toLocaleTimeString('ko-KR', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-  };
+  
 
   return (
     <>
