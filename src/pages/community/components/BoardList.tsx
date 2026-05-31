@@ -41,8 +41,8 @@ const BoardList = ({
                     <span>{item.writerNickname}</span>
                   </Profile>
                   <ContentWrapper>
-                    <h4>{item.title}</h4>
-                    <p>{item.content}</p>
+                    <h5>{item.title}</h5>
+                    {/* <p>{item.content}</p> */}
                   </ContentWrapper>
                 </BoardMain>
 
@@ -92,6 +92,10 @@ const Profile = styled.div`
 const ContentWrapper = styled.div`
   display: flex;
   gap: 8px;
+
+  h5 {
+    font-size: 16px;
+  }
 
   p {
     color: rgba(var(--color-darkgray));

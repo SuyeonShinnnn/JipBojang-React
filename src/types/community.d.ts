@@ -25,3 +25,11 @@ export interface BoardInfo {
 
   owner: boolean;
 }
+
+interface NewsInfo {
+  description: string;
+  link: string;
+  originallink: string;
+  pubDate: string;
+  title: string;
+}
